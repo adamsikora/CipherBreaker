@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context="cz.civilizacehra.cipherbreaker.DebinarizatorActivity" >
+
+    <RelativeLayout
+        android:id="@+id/legendLayout"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_toRightOf="@+id/numberPicker"
+        android:background="@color/colorPrimary">
+
+        <Switch
+            android:id="@+id/modeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Value/Order" />
+
+        <LinearLayout
+            android:id="@+id/interpretationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/modeSwitch"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/interpretation1"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary1" />
+
+            <ImageView
+                android:id="@+id/interpretation2"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary3" />
+
+            <ImageView
+                android:id="@+id/interpretation3"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary2" />
+
+            <ImageView
+                android:id="@+id/interpretation4"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary4" />
+
+            <ImageView
+                android:id="@+id/interpretation5"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary5" />
+
+            <ImageView
+                android:id="@+id/interpretation6"
+                style="@style/ternary_result_type_style"
+                app:srcCompat="@drawable/ternary6" />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/startRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:checkedButton="@+id/rbtn1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rgTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Start" />
+
+            <RadioButton
+                android:id="@+id/rbtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1" />
+
+            <RadioButton
+                android:id="@+id/rbtn0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0" />
+
+        </RadioGroup>
+
+        <Switch
+            android:id="@+id/directionSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/startRadioGroup"
+            android:layout_alignStart="@+id/startRadioGroup"
+            android:checked="true"
+            android:text="Dir " />
+
+        <CheckBox
+            android:id="@+id/chCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/directionSwitch"
+            android:layout_alignStart="@+id/directionSwitch"
+            android:checked="false"
+            android:text="Ch" />
+
+    </RelativeLayout>
+
+    <NumberPicker
+        android:id="@+id/numberPicker"
+        android:layout_width="@dimen/cube_size"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:elevation="1dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:descendantFocusability="blocksDescendants" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/legendLayout"
+        android:layout_toEndOf="@+id/numberPicker">
+
+        <LinearLayout
+            android:id="@+id/rowsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</RelativeLayout>

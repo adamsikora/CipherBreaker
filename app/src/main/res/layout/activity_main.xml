@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="cz.civilizacehra.cipherbreaker.MainActivity"
+    android:columnCount="1">
+
+    <TextView
+        android:id="@+id/Presmyslovnik"
+        style="@style/category_style"
+        android:text="@string/presmyslovnik" />
+
+    <TextView
+        android:id="@+id/Debinarizator"
+        style="@style/category_style"
+        android:text="@string/debinarizator" />
+
+    <TextView
+        android:id="@+id/Deternarizator"
+        style="@style/category_style"
+        android:text="@string/deternarizator" />
+
+    <TextView
+        android:id="@+id/MrizkoDrtic"
+        style="@style/category_style"
+        android:text="@string/mrizkodrtic" />
+
+    <TextView
+        android:id="@+id/PrincipTrainer"
+        style="@style/category_style"
+        android:text="@string/principtrainer" />
+
+    <TextView
+        android:id="@+id/PrincipReader"
+        style="@style/category_style"
+        android:text="@string/principreader" />
+</GridLayout>

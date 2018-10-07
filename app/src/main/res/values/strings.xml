@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">Cipher Breaker</string>
+    <string name="app_name">Šifro Haluzič</string>
+
+    <string name="presmyslovnik">Přesmyslovník</string>
+    <string name="debinarizator">Debinarizátor</string>
+    <string name="deternarizator">Deternarizátor</string>
+    <string name="mrizkodrtic">Mřížkodrtič</string>
+    <string name="principtrainer">Princip Trainer</string>
+    <string name="principreader">Princip Reader</string>
+
+    <string name="result">Results:\n</string>
+    <string name="go">Go!</string>
 </resources>

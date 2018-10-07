@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/tern1"
+        style="@style/cube_style"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:id="@+id/tern2"
+        style="@style/cube_style"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/tern1" />
+
+    <ImageView
+        android:id="@+id/tern3"
+        style="@style/cube_style"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/tern2" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/result1"
+            style="@style/result_style" />
+
+        <TextView
+            android:id="@+id/result2"
+            style="@style/result_style" />
+
+        <TextView
+            android:id="@+id/result3"
+            style="@style/result_style" />
+
+        <TextView
+            android:id="@+id/result4"
+            style="@style/result_style" />
+
+        <TextView
+            android:id="@+id/result5"
+            style="@style/result_style" />
+
+        <TextView
+            android:id="@+id/result6"
+            style="@style/result_style" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -8,4 +8,38 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="cube_style">
+        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_height">@dimen/cube_size</item>
+        <item name="android:src">@android:drawable/ic_menu_help</item>
+    </style>
+
+    <style name="result_style">
+        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_height">@dimen/cube_size</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:layout_marginLeft">1sp</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="result_type_style">
+        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_height">@dimen/half_cube_size</item>
+    </style>
+
+    <style name="ternary_result_type_style">
+        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="category_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
 </resources>
