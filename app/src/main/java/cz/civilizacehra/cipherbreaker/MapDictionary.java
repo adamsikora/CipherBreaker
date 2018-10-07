@@ -43,15 +43,15 @@ class MapDictionary extends Dictionary {
     private ArrayList<Point> mSortedResults = new ArrayList<Point>();
 
     @Override
-    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean regexp, int minLength, int maxLength) {
+    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
 
         prepare();
 
         setSuffix("");
-        findResults_impl(input, subset, exact, superset, hamming, regexp, minLength, maxLength);
+        findResults_impl(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
         if (mSvjz) {
             for (String s : mWorldSides) {
-                processWithWorldSide(input, s, subset, exact, superset, hamming, regexp, minLength, maxLength);
+                processWithWorldSide(input, s, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
             }
         }
 
@@ -61,6 +61,7 @@ class MapDictionary extends Dictionary {
     @Override
     protected void prepare() {
         mSortedResults.clear();
+        mStartTime = System.currentTimeMillis();
     }
 
     @Override
@@ -96,7 +97,7 @@ class MapDictionary extends Dictionary {
                 break;
             }
         }
-        mResults.setText("Result: (" + counter + ")\n" + resultStr);
+        mResults.setText("Result: (" + counter + ")" + computationTime() + "\n" + resultStr);
     }
 
     private void setSuffix(String s) {
@@ -107,7 +108,7 @@ class MapDictionary extends Dictionary {
         }
     }
 
-    private void processWithWorldSide(String input, String s, boolean subset, boolean exact, boolean superset, boolean hamming, boolean regexp, int minLength, int maxLength) {
+    private void processWithWorldSide(String input, String s, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
         String arr[] = s.split("");
         boolean contains = true;
         for (String c : arr) {
@@ -121,7 +122,7 @@ class MapDictionary extends Dictionary {
                 modified = modified.replaceFirst(c, "");
             }
             setSuffix(s);
-            findResults_impl(modified, subset, exact, superset, hamming, regexp, minLength, maxLength);
+            findResults_impl(modified, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
         }
     }
 

@@ -13,21 +13,22 @@ import java.util.regex.Pattern;
 
 class Dictionary {
     Dictionary(AssetManager manager, String filename, TextView results) {
+        int mStartTime;
         mManager = manager;
         mFilename = filename;
         mResults = results;
     }
 
-    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean regexp, int minLength, int maxLength) {
+    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
 
         prepare();
 
-        findResults_impl(input, subset, exact, superset, hamming, regexp, minLength, maxLength);
+        findResults_impl(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
 
-        conclude(hamming);
+        conclude(hamming || levenshtein);
     }
 
-    void findResults_impl(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean regexp, int minLength, int maxLength) {
+    void findResults_impl(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
 
         Pattern pattern;
         Matcher matcher;
@@ -47,7 +48,7 @@ class Dictionary {
         try {
             InputStream inputStream = mManager.open(mFilename);
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
+            String line;
 
             while((line = in.readLine()) != null) {
                 StringPair word = StringPair.fromString(line);
@@ -72,8 +73,13 @@ class Dictionary {
                             ++counter;
                         }
                     }
-                    if (counter < 4) {
+                    if (counter < 6) {
                         matched("(" + counter + ") " + word.getSecond());
+                    }
+                } else if (levenshtein) {
+                    int d = levenshteinDistance(first, input);
+                    if (d < 6) {
+                        matched("(" + d + ") " + word.getSecond());
                     }
                 } else {
                     int[] chars = new int[26];
@@ -106,8 +112,29 @@ class Dictionary {
         }
     }
 
+    private int levenshteinDistance(String a, String b) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        // i == 0
+        int [] costs = new int [b.length() + 1];
+        for (int j = 0; j < costs.length; j++)
+            costs[j] = j;
+        for (int i = 1; i <= a.length(); i++) {
+            // j == 0; nw = lev(i - 1, j)
+            costs[0] = i;
+            int nw = i - 1;
+            for (int j = 1; j <= b.length(); j++) {
+                int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]), a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
+                nw = costs[j];
+                costs[j] = cj;
+            }
+        }
+        return costs[b.length()];
+    }
+
     protected void prepare() {
         mList.clear();
+        mStartTime = System.currentTimeMillis();
     }
 
     protected void matched(String match) {
@@ -127,12 +154,17 @@ class Dictionary {
                 break;
             }
         }
-        mResults.setText("Result: (" + counter + ")\n" + resultStr);
+        mResults.setText("Result: (" + counter + ")" + computationTime() + "\n" + resultStr);
+    }
+
+    protected String computationTime() {
+        return "  " + (System.currentTimeMillis() - mStartTime) / 1000.0 + "s ";
     }
 
     private ArrayList<String> mList = new ArrayList<>();
 
     private AssetManager mManager;
     private String mFilename;
+    protected long mStartTime;
     TextView mResults;
 }

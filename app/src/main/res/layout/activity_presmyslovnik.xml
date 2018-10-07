@@ -153,6 +153,14 @@
                 android:text="Hamming" />
 
             <RadioButton
+                android:id="@+id/levenshteinRadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="Levenshtein" />
+
+            <RadioButton
                 android:id="@+id/regExpRadioBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
