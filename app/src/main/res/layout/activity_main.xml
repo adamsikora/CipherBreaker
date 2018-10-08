@@ -30,6 +30,11 @@
         android:text="@string/mrizkodrtic" />
 
     <TextView
+        android:id="@+id/Azimuther"
+        style="@style/category_style"
+        android:text="@string/azimuther" />
+
+    <TextView
         android:id="@+id/PrincipTrainer"
         style="@style/category_style"
         android:text="@string/principtrainer" />

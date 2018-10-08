@@ -140,45 +140,5 @@ public class PrincipReaderActivity extends Activity {
             setImage(newView, "principy/" + mPrincip + "/" + index + ".png");
             wordGridLayout.addView((View)newView);
         }
-
-        //for (int i = 0; i < 5; ++i) {
-        //    solutions[i].setBackgroundColor(mDefaultColor);
-        //    textView.setText("");
-        //}
-//
-        //String mSource;
-        //String mOut;
-        //mCurrent = mRandom.nextInt(5);
-//
-        //if (mInvert) {
-        //    mSource = mPrincip;
-        //    mOut = "a";
-        //} else {
-        //    mSource = "a";
-        //    mOut = mPrincip;
-        //}
-//
-        //ArrayList<Integer> list = new ArrayList<>();
-        //for (int i=1; i<=26; i++) {
-        //    if (i != mLast) {
-        //        list.add(i);
-        //    }
-        //}
-        //Collections.shuffle(list);
-        //for (int i=0; i<5; i++) {
-        //    setImage(solutions[i], "principy/" + mSource + "/" + list.get(i) + ".png");
-        //}
-        //mLast = list.get(mCurrent);
-//
-        //InputStream is = null;
-        //try {
-        //    is = this.getResources().getAssets().open("principy/" + mOut + "/" + list.get(mCurrent) + ".png");
-        //} catch (IOException e) {
-        //    Log.w("EL", e);
-        //}
-//
-        //Bitmap image = BitmapFactory.decodeStream(is);
-        //imageView.setImageBitmap(image);
-        //imageView.setBackgroundColor(mDefaultColor);
     }
 }

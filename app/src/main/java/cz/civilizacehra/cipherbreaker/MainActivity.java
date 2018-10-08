@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    TextView presmyslovnik, debinarizator, deternarizator, mrizkodrtic, principtrainer, principreader;
+    TextView presmyslovnik, debinarizator, deternarizator, mrizkodrtic, azimuther, principtrainer, principreader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
         debinarizator = (TextView)findViewById(R.id.Debinarizator);
         deternarizator = (TextView)findViewById(R.id.Deternarizator);
         mrizkodrtic = (TextView)findViewById(R.id.MrizkoDrtic);
+        azimuther = (TextView)findViewById(R.id.Azimuther);
         principtrainer = (TextView)findViewById(R.id.PrincipTrainer);
         principreader = (TextView)findViewById(R.id.PrincipReader);
 
@@ -46,6 +47,13 @@ public class MainActivity extends Activity {
         mrizkodrtic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, MrizkoDrticActivity.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
+
+        azimuther.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, AzimutherActivity.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });

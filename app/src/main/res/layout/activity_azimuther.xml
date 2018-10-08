@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cz.civilizacehra.cipherbreaker.MrizkoDrticActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp">
+
+        <EditText
+            android:id="@+id/latitudeEditText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:enabled="true"
+            android:hint="latitude"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/longitudeEditText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/latitudeEditText"
+            android:enabled="true"
+            android:hint="longitude"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/distanceEditText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/latitudeEditText"
+            android:enabled="true"
+            android:hint="distance (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/angleEditText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/longitudeEditText"
+            android:layout_alignTop="@+id/distanceEditText"
+            android:enabled="true"
+            android:hint="angle (°)"
+            android:inputType="numberDecimal" />
+
+        <Button
+            android:id="@+id/currBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:text="Current Location" />
+
+    </RelativeLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/azimutherMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true"
+        tools:context=".AzimutherActivity" />
+
+</RelativeLayout>

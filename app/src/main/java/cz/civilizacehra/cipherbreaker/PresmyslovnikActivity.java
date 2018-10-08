@@ -43,23 +43,23 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
 
     ProgressDialog dialog;
 
-    private LocationManager mLocationManager;
-    private Location mLocation;
+    protected LocationManager mLocationManager;
+    protected Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presmyslovnik);
 
-        goBtn = (Button) findViewById(R.id.GoBtn);
-        inputBox = (EditText) findViewById(R.id.inputEditText);
-        minLengthBox = (EditText) findViewById(R.id.minEditText);
-        maxLengthBox = (EditText) findViewById(R.id.maxEditText);
-        results = (TextView) findViewById(R.id.resultTextView);
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        mode = (RadioGroup) findViewById(R.id.modeRadioGrp);
-        source = (RadioGroup) findViewById(R.id.sourceRadioGrp);
-        svjz = (CheckBox) findViewById(R.id.svjzCheckBox);
+        goBtn = findViewById(R.id.GoBtn);
+        inputBox = findViewById(R.id.inputEditText);
+        minLengthBox = findViewById(R.id.minEditText);
+        maxLengthBox = findViewById(R.id.maxEditText);
+        results = findViewById(R.id.resultTextView);
+        scrollView = findViewById(R.id.scrollView);
+        mode = findViewById(R.id.modeRadioGrp);
+        source = findViewById(R.id.sourceRadioGrp);
+        svjz = findViewById(R.id.svjzCheckBox);
 
         source.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup arg0, int id) {
@@ -211,10 +211,10 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         boolean isNetwork = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (isNetwork) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 1, this);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         }
         if (isGps) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1, this);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
         if (!isGps && !isNetwork) {
             dialog.dismiss();
@@ -234,12 +234,9 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-
-        dialog.show();
         mLocation = location;
-        if (location != null) {
-            dialog.dismiss();
-        }
+        dialog.dismiss();
+        ceaseLocation();
     }
 
     @Override
