@@ -26,22 +26,22 @@
             <ImageView
                 android:id="@+id/direction1"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/right" />
+                android:src="@drawable/right" />
 
             <ImageView
                 android:id="@+id/direction2"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/right" />
+                android:src="@drawable/right" />
 
             <ImageView
                 android:id="@+id/direction3"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/left" />
+                android:src="@drawable/left" />
 
             <ImageView
                 android:id="@+id/direction4"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/left" />
+                android:src="@drawable/left" />
 
         </LinearLayout>
 
@@ -55,22 +55,22 @@
             <ImageView
                 android:id="@+id/interpretation1"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/black_horizontal" />
+                android:src="@drawable/black_horizontal" />
 
             <ImageView
                 android:id="@+id/interpretation2"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/white_horizontal" />
+                android:src="@drawable/white_horizontal" />
 
             <ImageView
                 android:id="@+id/interpretation3"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/black_horizontal" />
+                android:src="@drawable/black_horizontal" />
 
             <ImageView
                 android:id="@+id/interpretation4"
                 style="@style/result_type_style"
-                app:srcCompat="@drawable/white_horizontal" />
+                android:src="@drawable/white_horizontal" />
 
         </LinearLayout>
     </LinearLayout>

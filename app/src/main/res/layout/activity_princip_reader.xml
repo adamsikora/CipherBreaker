@@ -36,7 +36,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
         <ImageView
             android:id="@+id/mImage"
@@ -45,7 +45,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
         <ImageView
             android:id="@+id/bImage"
@@ -54,7 +54,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
         <ImageView
             android:id="@+id/sImage"
@@ -63,7 +63,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
         <ImageView
             android:id="@+id/binImage"
@@ -72,7 +72,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
         <ImageView
             android:id="@+id/tImage"
@@ -80,7 +80,7 @@
             android:layout_height="60dp"
             android:layout_weight="1"
             android:padding="4dp"
-            app:srcCompat="@android:drawable/alert_light_frame" />
+            android:src="@android:drawable/alert_light_frame" />
 
     </LinearLayout>
 
