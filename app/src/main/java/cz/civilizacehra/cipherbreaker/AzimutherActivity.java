@@ -7,11 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,6 +28,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.Locale;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public class AzimutherActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 

@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +23,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.regex.PatternSyntaxException;
+
+import androidx.core.app.ActivityCompat;
 
 public class PresmyslovnikActivity extends Activity implements LocationListener {
 

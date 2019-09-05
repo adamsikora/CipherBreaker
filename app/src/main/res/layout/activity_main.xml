@@ -35,6 +35,11 @@
         android:text="@string/azimuther" />
 
     <TextView
+        android:id="@+id/Calendar"
+        style="@style/category_style"
+        android:text="@string/calendar" />
+
+    <TextView
         android:id="@+id/PrincipTrainer"
         style="@style/category_style"
         android:text="@string/principtrainer" />
