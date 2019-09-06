@@ -1,8 +1,6 @@
 package cz.civilizacehra.cipherbreaker;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -129,16 +128,8 @@ public class CalendarActivity extends Activity {
                 result.add(new Holiday(year, month, day, data));
             }
         } catch (java.io.IOException e) {
-            AlertDialog.Builder builder = new  AlertDialog.Builder(this);
-            builder
-                    .setTitle("Error loading holidays file")
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+            String msg = "Error loading holidays file";
+            Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
         }
 
         return result;
@@ -148,16 +139,8 @@ public class CalendarActivity extends Activity {
         try {
             Pattern.compile(getQuery());
         } catch (PatternSyntaxException e) {
-            AlertDialog.Builder builder = new  AlertDialog.Builder(this);
-            builder
-                    .setTitle("Invalid regex syntax")
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+            String msg = "Invalid regex syntax";
+            Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
             return;
         }
 

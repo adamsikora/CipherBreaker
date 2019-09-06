@@ -2,10 +2,8 @@ package cz.civilizacehra.cipherbreaker;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -97,7 +95,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         pragueMap = new MapDictionary(getApplicationContext().getAssets(), "map_prague.sifrohal", results);
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        final AlertDialog.Builder builder = new  AlertDialog.Builder(this);
 
         inputBox.requestFocus();
 
@@ -157,25 +154,11 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
                             assert (false);
                         }
                     } catch (PatternSyntaxException e) {
-                        builder
-                                .setTitle("Invalid regex syntax")
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        String msg = "Invalid regex syntax";
+                        Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
                     } catch (Throwable e) {
-                        builder
-                                .setTitle("Unknown error")
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        String msg = "Unknown error";
+                        Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
                     }
                     saveRadioButtons();
                 }
