@@ -197,8 +197,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         }
         if (!isGps && !isNetwork) {
             dialog.dismiss();
-
-            Toast.makeText(getApplicationContext(), "Enable Location", Toast.LENGTH_LONG).show();
+            Utils.toastIt(getApplicationContext() , "Enable Location");
         }
     }
 

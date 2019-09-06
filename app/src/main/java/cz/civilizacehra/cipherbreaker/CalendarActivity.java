@@ -128,8 +128,7 @@ public class CalendarActivity extends Activity {
                 result.add(new Holiday(year, month, day, data));
             }
         } catch (java.io.IOException e) {
-            String msg = "Error loading holidays file";
-            Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
+            Utils.toastIt(getApplicationContext() , "Error loading holidays file");
         }
 
         return result;
@@ -139,8 +138,7 @@ public class CalendarActivity extends Activity {
         try {
             Pattern.compile(getQuery());
         } catch (PatternSyntaxException e) {
-            String msg = "Invalid regex syntax";
-            Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
+            Utils.toastIt(getApplicationContext() , "Invalid regex syntax");
             return;
         }
 

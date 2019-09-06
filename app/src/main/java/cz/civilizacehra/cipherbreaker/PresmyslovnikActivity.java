@@ -113,7 +113,10 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
                     boolean regexp = checked == R.id.regExpRadioBtn;
                     boolean hamming = checked == R.id.hammingRadioBtn;
                     boolean levenshtein = checked == R.id.levenshteinRadioBtn;
-                    assert (subset ^ exact ^ superset ^ regexp ^ hamming ^ levenshtein);
+                    if (!(subset ^ exact ^ superset ^ regexp ^ hamming ^ levenshtein)) {
+                        Utils.toastIt(getApplicationContext() , "No mode selected");
+                        return;
+                    }
                     int minLength = 0;
                     if (minLengthBox.getText().length() > 0) {
                         minLength = Integer.parseInt(minLengthBox.getText().toString());
@@ -151,14 +154,13 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
                             pragueMap.setLocation(mLocation);
                             pragueMap.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
                         } else {
-                            assert (false);
+                            Utils.toastIt(getApplicationContext() , "No dictionary selected");
+                            return;
                         }
                     } catch (PatternSyntaxException e) {
-                        String msg = "Invalid regex syntax";
-                        Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
+                        Utils.toastIt(getApplicationContext() , "Invalid regex syntax");
                     } catch (Throwable e) {
-                        String msg = "Unknown error";
-                        Toast.makeText(getApplicationContext() , msg, Toast.LENGTH_SHORT).show();
+                        Utils.toastIt(getApplicationContext() , "Unknown error");
                     }
                     saveRadioButtons();
                 }
@@ -202,8 +204,7 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         }
         if (!isGps && !isNetwork) {
             dialog.dismiss();
-
-            Toast.makeText(getApplicationContext(), "Enable Location", Toast.LENGTH_LONG).show();
+            Utils.toastIt(getApplicationContext() , "Enable Location");
         }
     }
 
