@@ -18,9 +18,9 @@ public class DebinarizatorActivity extends DebaseatorActivity {
 
     @Override
     protected void onRowClick(RelativeLayout layout) {
-        int values[] = new int[mBaseLength];
+        int[] values = new int[mBaseLength];
         for (int k = 0; k < mBaseLength; ++k) {
-            ImageView view = (ImageView) layout.findViewById(bits[k]);
+            ImageView view = layout.findViewById(bits[k]);
             int value = (int) view.getTag();
             values[k] = value;
         }
@@ -37,15 +37,15 @@ public class DebinarizatorActivity extends DebaseatorActivity {
         int offset = alphabetStart.getCheckedRadioButtonId() == R.id.rbtn0 ? 1 : 0;
 
         if (up >= 0 && up <= mBaseMax) {
-            TextView text = (TextView) layout.findViewById(results[0]);
+            TextView text = layout.findViewById(results[0]);
             text.setText(getLetter(up + offset));
-            text = (TextView) layout.findViewById(results[1]);
+            text = layout.findViewById(results[1]);
             text.setText(getLetter(mBaseMax - up + offset));
         }
         if (down >= 0 && down <= mBaseMax) {
-            TextView text = (TextView) layout.findViewById(results[2]);
+            TextView text = layout.findViewById(results[2]);
             text.setText(getLetter(down + offset));
-            text = (TextView) layout.findViewById(results[3]);
+            text = layout.findViewById(results[3]);
             text.setText(getLetter(mBaseMax - down + offset));
         }
     }

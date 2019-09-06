@@ -64,7 +64,7 @@ public class Holiday {
     private String mName, mDayOfWeek;
 
 
-    static Comparator dateFirstComparator = new Comparator<Holiday>() {
+    static Comparator<Holiday> dateFirstComparator = new Comparator<Holiday>() {
         public int compare(Holiday h1, Holiday h2) {
             int result = Integer.compare(h1.getMonth(), h2.getMonth());
             if (result != 0) {
@@ -77,7 +77,7 @@ public class Holiday {
             return collator.compare(h1.getName(), h2.getName());
         }
     };
-    static Comparator nameFirstComparator = new Comparator<Holiday>() {
+    static Comparator<Holiday> nameFirstComparator = new Comparator<Holiday>() {
         public int compare(Holiday h1, Holiday h2) {
             int result = collator.compare(h1.getName(), h2.getName());
             if (result != 0) {

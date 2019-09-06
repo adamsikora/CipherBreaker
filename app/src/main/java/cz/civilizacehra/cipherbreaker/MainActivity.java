@@ -15,14 +15,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presmyslovnik = (TextView)findViewById(R.id.Presmyslovnik);
-        debinarizator = (TextView)findViewById(R.id.Debinarizator);
-        deternarizator = (TextView)findViewById(R.id.Deternarizator);
-        mrizkodrtic = (TextView)findViewById(R.id.MrizkoDrtic);
-        azimuther = (TextView)findViewById(R.id.Azimuther);
-        calendar = (TextView)findViewById(R.id.Calendar);
-        principtrainer = (TextView)findViewById(R.id.PrincipTrainer);
-        principreader = (TextView)findViewById(R.id.PrincipReader);
+        presmyslovnik = findViewById(R.id.Presmyslovnik);
+        debinarizator = findViewById(R.id.Debinarizator);
+        deternarizator = findViewById(R.id.Deternarizator);
+        mrizkodrtic = findViewById(R.id.MrizkoDrtic);
+        azimuther = findViewById(R.id.Azimuther);
+        calendar = findViewById(R.id.Calendar);
+        principtrainer = findViewById(R.id.PrincipTrainer);
+        principreader = findViewById(R.id.PrincipReader);
 
         presmyslovnik.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

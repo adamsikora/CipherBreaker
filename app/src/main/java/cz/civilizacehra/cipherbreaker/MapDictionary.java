@@ -10,7 +10,7 @@ import java.util.Collections;
 class MapDictionary extends Dictionary {
 
     class Point implements Comparable<Point> {
-        public Point(float dist, String n) {
+        Point(float dist, String n) {
             distance = dist;
             name = n;
         }
@@ -109,7 +109,7 @@ class MapDictionary extends Dictionary {
     }
 
     private void processWithWorldSide(String input, String s, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
-        String arr[] = s.split("");
+        String[] arr = s.split("");
         boolean contains = true;
         for (String c : arr) {
             if (!input.contains(c)) {
@@ -127,6 +127,6 @@ class MapDictionary extends Dictionary {
     }
 
     private String mSuffix;
-    private String mWorldSides[] = {"s", "sv", "sz", "v", "z", "j", "jv", "jz"};
+    private String[] mWorldSides = {"s", "sv", "sz", "v", "z", "j", "jv", "jz"};
     private boolean mSvjz;
 }

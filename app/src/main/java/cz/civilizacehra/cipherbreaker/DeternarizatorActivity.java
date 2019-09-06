@@ -13,8 +13,8 @@ public class DeternarizatorActivity extends DebaseatorActivity {
     Switch mode;
     Switch direction;
     CheckBox ch;
-    ImageView images[];
-    int mapping[][] = {
+    ImageView[] images;
+    int[][] mapping = {
             { 0, 1, 2 },
             { 0, 2, 1 },
             { 1, 0, 2 },
@@ -32,12 +32,12 @@ public class DeternarizatorActivity extends DebaseatorActivity {
         commonPostCreate(3, 3, R.layout.ternaryrow);
 
         images = new ImageView[]{
-                (ImageView) findViewById(R.id.interpretation1),
-                (ImageView) findViewById(R.id.interpretation2),
-                (ImageView) findViewById(R.id.interpretation3),
-                (ImageView) findViewById(R.id.interpretation4),
-                (ImageView) findViewById(R.id.interpretation5),
-                (ImageView) findViewById(R.id.interpretation6)
+                findViewById(R.id.interpretation1),
+                findViewById(R.id.interpretation2),
+                findViewById(R.id.interpretation3),
+                findViewById(R.id.interpretation4),
+                findViewById(R.id.interpretation5),
+                findViewById(R.id.interpretation6)
         };
 
         mode = (Switch) findViewById(R.id.modeSwitch);
@@ -63,7 +63,7 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 }
             }
         });
-        direction = (Switch) findViewById(R.id.directionSwitch);
+        direction = findViewById(R.id.directionSwitch);
         direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                 for (View row : rows) {
@@ -71,7 +71,7 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 }
             }
         });
-        ch = (CheckBox) findViewById(R.id.chCheckBox);
+        ch = findViewById(R.id.chCheckBox);
         ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                 for (View row : rows) {
@@ -83,13 +83,13 @@ public class DeternarizatorActivity extends DebaseatorActivity {
 
     @Override
     protected void onRowClick(RelativeLayout layout) {
-        int values[] = new int[mBaseLength];
+        int[] values = new int[mBaseLength];
         for (int k = 0; k < mBaseLength; ++k) {
-            ImageView view = (ImageView) layout.findViewById(bits[k]);
+            ImageView view = layout.findViewById(bits[k]);
             int value = (int) view.getTag();
             values[k] = value;
         }
-        int iterate[];
+        int[] iterate;
         if (direction.isChecked()) {
             iterate = new int[]{ 2, 1, 0 };
         } else {
@@ -111,7 +111,7 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 }
             }
             if (value >= 0 && value <= mBaseMax) {
-                TextView text = (TextView) layout.findViewById(results[i]);
+                TextView text = layout.findViewById(results[i]);
                 String letter = ch.isChecked() ? getChLetter(value + offset) : getLetter(value + offset);
                 text.setText(letter);
             }

@@ -20,11 +20,11 @@ import java.util.Random;
 
 public class PrincipTrainerActivity extends Activity {
 
-    ImageView principy[] = new ImageView[6];
+    ImageView[] principy = new ImageView[6];
     Switch invertSwitch;
 
     ImageView imageView;
-    ImageView solutions[] = new ImageView[5];
+    ImageView[] solutions = new ImageView[5];
 
     TextView textView;
     Button nextButton;
@@ -35,7 +35,7 @@ public class PrincipTrainerActivity extends Activity {
     int mDefaultColor = 0xFFBBBBBB;
 
     boolean mInvert;
-    String mPrincipy[] = {"n", "m", "b", "s", "bin", "t"};
+    String[] mPrincipy = {"n", "m", "b", "s", "bin", "t"};
     String mPrincip = "n";
     Random mRandom = new Random();
     int mCurrent = 0, mLast = 0;
@@ -45,12 +45,12 @@ public class PrincipTrainerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_princip_trainer);
 
-        principy[0] = (ImageView)findViewById(R.id.nImage);
-        principy[1] = (ImageView)findViewById(R.id.mImage);
-        principy[2] = (ImageView)findViewById(R.id.bImage);
-        principy[3] = (ImageView)findViewById(R.id.sImage);
-        principy[4] = (ImageView)findViewById(R.id.binImage);
-        principy[5] = (ImageView)findViewById(R.id.tImage);
+        principy[0] = findViewById(R.id.nImage);
+        principy[1] = findViewById(R.id.mImage);
+        principy[2] = findViewById(R.id.bImage);
+        principy[3] = findViewById(R.id.sImage);
+        principy[4] = findViewById(R.id.binImage);
+        principy[5] = findViewById(R.id.tImage);
 
         for (int i = 0; i < mPrincipy.length; ++i) {
             final int ii = i;
@@ -74,7 +74,7 @@ public class PrincipTrainerActivity extends Activity {
             });
         }
 
-        invertSwitch = (Switch)findViewById(R.id.invertSwitch);
+        invertSwitch = findViewById(R.id.invertSwitch);
         invertSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -85,13 +85,13 @@ public class PrincipTrainerActivity extends Activity {
             }
         });
 
-        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
 
-        solutions[0] = (ImageView)findViewById(R.id.solution1);
-        solutions[1] = (ImageView)findViewById(R.id.solution2);
-        solutions[2] = (ImageView)findViewById(R.id.solution3);
-        solutions[3] = (ImageView)findViewById(R.id.solution4);
-        solutions[4] = (ImageView)findViewById(R.id.solution5);
+        solutions[0] = findViewById(R.id.solution1);
+        solutions[1] = findViewById(R.id.solution2);
+        solutions[2] = findViewById(R.id.solution3);
+        solutions[3] = findViewById(R.id.solution4);
+        solutions[4] = findViewById(R.id.solution5);
 
         for (int i = 0; i < 5; ++i) {
             final int ii = i;
@@ -131,16 +131,16 @@ public class PrincipTrainerActivity extends Activity {
             });
         }
 
-        textView = (TextView)findViewById(R.id.textView);
+        textView = findViewById(R.id.textView);
 
-        nextButton = (Button)findViewById(R.id.nextButton);
+        nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 newLetter();
             }
         });
 
-        solutionButton = (Button)findViewById(R.id.solutionButton);
+        solutionButton = findViewById(R.id.solutionButton);
         solutionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 solutions[mCurrent].setBackgroundColor(mHihglightColor);

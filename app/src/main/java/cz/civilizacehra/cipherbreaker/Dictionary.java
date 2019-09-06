@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 class Dictionary {
     Dictionary(AssetManager manager, String filename, TextView results) {
-        int mStartTime;
         mManager = manager;
         mFilename = filename;
         mResults = results;
@@ -157,7 +156,7 @@ class Dictionary {
         mResults.setText("Result: (" + counter + ")" + computationTime() + "\n" + resultStr);
     }
 
-    protected String computationTime() {
+    String computationTime() {
         return "  " + (System.currentTimeMillis() - mStartTime) / 1000.0 + "s ";
     }
 
@@ -165,6 +164,6 @@ class Dictionary {
 
     private AssetManager mManager;
     private String mFilename;
-    protected long mStartTime;
+    long mStartTime;
     TextView mResults;
 }

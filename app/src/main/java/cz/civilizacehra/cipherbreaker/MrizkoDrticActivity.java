@@ -2,7 +2,6 @@ package cz.civilizacehra.cipherbreaker;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,8 +19,6 @@ public class MrizkoDrticActivity extends Activity {
     EditText inputBox;
     TextView results;
 
-    ColorStateList textColors;
-
     boolean isTrieInitialized;
 
     static {
@@ -36,9 +33,9 @@ public class MrizkoDrticActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mrizko_drtic);
 
-        goBtn = (Button) findViewById(R.id.GoBtn);
-        inputBox = (EditText) findViewById(R.id.inputEditText);
-        results = (TextView) findViewById(R.id.resultTextView);
+        goBtn = findViewById(R.id.GoBtn);
+        inputBox = findViewById(R.id.inputEditText);
+        results = findViewById(R.id.resultTextView);
 
         try {
             InputStream inputStream = getApplicationContext().getAssets().open("cs_CZ_openoffice.canon");

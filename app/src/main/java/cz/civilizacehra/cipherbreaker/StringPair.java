@@ -30,7 +30,7 @@ class StringPair {
     {
         int index = input.indexOf(":");
         if (index > 0 && index < input.length()) {
-            return new StringPair(input.substring(0, index), input.substring(index + 1, input.length()));
+            return new StringPair(input.substring(0, index), input.substring(index + 1));
         } else {
             return new StringPair(input, input);
         }

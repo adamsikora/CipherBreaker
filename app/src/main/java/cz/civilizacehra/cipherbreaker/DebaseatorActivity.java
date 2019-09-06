@@ -29,11 +29,11 @@ public class DebaseatorActivity extends Activity {
     int mBaseMax = 0;
     int mRowLayout = 0;
 
-    int bits[];
-    int results[];
+    int[] bits;
+    int[] results;
 
-    final String alphabet[] = {"", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-    final String chAlphabet[] = {"", "A", "B", "C", "D", "E", "F", "G", "H", "CH", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+    final String[] alphabet = {"", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+    final String[] chAlphabet = {"", "A", "B", "C", "D", "E", "F", "G", "H", "CH", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class DebaseatorActivity extends Activity {
         mBaseMax = (int)Math.pow(base, baseLength) - 1;
 
         mRowLayout = rowLayout;
-        alphabetStart = (RadioGroup) findViewById(R.id.startRadioGroup);
+        alphabetStart = findViewById(R.id.startRadioGroup);
 
         alphabetStart.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup arg0, int id) {
@@ -58,9 +58,9 @@ public class DebaseatorActivity extends Activity {
 
         mLayoutInflater = getLayoutInflater();
 
-        rowsLayout = (LinearLayout) findViewById(R.id.rowsLayout);
+        rowsLayout = findViewById(R.id.rowsLayout);
 
-        numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+        numberPicker = findViewById(R.id.numberPicker);
         numberPicker.setMaxValue(30);
         numberPicker.setMinValue(0);
         loadNRows();
@@ -100,11 +100,11 @@ public class DebaseatorActivity extends Activity {
 
     protected final void addRow() {
         final RelativeLayout layout = (RelativeLayout) mLayoutInflater.inflate(mRowLayout, null, false);
-        rows.add((View)layout);
-        rowsLayout.addView((View)layout);
+        rows.add(layout);
+        rowsLayout.addView(layout);
 
         for (int j = 0; j < mBaseLength; ++j) {
-            ImageView view = (ImageView) layout.findViewById(bits[j]);
+            ImageView view = layout.findViewById(bits[j]);
             view.setTag(0);
             view.setImageResource(getResources().getIdentifier("@android:drawable/alert_light_frame", null, null));
         }
@@ -116,7 +116,7 @@ public class DebaseatorActivity extends Activity {
         });
 
         for (int j = 0; j < mBaseLength; ++j) {
-            final ImageView view = (ImageView) layout.findViewById(bits[j]);
+            final ImageView view = layout.findViewById(bits[j]);
             view.setOnClickListener(new View.OnClickListener()
             {
                 private int counter = (int) view.getTag();

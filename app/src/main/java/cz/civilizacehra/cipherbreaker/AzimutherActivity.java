@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +36,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
     protected GoogleMap mMap;
 
     protected EditText latEditText, lonEditText, distEditText, angleEditText;
-    protected Button pickFromMapButton, currentLocationButton;
+    protected Button currentLocationButton;
 
     ProgressDialog dialog;
 

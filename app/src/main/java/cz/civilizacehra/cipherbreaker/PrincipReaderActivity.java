@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class PrincipReaderActivity extends Activity {
 
-    ImageView principy[] = new ImageView[6];
+    ImageView[] principy = new ImageView[6];
 
     TextView solutionView;
     Button nextButton;
@@ -31,7 +31,7 @@ public class PrincipReaderActivity extends Activity {
     int mHihglightColor = 0xFF24872F;
     int mDefaultColor = 0xFFBBBBBB;
 
-    String mPrincipy[] = {"n", "m", "b", "s", "bin", "t"};
+    String[] mPrincipy = {"n", "m", "b", "s", "bin", "t"};
     String mPrincip = "n";
     Vector<String> mWords = new Vector<>();
     String mCurrentWord = "";
@@ -42,12 +42,12 @@ public class PrincipReaderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_princip_reader);
 
-        principy[0] = (ImageView)findViewById(R.id.nImage);
-        principy[1] = (ImageView)findViewById(R.id.mImage);
-        principy[2] = (ImageView)findViewById(R.id.bImage);
-        principy[3] = (ImageView)findViewById(R.id.sImage);
-        principy[4] = (ImageView)findViewById(R.id.binImage);
-        principy[5] = (ImageView)findViewById(R.id.tImage);
+        principy[0] = findViewById(R.id.nImage);
+        principy[1] = findViewById(R.id.mImage);
+        principy[2] = findViewById(R.id.bImage);
+        principy[3] = findViewById(R.id.sImage);
+        principy[4] = findViewById(R.id.binImage);
+        principy[5] = findViewById(R.id.tImage);
 
         for (int i = 0; i < mPrincipy.length; ++i) {
             final int ii = i;
@@ -71,23 +71,23 @@ public class PrincipReaderActivity extends Activity {
             });
         }
 
-        solutionView = (TextView)findViewById(R.id.solutionView);
+        solutionView = findViewById(R.id.solutionView);
 
-        nextButton = (Button)findViewById(R.id.nextButton);
+        nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 newWord();
             }
         });
 
-        solutionButton = (Button)findViewById(R.id.solutionButton);
+        solutionButton = findViewById(R.id.solutionButton);
         solutionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 solutionView.setText(mCurrentWord);
             }
         });
 
-        wordGridLayout = (GridLayout)findViewById(R.id.wordGridLayout);
+        wordGridLayout = findViewById(R.id.wordGridLayout);
 
         setImage(principy[0], "principy/n/7.png");
         setImage(principy[1], "principy/m/16.png");
@@ -99,8 +99,8 @@ public class PrincipReaderActivity extends Activity {
         try {
             InputStream inputStream = getApplicationContext().getAssets().open("cs_CZ_openoffice.canon");
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
 
+            String line;
             while((line = in.readLine()) != null) {
                 StringPair word = StringPair.fromString(line);
                 String first = word.getFirst();
