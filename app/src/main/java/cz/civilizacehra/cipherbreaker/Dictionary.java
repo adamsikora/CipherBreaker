@@ -45,7 +45,6 @@ class Dictionary {
             }
         }
 
-
         try {
             InputStream inputStream = mContext.getAssets().open(mFilename);
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
@@ -141,14 +140,15 @@ class Dictionary {
     }
 
     protected void conclude(boolean sort) {
-        String resultStr = "";
+        StringBuilder resultStr = new StringBuilder();
         int counter = 0;
         if (sort) {
             Collections.sort(mList);
         }
         for (String point : mList) {
             ++counter;
-            resultStr += point + "\n";
+            String row = point + "\n";
+            resultStr.append(row);
             if (counter >= 3000) {
                 break;
             }

@@ -88,12 +88,13 @@ class MapDictionary extends Dictionary {
 
     @Override
     protected void conclude(boolean sort) {
-        String resultStr = "";
+        StringBuilder resultStr = new StringBuilder();
         int counter = 0;
         Collections.sort(mSortedResults);
         for (Point point : mSortedResults) {
             ++counter;
-            resultStr += point.name + " (" + Math.round(point.distance) + "m)\n";
+            String row = point.name + " (" + Math.round(point.distance) + "m)\n";
+            resultStr.append(row);
             if (counter >= 3000) {
                 break;
             }
