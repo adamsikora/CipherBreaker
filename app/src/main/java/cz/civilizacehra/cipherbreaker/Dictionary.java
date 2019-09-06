@@ -34,12 +34,14 @@ class Dictionary {
         pattern = Pattern.compile(input);
 
         int[] charCount = new int[26];
-        for (int i = 0; i < input.length(); ++i) {
-            int position = input.charAt(i) - 'a';
-            if (position >= 0 && position < 26) {
-                ++charCount[position];
-            } else {
-                Utils.toastIt(mContext, "Invalid position in alphabet");
+        if (!regexp) {
+            for (int i = 0; i < input.length(); ++i) {
+                int position = input.charAt(i) - 'a';
+                if (position >= 0 && position < 26) {
+                    ++charCount[position];
+                } else {
+                    Utils.toastIt(mContext, "Invalid input letter \"" + input.charAt(i) + "\"");
+                }
             }
         }
 
@@ -87,7 +89,7 @@ class Dictionary {
                         if (position >= 0 && position < 26) {
                             ++chars[position];
                         } else {
-                            Utils.toastIt(mContext, "Invalid position in alphabet");
+                            Utils.toastIt(mContext, "Invalid letter in dictionary");
                         }
                     }
                     for (int i = 0; i < 26; ++i) {
@@ -114,12 +116,10 @@ class Dictionary {
     private int levenshteinDistance(String a, String b) {
         a = a.toLowerCase();
         b = b.toLowerCase();
-        // i == 0
         int [] costs = new int [b.length() + 1];
         for (int j = 0; j < costs.length; j++)
             costs[j] = j;
         for (int i = 1; i <= a.length(); i++) {
-            // j == 0; nw = lev(i - 1, j)
             costs[0] = i;
             int nw = i - 1;
             for (int j = 1; j <= b.length(); j++) {
