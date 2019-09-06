@@ -1,28 +1,25 @@
 package cz.civilizacehra.cipherbreaker;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
 public class DebaseatorActivity extends Activity {
 
-    private SharedPreferences sharedPreferences;
-
-    NumberPicker numberPicker;
     LinearLayout rowsLayout;
     ArrayList<View> rows = new ArrayList<>();
     LayoutInflater mLayoutInflater;
     RadioGroup alphabetStart;
+    ScrollView mScrollView;
 
     int mBase = 0;
     int mBaseLength = 0;
@@ -60,28 +57,22 @@ public class DebaseatorActivity extends Activity {
 
         rowsLayout = findViewById(R.id.rowsLayout);
 
-        numberPicker = findViewById(R.id.numberPicker);
-        numberPicker.setMaxValue(30);
-        numberPicker.setMinValue(0);
-        loadNRows();
-        numberPicker.setWrapSelectorWheel(false);
-
-        for (int i = 0; i < numberPicker.getValue(); ++i) {
+        for (int i = 0; i < 30; ++i) {
             addRow();
         }
 
-        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                while (rows.size() < newVal) {
-                    addRow();
-                }
-                while (rows.size() > newVal) {
-                    removeRow();
-                }
-                saveNRows();
-            }
-        });
+        mScrollView = findViewById(R.id.scrollView);
+        mScrollView.getViewTreeObserver()
+                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (!mScrollView.canScrollVertically(1)) {
+                            for (int i = 0; i < 30; ++i) {
+                                addRow();
+                            }
+                        }
+                    }
+                });
     }
 
     protected final String getLetter(int i) {
@@ -141,22 +132,4 @@ public class DebaseatorActivity extends Activity {
     }
 
     protected void onRowClick(RelativeLayout layout) {}
-
-    protected final void removeRow() {
-        int size = rows.size();
-        rowsLayout.removeView(rows.get(size-1));
-        rows.remove(size-1);
-    }
-
-    protected final void saveNRows(){
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("nRows", numberPicker.getValue());
-        editor.apply();
-    }
-
-    protected final void loadNRows(){
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        numberPicker.setValue(sharedPreferences.getInt("nRows", 15));
-    }
 }

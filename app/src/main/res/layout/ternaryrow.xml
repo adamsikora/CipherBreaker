@@ -51,6 +51,7 @@
 
         <TextView
             android:id="@+id/result6"
+            android:layout_marginRight="1sp"
             style="@style/result_style" />
     </LinearLayout>
 
