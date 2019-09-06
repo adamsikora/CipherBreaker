@@ -140,7 +140,7 @@ public class DebaseatorActivity extends Activity {
         }
     }
 
-    protected void onRowClick(RelativeLayout layout) {};
+    protected void onRowClick(RelativeLayout layout) {}
 
     protected final void removeRow() {
         int size = rows.size();

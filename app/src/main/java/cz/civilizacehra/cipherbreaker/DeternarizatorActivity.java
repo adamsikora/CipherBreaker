@@ -40,7 +40,7 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 findViewById(R.id.interpretation6)
         };
 
-        mode = (Switch) findViewById(R.id.modeSwitch);
+        mode = findViewById(R.id.modeSwitch);
         mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                 if (isChecked) {

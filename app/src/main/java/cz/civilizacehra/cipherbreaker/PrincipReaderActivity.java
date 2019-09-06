@@ -108,7 +108,7 @@ public class PrincipReaderActivity extends Activity {
                 mWords.add(first);
             }
         } catch (java.io.IOException e) {
-
+            Utils.toastIt(getApplicationContext() , "Error loading dictionary file");
         }
 
         newWord();

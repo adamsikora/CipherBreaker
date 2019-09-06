@@ -1,6 +1,6 @@
 package cz.civilizacehra.cipherbreaker;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -12,8 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Dictionary {
-    Dictionary(AssetManager manager, String filename, TextView results) {
-        mManager = manager;
+    Dictionary(Context context, String filename, TextView results) {
+        mContext = context;
         mFilename = filename;
         mResults = results;
     }
@@ -39,13 +39,13 @@ class Dictionary {
             if (position >= 0 && position < 26) {
                 ++charCount[position];
             } else {
-                assert(false);
+                Utils.toastIt(mContext, "Invalid position in alphabet");
             }
         }
 
 
         try {
-            InputStream inputStream = mManager.open(mFilename);
+            InputStream inputStream = mContext.getAssets().open(mFilename);
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line;
 
@@ -87,7 +87,7 @@ class Dictionary {
                         if (position >= 0 && position < 26) {
                             ++chars[position];
                         } else {
-                            assert (false);
+                            Utils.toastIt(mContext, "Invalid position in alphabet");
                         }
                     }
                     for (int i = 0; i < 26; ++i) {
@@ -107,7 +107,7 @@ class Dictionary {
                 }
             }
         } catch (java.io.IOException e) {
-
+            Utils.toastIt(mContext, "Error loading dictionary file");
         }
     }
 
@@ -162,7 +162,7 @@ class Dictionary {
 
     private ArrayList<String> mList = new ArrayList<>();
 
-    private AssetManager mManager;
+    private Context mContext;
     private String mFilename;
     long mStartTime;
     TextView mResults;

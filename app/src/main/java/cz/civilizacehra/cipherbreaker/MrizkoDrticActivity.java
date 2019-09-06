@@ -37,19 +37,6 @@ public class MrizkoDrticActivity extends Activity {
         inputBox = findViewById(R.id.inputEditText);
         results = findViewById(R.id.resultTextView);
 
-        try {
-            InputStream inputStream = getApplicationContext().getAssets().open("cs_CZ_openoffice.canon");
-            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-
-            while((line = in.readLine()) != null) {
-                StringPair word = StringPair.fromString(line);
-                //mTrieMap.put(word.getFirst(), "");
-            }
-        } catch (java.io.IOException e) {
-
-        }
-
         if (goBtn != null) {
             goBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,7 +51,7 @@ public class MrizkoDrticActivity extends Activity {
 
                     try {
                         if (!isTrieInitialized) {
-                            initializeTrie((Object)getApplicationContext().getAssets());
+                            initializeTrie(getApplicationContext().getAssets());
                             isTrieInitialized = true;
                         }
                         long start = System.currentTimeMillis();

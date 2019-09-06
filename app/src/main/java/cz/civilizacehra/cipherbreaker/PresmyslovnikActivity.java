@@ -62,8 +62,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         source.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup arg0, int id) {
                 switch (id) {
-                    case -1:
-                        break;
                     case R.id.mapBrnoRadioBtn:
                     case R.id.mapPragueRadioBtn:
                         if (mLocation == null) {
@@ -86,12 +84,12 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         loadRadioButtons();
         refreshSvjz(source.getCheckedRadioButtonId(), mode.getCheckedRadioButtonId());
 
-        enDict = new Dictionary(getApplicationContext().getAssets(), "en.canon", results);
-        czPJDict = new Dictionary(getApplicationContext().getAssets(), "podst_jm_cz.canon", results);
-        czDict = new Dictionary(getApplicationContext().getAssets(), "cs_CZ_openoffice.canon", results);
-        czBigDict = new Dictionary(getApplicationContext().getAssets(), "cs.canon", results);
-        brnoMap = new MapDictionary(getApplicationContext().getAssets(), "map_brno.sifrohal", results);
-        pragueMap = new MapDictionary(getApplicationContext().getAssets(), "map_prague.sifrohal", results);
+        enDict = new Dictionary(getApplicationContext(), "en.canon", results);
+        czPJDict = new Dictionary(getApplicationContext(), "podst_jm_cz.canon", results);
+        czDict = new Dictionary(getApplicationContext(), "cs_CZ_openoffice.canon", results);
+        czBigDict = new Dictionary(getApplicationContext(), "cs.canon", results);
+        brnoMap = new MapDictionary(getApplicationContext(), "map_brno.sifrohal", results);
+        pragueMap = new MapDictionary(getApplicationContext(), "map_prague.sifrohal", results);
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 

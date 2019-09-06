@@ -1,5 +1,6 @@
 package cz.civilizacehra.cipherbreaker;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.location.Location;
 import android.widget.TextView;
@@ -27,8 +28,8 @@ class MapDictionary extends Dictionary {
         }
     }
 
-    MapDictionary(AssetManager manager, String filename, TextView results) {
-        super(manager, filename, results);
+    MapDictionary(Context context, String filename, TextView results) {
+        super(context, filename, results);
         mSvjz = false;
     }
 
@@ -40,7 +41,7 @@ class MapDictionary extends Dictionary {
         mLocation = location;
     }
     private Location mLocation;
-    private ArrayList<Point> mSortedResults = new ArrayList<Point>();
+    private ArrayList<Point> mSortedResults = new ArrayList<>();
 
     @Override
     public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
@@ -68,8 +69,8 @@ class MapDictionary extends Dictionary {
     protected void matched(String match) {
 
         String[] split = match.split(";");
-        Double lat = .0;
-        Double lon = .0;
+        double lat = .0;
+        double lon = .0;
         String name = split[0] + mSuffix;
         if (split.length >= 3) {
             lat = Double.parseDouble(split[split.length - 2]);
