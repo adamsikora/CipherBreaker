@@ -24,12 +24,12 @@
     </style>
 
     <style name="result_type_style">
-        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_width">@dimen/cube_size_p1</item>
         <item name="android:layout_height">@dimen/half_cube_size</item>
     </style>
 
     <style name="ternary_result_type_style">
-        <item name="android:layout_width">@dimen/cube_size</item>
+        <item name="android:layout_width">@dimen/cube_size_p1</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>

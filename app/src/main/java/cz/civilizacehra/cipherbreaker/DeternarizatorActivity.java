@@ -40,16 +40,26 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 findViewById(R.id.interpretation6)
         };
 
+        direction = findViewById(R.id.directionSwitch);
+        direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+                for (View row : rows) {
+                    row.callOnClick();
+                }
+            }
+        });
         mode = findViewById(R.id.modeSwitch);
         mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                 if (isChecked) {
-                    images[0].setImageResource(R.drawable.ternaryorder1);
-                    images[1].setImageResource(R.drawable.ternaryorder2);
-                    images[2].setImageResource(R.drawable.ternaryorder3);
-                    images[3].setImageResource(R.drawable.ternaryorder4);
-                    images[4].setImageResource(R.drawable.ternaryorder5);
-                    images[5].setImageResource(R.drawable.ternaryorder6);
+                    images[0].setImageResource(R.drawable.ternaryorder6);
+                    images[1].setImageResource(R.drawable.ternaryorder5);
+                    images[2].setImageResource(R.drawable.ternaryorder4);
+                    images[3].setImageResource(R.drawable.ternaryorder3);
+                    images[4].setImageResource(R.drawable.ternaryorder2);
+                    images[5].setImageResource(R.drawable.ternaryorder1);
+
+                    direction.setEnabled(false);
                 } else {
                     images[0].setImageResource(R.drawable.ternary1);
                     images[1].setImageResource(R.drawable.ternary2);
@@ -57,15 +67,9 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                     images[3].setImageResource(R.drawable.ternary4);
                     images[4].setImageResource(R.drawable.ternary5);
                     images[5].setImageResource(R.drawable.ternary6);
+
+                    direction.setEnabled(true);
                 }
-                for (View row : rows) {
-                    row.callOnClick();
-                }
-            }
-        });
-        direction = findViewById(R.id.directionSwitch);
-        direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                 for (View row : rows) {
                     row.callOnClick();
                 }
@@ -100,7 +104,7 @@ public class DeternarizatorActivity extends DebaseatorActivity {
         for (int i = 0; i < 6; ++i) {
             int value = 0;
             if (mode.isChecked()) {
-                for (int j : mapping[i]) {
+                for (int j : mapping[5 - i]) {
                     value *= mBase;
                     value += values[j];
                 }
@@ -116,29 +120,5 @@ public class DeternarizatorActivity extends DebaseatorActivity {
                 text.setText(letter);
             }
         }
-
-        /*int down = 0, up = 0;
-        for (int k = 0; k < mBaseLength; ++k) {
-            down *= mBase;
-            down += values[k];
-        }
-        for (int k = mBaseLength - 1; k >= 0; --k) {
-            up *= mBase;
-            up += values[k];
-        }
-        int offset = alphabetStart.getCheckedRadioButtonId() == R.id.rbtn0 ? 1 : 0;
-
-        if (up >= 0 && up <= mBaseMax) {
-            TextView text = (TextView) layout.findViewById(results[0]);
-            text.setText(getLetter(up + offset));
-            text = (TextView) layout.findViewById(results[1]);
-            text.setText(getLetter(mBaseMax - up + offset));
-        }
-        if (down >= 0 && down <= mBaseMax) {
-            TextView text = (TextView) layout.findViewById(results[2]);
-            text.setText(getLetter(down + offset));
-            text = (TextView) layout.findViewById(results[3]);
-            text.setText(getLetter(mBaseMax - down + offset));
-        }*/
     }
 }

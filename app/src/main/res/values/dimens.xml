@@ -20,6 +20,7 @@
     <dimen name="stats_rightcolumn_padleft">20dp</dimen>
 
     <dimen name="cube_size">36dp</dimen>
+    <dimen name="cube_size_p1">37dp</dimen>
     <dimen name="half_cube_size">18dp</dimen>
 
 

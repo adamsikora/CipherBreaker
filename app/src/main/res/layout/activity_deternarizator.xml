@@ -8,23 +8,15 @@
     <RelativeLayout
         android:id="@+id/legendLayout"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="70dp"
         android:background="@color/colorPrimary"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <Switch
-            android:id="@+id/modeSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="Value/Order" />
 
         <LinearLayout
             android:id="@+id/interpretationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/modeSwitch"
             android:orientation="horizontal">
 
             <ImageView
@@ -63,8 +55,7 @@
             android:id="@+id/startRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/chCheckBox"
             android:checkedButton="@+id/rbtn1"
             android:orientation="horizontal">
 
@@ -91,23 +82,31 @@
 
         </RadioGroup>
 
-        <Switch
-            android:id="@+id/directionSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/startRadioGroup"
-            android:layout_alignStart="@+id/startRadioGroup"
-            android:checked="true"
-            android:text="Dir " />
-
         <CheckBox
             android:id="@+id/chCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/directionSwitch"
-            android:layout_alignStart="@+id/directionSwitch"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:checked="false"
             android:text="Ch" />
+
+        <Switch
+            android:id="@+id/directionSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chCheckBox"
+            android:layout_alignStart="@+id/startRadioGroup"
+            android:checked="true"
+            android:text="Dir" />
+
+        <Switch
+            android:id="@+id/modeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chCheckBox"
+            android:layout_alignParentEnd="true"
+            android:text="Val/Ord" />
 
     </RelativeLayout>
 
