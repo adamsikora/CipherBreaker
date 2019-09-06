@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_weight="1"
         android:orientation="horizontal">
 
         <ImageView
@@ -89,7 +88,7 @@
         android:id="@+id/invertLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/answerLayout"
+        android:layout_alignEnd="@+id/answerLayout"
         android:layout_below="@+id/principleLayout"
         android:layout_centerInParent="false"
         android:layout_marginTop="20dp"
@@ -106,8 +105,6 @@
             android:id="@+id/invertSwitch"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:checked="false" />
     </LinearLayout>
 
@@ -188,8 +185,6 @@
             android:id="@+id/solutionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="22dp"
             android:text="Solution" />
 
@@ -197,8 +192,6 @@
             android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="22dp"
             android:text="Next" />
     </LinearLayout>
