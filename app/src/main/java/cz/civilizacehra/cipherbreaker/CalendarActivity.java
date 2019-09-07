@@ -63,24 +63,16 @@ public class CalendarActivity extends Activity {
 
         updateHolidays();
 
-        daySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateHolidays();
             }
             public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateHolidays();
-            }
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        dayOfWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateHolidays();
-            }
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        };
+
+        daySpinner.setOnItemSelectedListener(spinnerListener);
+        monthSpinner.setOnItemSelectedListener(spinnerListener);
+        dayOfWeekSpinner.setOnItemSelectedListener(spinnerListener);
 
         sortBySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {

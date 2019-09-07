@@ -28,7 +28,7 @@ public class Holiday {
     }
 
     String toString(boolean nameFirst) {
-        String date = String.format("%2d. %2d. (%s)", mDay, mMonth, mDayOfWeek);
+        String date = String.format(Locale.ENGLISH, "%2d. %2d. (%s)", mDay, mMonth, mDayOfWeek);
         if (nameFirst) {
             return mName + "  " + date + "\n";
         } else {

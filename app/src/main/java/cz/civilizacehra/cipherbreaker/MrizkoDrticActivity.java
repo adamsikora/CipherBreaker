@@ -9,9 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Locale;
 
 public class MrizkoDrticActivity extends Activity {
 
@@ -56,8 +54,7 @@ public class MrizkoDrticActivity extends Activity {
                         }
                         long start = System.currentTimeMillis();
                         String solutions = grindGrid(input);
-                        results.setText("Result: " + String.format("%.3f", 0.001*(System.currentTimeMillis() - start)) + "s\n");
-                        results.setText(results.getText().toString() + solutions);
+                        results.setText("Result: " + String.format(Locale.ENGLISH, "%.3f", 0.001*(System.currentTimeMillis() - start)) + "s\n" + solutions);
                     } catch (Throwable e) {
 
                     }
