@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
 import androidx.core.app.ActivityCompat;
@@ -32,7 +34,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
     EditText minLengthBox;
     EditText maxLengthBox;
     TextView results;
-    ScrollView scrollView;
     RadioGroup mode, source;
     CheckBox svjz;
 
@@ -54,7 +55,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
         minLengthBox = findViewById(R.id.minEditText);
         maxLengthBox = findViewById(R.id.maxEditText);
         results = findViewById(R.id.resultTextView);
-        scrollView = findViewById(R.id.scrollView);
         mode = findViewById(R.id.modeRadioGrp);
         source = findViewById(R.id.sourceRadioGrp);
         svjz = findViewById(R.id.svjzCheckBox);
@@ -101,7 +101,7 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
                 public void onClick(View view) {
 
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
                     int checked = mode.getCheckedRadioButtonId();
                     boolean subset = checked == R.id.subsetRadioBtn;

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -49,7 +50,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.azimutherMap);
-        mapFragment.getMapAsync(this);
+        Objects.requireNonNull(mapFragment).getMapAsync(this);
 
         latEditText = findViewById(R.id.latitudeEditText);
         lonEditText = findViewById(R.id.longitudeEditText);
@@ -92,12 +93,12 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         if (!Double.isNaN(lat) && !Double.isNaN(lon)) {
             mMap.clear();
             LatLng loc = new LatLng(lat, lon);
-            mMap.addMarker(new MarkerOptions().position(loc).icon(
+            mMap.addMarker(new MarkerOptions().position(loc).title("Start").icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
             if (!Double.isNaN(dist) && !Double.isNaN(angle)) {
                 LatLng dest = computeLatLng(lat, lon, dist, angle);
-                mMap.addMarker(new MarkerOptions().position(dest));
+                mMap.addMarker(new MarkerOptions().position(dest).title("Destination"));
                 mMap.addPolyline(new PolylineOptions().color(0xffff0000).add(loc, dest));
                 LatLng southWest = new LatLng(
                         Math.min(loc.latitude, dest.latitude),
@@ -162,6 +163,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onMapLongClick (LatLng latLng){
                 setLatLon(latLng.latitude, latLng.longitude);
+                Utils.toastIt(getApplicationContext() , "Set new starting location");
             }
         });
         mMap.getUiSettings().setRotateGesturesEnabled(false);

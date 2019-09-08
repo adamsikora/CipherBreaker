@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MrizkoDrticActivity extends Activity {
 
@@ -41,7 +42,7 @@ public class MrizkoDrticActivity extends Activity {
                 public void onClick(View view) {
 
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
                     results.setText("Result:\n");
 
@@ -56,7 +57,7 @@ public class MrizkoDrticActivity extends Activity {
                         String solutions = grindGrid(input);
                         results.setText("Result: " + String.format(Locale.ENGLISH, "%.3f", 0.001*(System.currentTimeMillis() - start)) + "s\n" + solutions);
                     } catch (Throwable e) {
-
+                        Utils.toastIt(getApplicationContext() , "Error calculating grid");
                     }
                 }
             });

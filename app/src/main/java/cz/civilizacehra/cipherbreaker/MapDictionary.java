@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.location.Location;
 import android.widget.TextView;
 

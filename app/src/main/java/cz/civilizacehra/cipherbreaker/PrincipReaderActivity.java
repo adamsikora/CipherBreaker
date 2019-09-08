@@ -138,7 +138,7 @@ public class PrincipReaderActivity extends Activity {
             newView.setLayoutParams(layoutParams);
             newView.setPadding(30,0,0,0);
             setImage(newView, "principy/" + mPrincip + "/" + index + ".png");
-            wordGridLayout.addView((View)newView);
+            wordGridLayout.addView(newView);
         }
     }
 }
