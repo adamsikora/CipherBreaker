@@ -103,11 +103,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/modeRadioGrp"
             android:clickable="false"
             android:enabled="true"
             android:hint="Known Characters"
-            android:inputType="text"
-            android:layout_toStartOf="@+id/modeRadioGrp" />
+            android:imeOptions="actionGo"
+            android:inputType="text" />
 
         <RadioGroup
             android:id="@+id/modeRadioGrp"
