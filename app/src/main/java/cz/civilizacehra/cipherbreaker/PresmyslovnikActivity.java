@@ -1,13 +1,7 @@
 package cz.civilizacehra.cipherbreaker;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
@@ -23,11 +17,9 @@ import android.widget.TextView;
 import java.util.Objects;
 import java.util.regex.PatternSyntaxException;
 
-import androidx.core.app.ActivityCompat;
+public class PresmyslovnikActivity extends LocationActivity {
 
-public class PresmyslovnikActivity extends Activity implements LocationListener {
-
-    private SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences;
 
     Button goBtn;
     EditText inputBox;
@@ -39,11 +31,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
 
     Dictionary enDict, czPJDict, czDict, czBigDict;
     MapDictionary pragueMap, brnoMap;
-
-    ProgressDialog dialog;
-
-    protected LocationManager mLocationManager;
-    protected Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,77 +101,6 @@ public class PresmyslovnikActivity extends Activity implements LocationListener 
                 }
             });
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ceaseLocation();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        /*if (mLocationManager != null) {
-            acquireLocation();
-        }*/
-    }
-
-    private void acquireLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  }, 456 );
-
-            return;
-        }
-        dialog = new ProgressDialog(PresmyslovnikActivity.this);
-        dialog.show();
-        dialog.setMessage("Getting Coordinates");
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        boolean isGps = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetwork = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (isNetwork) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        }
-        if (isGps) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-        if (!isGps && !isNetwork) {
-            dialog.dismiss();
-            Utils.toastIt(getApplicationContext() , "Enable Location");
-        }
-    }
-
-    void ceaseLocation() {
-        if (mLocationManager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mLocationManager.removeUpdates(this);
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mLocation = location;
-        dialog.dismiss();
-        ceaseLocation();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 
     void saveRadioButtons(){

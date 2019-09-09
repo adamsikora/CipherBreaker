@@ -1,12 +1,7 @@
 package cz.civilizacehra.cipherbreaker;
 
-import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,19 +24,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.Locale;
 import java.util.Objects;
 
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
+public class AzimutherActivity extends LocationActivity implements OnMapReadyCallback {
 
-public class AzimutherActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+    GoogleMap mMap;
 
-    protected GoogleMap mMap;
-
-    protected EditText latEditText, lonEditText, distEditText, angleEditText;
-    protected Button currentLocationButton;
-
-    ProgressDialog dialog;
-
-    protected LocationManager mLocationManager;
+    EditText latEditText, lonEditText, distEditText, angleEditText;
+    Button currentLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +73,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         angleEditText.setOnEditorActionListener(onEdit);
     }
 
-    protected void setLocation() {
+    void setLocation() {
         double lat = getDouble(latEditText);
         double lon = getDouble(lonEditText);
         double dist = getDouble(distEditText);
@@ -114,7 +102,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    protected double getDouble(EditText et) {
+    double getDouble(EditText et) {
         try {
             return Double.parseDouble(et.getText().toString());
         } catch(NumberFormatException e) {
@@ -122,7 +110,7 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    protected LatLng computeLatLng(double lat, double lon, double distance, double angle) {
+    LatLng computeLatLng(double lat, double lon, double distance, double angle) {
         distance = distance / 6371000;
         angle = toRad(angle);
         lat = toRad(lat);
@@ -137,12 +125,12 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         return new LatLng(toDeg(newLat), toDeg(newLon));
     }
 
-    protected double toRad(double degrees) {
+    double toRad(double degrees) {
         return degrees * Math.PI / 180;
     }
 
 
-    protected double toDeg(double radians) {
+    double toDeg(double radians) {
         return radians * 180 / Math.PI;
     }
 
@@ -169,66 +157,15 @@ public class AzimutherActivity extends FragmentActivity implements OnMapReadyCal
         mMap.getUiSettings().setRotateGesturesEnabled(false);
     }
 
-    protected void setLatLon(double latitude, double longitude) {
-        latEditText.setText(String.format(Locale.ENGLISH, "%.7f", latitude));
-        lonEditText.setText(String.format(Locale.ENGLISH, "%.7f", longitude));
-        setLocation();
-    }
-
-    private void acquireLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  }, 456 );
-
-            return;
-        }
-        dialog = new ProgressDialog(AzimutherActivity.this);
-        dialog.show();
-        dialog.setMessage("Getting Coordinates");
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        boolean isGps = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetwork = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (isNetwork) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        }
-        if (isGps) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-        if (!isGps && !isNetwork) {
-            dialog.dismiss();
-            Utils.toastIt(getApplicationContext() , "Enable Location");
-        }
-    }
-
-    private void ceaseLocation() {
-        if (mLocationManager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mLocationManager.removeUpdates(this);
-        }
-    }
-
     @Override
     public void onLocationChanged(Location location) {
         setLatLon(location.getLatitude(), location.getLongitude());
-        dialog.dismiss();
-        ceaseLocation();
+        super.onLocationChanged(location);
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+    void setLatLon(double latitude, double longitude) {
+        latEditText.setText(String.format(Locale.ENGLISH, "%.7f", latitude));
+        lonEditText.setText(String.format(Locale.ENGLISH, "%.7f", longitude));
+        setLocation();
     }
 }

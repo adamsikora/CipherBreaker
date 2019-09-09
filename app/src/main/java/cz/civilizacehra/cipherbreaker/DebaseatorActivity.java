@@ -13,7 +13,7 @@ import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
-public class DebaseatorActivity extends Activity {
+public abstract class DebaseatorActivity extends Activity {
 
     LinearLayout rowsLayout;
     ArrayList<View> rows = new ArrayList<>();
