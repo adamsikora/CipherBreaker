@@ -36,11 +36,12 @@ class Dictionary {
         int[] charCount = new int[26];
         if (!regexp) {
             for (int i = 0; i < input.length(); ++i) {
-                int position = input.charAt(i) - 'a';
+                char c = input.charAt(i);
+                int position = c - 'a';
                 if (position >= 0 && position < 26) {
                     ++charCount[position];
                 } else {
-                    Utils.toastIt(mContext, "Invalid input letter \"" + input.charAt(i) + "\"");
+                    Utils.toastIt(mContext, "Invalid input letter \"" + c + "\"");
                 }
             }
         }
@@ -49,6 +50,7 @@ class Dictionary {
             InputStream inputStream = mContext.getAssets().open(mFilename);
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line;
+            boolean assertInvalidLetters = true;
 
             while((line = in.readLine()) != null) {
                 StringPair word = StringPair.fromString(line);
@@ -84,11 +86,16 @@ class Dictionary {
                 } else {
                     int[] chars = new int[26];
                     for (int i = 0; i < first.length(); ++i) {
-                        int position = first.charAt(i) - 'a';
+                        char c = first.charAt(i);
+                        int position = c - 'a';
                         if (position >= 0 && position < 26) {
                             ++chars[position];
                         } else {
-                            Utils.toastIt(mContext, "Invalid letter in dictionary");
+                            // TODO map dictionaries contain invalid letters figure out a way to deal with it
+                            if (assertInvalidLetters && (c != ' ' && (c < '0' || c > '9'))) {
+                                Utils.toastIt(mContext, "Invalid letter in dictionary \"" + c + "\"");
+                                assertInvalidLetters = false;
+                            }
                         }
                     }
                     for (int i = 0; i < 26; ++i) {
