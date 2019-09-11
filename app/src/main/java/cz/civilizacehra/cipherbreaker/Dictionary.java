@@ -18,16 +18,27 @@ class Dictionary {
         mResults = results;
     }
 
-    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
+    public void findResults(String input, int modeId, int minLength, int maxLength) {
 
         prepare();
 
-        findResults_impl(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+        findResults_impl(input, modeId, minLength, maxLength);
 
-        conclude(hamming || levenshtein);
+        conclude(modeId == R.id.hammingRadioBtn || modeId == R.id.levenshteinRadioBtn);
     }
 
-    void findResults_impl(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
+    void findResults_impl(String input, int modeId, int minLength, int maxLength) {
+
+        boolean subset = modeId == R.id.subsetRadioBtn;
+        boolean exact = modeId == R.id.exactRadioBtn;
+        boolean superset = modeId == R.id.supersetRadioBtn;
+        boolean regexp = modeId == R.id.regExpRadioBtn;
+        boolean hamming = modeId == R.id.hammingRadioBtn;
+        boolean levenshtein = modeId == R.id.levenshteinRadioBtn;
+        if (!(subset ^ exact ^ superset ^ regexp ^ hamming ^ levenshtein)) {
+            Utils.toastIt(mContext , "No mode selected");
+            return;
+        }
 
         Pattern pattern;
         Matcher matcher;

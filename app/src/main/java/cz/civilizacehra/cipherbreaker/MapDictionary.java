@@ -43,15 +43,15 @@ class MapDictionary extends Dictionary {
     private ArrayList<Point> mSortedResults = new ArrayList<>();
 
     @Override
-    public void findResults(String input, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
+    public void findResults(String input, int modeId, int minLength, int maxLength) {
 
         prepare();
 
         setSuffix("");
-        findResults_impl(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+        findResults_impl(input, modeId, minLength, maxLength);
         if (mSvjz) {
             for (String s : mWorldSides) {
-                processWithWorldSide(input, s, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                processWithWorldSide(input, s, modeId, minLength, maxLength);
             }
         }
 
@@ -109,7 +109,7 @@ class MapDictionary extends Dictionary {
         }
     }
 
-    private void processWithWorldSide(String input, String s, boolean subset, boolean exact, boolean superset, boolean hamming, boolean levenshtein, boolean regexp, int minLength, int maxLength) {
+    private void processWithWorldSide(String input, String s, int modeId, int minLength, int maxLength) {
         String[] arr = s.split("");
         boolean contains = true;
         for (String c : arr) {
@@ -123,7 +123,7 @@ class MapDictionary extends Dictionary {
                 modified = modified.replaceFirst(c, "");
             }
             setSuffix(s);
-            findResults_impl(modified, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+            findResults_impl(modified, modeId, minLength, maxLength);
         }
     }
 

@@ -127,17 +127,7 @@ public class PresmyslovnikActivity extends LocationActivity {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-        int checked = mode.getCheckedRadioButtonId();
-        boolean subset = checked == R.id.subsetRadioBtn;
-        boolean exact = checked == R.id.exactRadioBtn;
-        boolean superset = checked == R.id.supersetRadioBtn;
-        boolean regexp = checked == R.id.regExpRadioBtn;
-        boolean hamming = checked == R.id.hammingRadioBtn;
-        boolean levenshtein = checked == R.id.levenshteinRadioBtn;
-        if (!(subset ^ exact ^ superset ^ regexp ^ hamming ^ levenshtein)) {
-            Utils.toastIt(getApplicationContext() , "No mode selected");
-            return;
-        }
+        int modeId = mode.getCheckedRadioButtonId();
         int minLength = 0;
         if (minLengthBox.getText().length() > 0) {
             minLength = Integer.parseInt(minLengthBox.getText().toString());
@@ -153,27 +143,27 @@ public class PresmyslovnikActivity extends LocationActivity {
 
         try {
             if (checkedDictionary == R.id.enRadioBtn) {
-                enDict.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                enDict.findResults(input, modeId, minLength, maxLength);
             } else if (checkedDictionary == R.id.czPJRadioBtn) {
-                czPJDict.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                czPJDict.findResults(input, modeId, minLength, maxLength);
             } else if (checkedDictionary == R.id.czRadioBtn) {
-                czDict.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                czDict.findResults(input, modeId, minLength, maxLength);
             } else if (checkedDictionary == R.id.czBigRadioBtn) {
-                czBigDict.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                czBigDict.findResults(input, modeId, minLength, maxLength);
             } else if (checkedDictionary == R.id.mapBrnoRadioBtn) {
                 if (mLocation == null) {
                     acquireLocation();
                 }
                 brnoMap.setSvjz(svjz.isEnabled() && svjz.isChecked());
                 brnoMap.setLocation(mLocation);
-                brnoMap.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                brnoMap.findResults(input, modeId, minLength, maxLength);
             } else if (checkedDictionary == R.id.mapPragueRadioBtn) {
                 if (mLocation == null) {
                     acquireLocation();
                 }
                 pragueMap.setSvjz(svjz.isEnabled() && svjz.isChecked());
                 pragueMap.setLocation(mLocation);
-                pragueMap.findResults(input, subset, exact, superset, hamming, levenshtein, regexp, minLength, maxLength);
+                pragueMap.findResults(input, modeId, minLength, maxLength);
             } else {
                 Utils.toastIt(getApplicationContext() , "No dictionary selected");
                 return;
