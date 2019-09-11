@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.TextView
 
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 import java.util.regex.Matcher
@@ -122,7 +123,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
                     }
                 }
             }
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             Utils.toastIt(mContext, "Error loading dictionary file")
         }
 

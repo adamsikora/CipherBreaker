@@ -1,13 +1,11 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
@@ -15,7 +13,6 @@ import android.widget.TextView
 import java.io.IOException
 import java.io.InputStream
 import java.util.ArrayList
-import java.util.Collections
 import java.util.Random
 
 class PrincipTrainerActivity : Activity() {

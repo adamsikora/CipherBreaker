@@ -2,7 +2,6 @@ package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.location.LocationManager
 import android.preference.PreferenceManager
 import android.os.Bundle
 import android.view.KeyEvent
@@ -13,7 +12,6 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
-import cz.civilizacehra.cipherbreaker.Dictionary
 import java.util.*
 
 import java.util.regex.PatternSyntaxException

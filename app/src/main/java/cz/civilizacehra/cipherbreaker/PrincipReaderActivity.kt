@@ -99,7 +99,7 @@ class PrincipReaderActivity : Activity() {
 
                 mWords.add(first)
             }
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             Utils.toastIt(applicationContext, "Error loading dictionary file")
         }
 

@@ -13,6 +13,7 @@ import android.widget.Switch
 import android.widget.TextView
 
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.util.ArrayList
 import java.util.Calendar
@@ -119,7 +120,7 @@ class CalendarActivity : Activity() {
                 val month = ints[1].toInt()
                 result.add(Holiday(year, month, day, data))
             }
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             Utils.toastIt(applicationContext, "Error loading holidays file")
         }
 
