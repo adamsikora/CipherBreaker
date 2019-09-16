@@ -79,8 +79,8 @@ class PresmyslovnikActivity : LocationActivity() {
         czPJDict = Dictionary(applicationContext, "podst_jm_cz.canon", results!!)
         czDict = Dictionary(applicationContext, "cs_CZ_openoffice.canon", results!!)
         czBigDict = Dictionary(applicationContext, "cs.canon", results!!)
-        brnoMap = MapDictionary(applicationContext, "map_brno.sifrohal", results!!)
-        pragueMap = MapDictionary(applicationContext, "map_prague.sifrohal", results!!)
+        pragueMap = MapDictionary(applicationContext, "Prague.cbmap", results!!)
+        brnoMap = MapDictionary(applicationContext, "Brno.cbmap", results!!)
 
         inputBox!!.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             // If the event is a key-down event on the "enter" button

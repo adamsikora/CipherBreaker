@@ -84,7 +84,7 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
         mSortedResults.sort()
         for (point in mSortedResults) {
             ++counter
-            val row = point.name + " (${round(point.distance)}m)\n"
+            val row = point.name + " (${round(point.distance).toInt()}m)\n"
             resultStr.append(row)
             if (counter >= 3000) {
                 break
