@@ -19,7 +19,7 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
 
         override fun compareTo(other: Point): Int {
             return if (this.distance != other.distance) {
-                java.lang.Float.compare(this.distance, other.distance)
+                this.distance.compareTo(other.distance)
             } else {
                 this.name.compareTo(other.name)
             }

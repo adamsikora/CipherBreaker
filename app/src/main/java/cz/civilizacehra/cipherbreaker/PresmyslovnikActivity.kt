@@ -33,6 +33,7 @@ class PresmyslovnikActivity : LocationActivity() {
     private var czBigDict: Dictionary? = null
     private var pragueMap: MapDictionary? = null
     private var brnoMap: MapDictionary? = null
+    private var czechiaMap: MapDictionary? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +82,7 @@ class PresmyslovnikActivity : LocationActivity() {
         czBigDict = Dictionary(applicationContext, "cs.canon", results!!)
         pragueMap = MapDictionary(applicationContext, "Prague.cbmap", results!!)
         brnoMap = MapDictionary(applicationContext, "Brno.cbmap", results!!)
+        czechiaMap = MapDictionary(applicationContext, "Czechia.cbmap", results!!)
 
         inputBox!!.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             // If the event is a key-down event on the "enter" button
@@ -151,6 +153,7 @@ class PresmyslovnikActivity : LocationActivity() {
                 3 -> findResults(czBigDict!!)
                 4 -> findResultsInMap(pragueMap!!)
                 5 -> findResultsInMap(brnoMap!!)
+                6 -> findResultsInMap(czechiaMap!!)
                 else -> {
                     Utils.toastIt(applicationContext, "No dictionary selected")
                     return
