@@ -13,6 +13,24 @@
     <string name="result">Results:\n</string>
     <string name="go">Go!</string>
 
+    <string-array name="presmyslovnik_mode">
+        <item>Regex</item>
+        <item>Subset</item>
+        <item>Exact</item>
+        <item>Superset</item>
+        <item>Hamming</item>
+        <item>Levenshtein</item>
+    </string-array>
+
+    <string-array name="presmyslovnik_dictionary">
+        <item>en</item>
+        <item>cz p.j.</item>
+        <item>cz</item>
+        <item>cz big</item>
+        <item>Prague</item>
+        <item>Brno</item>
+    </string-array>
+
     <string-array name="days">
         <item>-</item>
         <item>1</item>

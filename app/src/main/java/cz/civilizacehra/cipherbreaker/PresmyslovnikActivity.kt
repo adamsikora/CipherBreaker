@@ -7,11 +7,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import java.util.*
 
 import java.util.regex.PatternSyntaxException
@@ -25,8 +21,8 @@ class PresmyslovnikActivity : LocationActivity() {
     private var minLengthBox: EditText? = null
     private var maxLengthBox: EditText? = null
     internal var results: TextView? = null
-    internal var mode: RadioGroup? = null
-    internal var source: RadioGroup? = null
+    internal var modeSpinner: Spinner? = null
+    internal var dictionarySpinner: Spinner? = null
     private var svjz: CheckBox? = null
 
     private var enDict: Dictionary? = null
@@ -45,23 +41,36 @@ class PresmyslovnikActivity : LocationActivity() {
         minLengthBox = findViewById(R.id.minEditText)
         maxLengthBox = findViewById(R.id.maxEditText)
         results = findViewById(R.id.resultTextView)
-        mode = findViewById(R.id.modeRadioGrp)
-        source = findViewById(R.id.sourceRadioGrp)
+        modeSpinner = findViewById(R.id.modeSpinner)
+        dictionarySpinner = findViewById(R.id.dictionarySpinner)
         svjz = findViewById(R.id.svjzCheckBox)
 
-        source!!.setOnCheckedChangeListener { _, id ->
-            when (id) {
-                R.id.mapBrnoRadioBtn, R.id.mapPragueRadioBtn -> if (mLocation == null) {
+        val dictionarySpinnerListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                if (position in 4..5 && mLocation == null) {
                     acquireLocation()
                 }
+                refreshSvjz()
             }
-            refreshSvjz(id, mode!!.checkedRadioButtonId)
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        mode!!.setOnCheckedChangeListener { _, id -> refreshSvjz(source!!.checkedRadioButtonId, id) }
+        dictionarySpinner!!.onItemSelectedListener = dictionarySpinnerListener
 
-        loadRadioButtons()
-        refreshSvjz(source!!.checkedRadioButtonId, mode!!.checkedRadioButtonId)
+
+        val modeSpinnerListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                refreshSvjz()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        modeSpinner!!.onItemSelectedListener = modeSpinnerListener
+
+        loadSavedState()
+        refreshSvjz()
 
         enDict = Dictionary(applicationContext, "en.canon", results!!)
         czPJDict = Dictionary(applicationContext, "podst_jm_cz.canon", results!!)
@@ -81,34 +90,34 @@ class PresmyslovnikActivity : LocationActivity() {
 
         inputBox!!.requestFocus()
 
-        if (goBtn != null) {
-            goBtn!!.setOnClickListener { searchDictionary() }
-        }
+        goBtn!!.setOnClickListener { searchDictionary() }
     }
 
-    private fun saveRadioButtons() {
+    private fun saveState() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = sharedPreferences!!.edit()
-        editor.putInt("modeRadioButton", mode!!.checkedRadioButtonId)
-        editor.putInt("sourceRadioButton", source!!.checkedRadioButtonId)
+        editor.putInt("modeSpinner", modeSpinner!!.selectedItemPosition)
+        editor.putInt("dictionarySpinner", dictionarySpinner!!.selectedItemPosition)
         editor.apply()
     }
 
-    private fun loadRadioButtons() {
+    private fun loadSavedState() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        mode!!.check(sharedPreferences!!.getInt("modeRadioButton", mode!!.checkedRadioButtonId))
-        source!!.check(sharedPreferences!!.getInt("sourceRadioButton", source!!.checkedRadioButtonId))
+        modeSpinner!!.setSelection(sharedPreferences!!.getInt("modeSpinner", 0))
+        dictionarySpinner!!.setSelection(sharedPreferences!!.getInt("dictionarySpinner", 0))
     }
 
-    private fun refreshSvjz(sourceId: Int, modeId: Int) {
-        svjz!!.isEnabled = (sourceId == R.id.mapBrnoRadioBtn || sourceId == R.id.mapPragueRadioBtn) && (modeId == R.id.exactRadioBtn || modeId == R.id.supersetRadioBtn)
+    private fun refreshSvjz() {
+        val dictionaryPosition = dictionarySpinner!!.selectedItemPosition
+        val modePosition = modeSpinner!!.selectedItemPosition
+        svjz!!.isEnabled = dictionaryPosition in 4..5 && modePosition in 2..3
     }
 
     private fun searchDictionary() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(Objects.requireNonNull(currentFocus).windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-        val modeId = mode!!.checkedRadioButtonId
+        val modeId = modeSpinner!!.selectedItemPosition
         var minLength = 0
         if (minLengthBox!!.text.isNotEmpty()) {
             minLength = Integer.parseInt(minLengthBox!!.text.toString())
@@ -119,7 +128,6 @@ class PresmyslovnikActivity : LocationActivity() {
         }
         results!!.text = "Result:\n"
 
-        val checkedDictionary = source!!.checkedRadioButtonId
         val input = inputBox!!.text.toString().toLowerCase(Locale.ENGLISH)
 
         val findResults = fun(dict: Dictionary) { dict.findResults(input, modeId, minLength, maxLength)}
@@ -133,13 +141,13 @@ class PresmyslovnikActivity : LocationActivity() {
         }
 
         try {
-            when (checkedDictionary) {
-                R.id.enRadioBtn -> findResults(enDict!!)
-                R.id.czPJRadioBtn -> findResults(czPJDict!!)
-                R.id.czRadioBtn -> findResults(czDict!!)
-                R.id.czBigRadioBtn -> findResults(czBigDict!!)
-                R.id.mapBrnoRadioBtn -> findResultsInMap(brnoMap!!)
-                R.id.mapPragueRadioBtn -> findResultsInMap(pragueMap!!)
+            when (dictionarySpinner!!.selectedItemPosition) {
+                0 -> findResults(enDict!!)
+                1 -> findResults(czPJDict!!)
+                2 -> findResults(czDict!!)
+                3 -> findResults(czBigDict!!)
+                4 -> findResultsInMap(pragueMap!!)
+                5 -> findResultsInMap(brnoMap!!)
                 else -> {
                     Utils.toastIt(applicationContext, "No dictionary selected")
                     return
@@ -148,9 +156,9 @@ class PresmyslovnikActivity : LocationActivity() {
         } catch (e: PatternSyntaxException) {
             Utils.toastIt(applicationContext, "Invalid regex syntax")
         } catch (e: Throwable) {
-            Utils.toastIt(applicationContext, "Unknown error")
+            Utils.toastIt(applicationContext, "Unknown error ${e.message}")
         }
 
-        saveRadioButtons()
+        saveState()
     }
 }

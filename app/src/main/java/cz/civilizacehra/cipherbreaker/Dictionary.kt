@@ -19,18 +19,18 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
     open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int) {
         prepare()
         findResults_impl(input, modeId, minLength, maxLength)
-        conclude(modeId == R.id.hammingRadioBtn || modeId == R.id.levenshteinRadioBtn)
+        conclude(modeId in 3..4)
     }
 
     fun findResults_impl(input: String, modeId: Int, minLength: Int, maxLength: Int) {
 
-        val subset = modeId == R.id.subsetRadioBtn
-        val exact = modeId == R.id.exactRadioBtn
-        val superset = modeId == R.id.supersetRadioBtn
-        val regexp = modeId == R.id.regExpRadioBtn
-        val hamming = modeId == R.id.hammingRadioBtn
-        val levenshtein = modeId == R.id.levenshteinRadioBtn
-        if (!(subset xor exact xor superset xor regexp xor hamming xor levenshtein)) {
+        val regex = modeId == 0
+        val subset = modeId == 1
+        val exact = modeId == 2
+        val superset = modeId == 3
+        val hamming = modeId == 4
+        val levenshtein = modeId == 5
+        if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein)) {
             Utils.toastIt(mContext, "No mode selected")
             return
         }
@@ -39,7 +39,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
         val pattern = Pattern.compile(input)
 
         val charCount = IntArray(26)
-        if (!regexp) {
+        if (!regex and !hamming) {
             for (i in 0 until input.length) {
                 val c = input[i]
                 val position = c - 'a'
@@ -72,7 +72,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
                         || first!!.length < minLength || first.length > maxLength) {
                     continue
                 }
-                if (regexp) {
+                if (regex) {
                     matcher = pattern.matcher(first)
                     if (matcher.matches()) {
                         matched(word.second!!)
