@@ -60,31 +60,33 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         angleEditText.setOnEditorActionListener(onEdit)
     }
 
-    private fun setLocation() {
+    private fun setLocation(move: Boolean = true) {
         val lat = getDouble(latEditText)
         val lon = getDouble(lonEditText)
         val dist = getDouble(distEditText)
         val angle = getDouble(angleEditText)
-        if (!java.lang.Double.isNaN(lat) && !java.lang.Double.isNaN(lon)) {
+        if (!lat.isNaN() && !lon.isNaN()) {
             mMap!!.clear()
             val loc = LatLng(lat, lon)
             mMap!!.addMarker(MarkerOptions().position(loc).title("Start").icon(
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
 
-            if (!java.lang.Double.isNaN(dist) && !java.lang.Double.isNaN(angle)) {
+            if (!dist.isNaN() && !angle.isNaN()) {
                 val dest = computeLatLng(lat, lon, dist, angle)
                 mMap!!.addMarker(MarkerOptions().position(dest).title("Destination"))
                 mMap!!.addPolyline(PolylineOptions().color(-0x10000).add(loc, dest))
-                val southWest = LatLng(
-                        min(loc.latitude, dest.latitude),
-                        min(loc.longitude, dest.longitude))
-                val northEast = LatLng(
-                        max(loc.latitude, dest.latitude),
-                        max(loc.longitude, dest.longitude))
-                val bounds = LatLngBounds(southWest, northEast)
-                mMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300))
-            } else {
-                mMap!!.moveCamera(CameraUpdateFactory.newLatLng(loc))
+                if (move) {
+                    val southWest = LatLng(
+                            min(loc.latitude, dest.latitude),
+                            min(loc.longitude, dest.longitude))
+                    val northEast = LatLng(
+                            max(loc.latitude, dest.latitude),
+                            max(loc.longitude, dest.longitude))
+                    val bounds = LatLngBounds(southWest, northEast)
+                    mMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300))
+                }
+            } else if (move) {
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.toFloat()))
             }
         }
     }
@@ -93,7 +95,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         return try {
             et.text.toString().toDouble()
         } catch (e: NumberFormatException) {
-            java.lang.Double.NaN
+            Double.NaN
         }
 
     }
@@ -134,20 +136,20 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         mMap!!.setOnMapLongClickListener { latLng ->
-            setLatLon(latLng.latitude, latLng.longitude)
+            setLatLon(latLng.latitude, latLng.longitude, false)
             Utils.toastIt(applicationContext, "Set new starting location")
         }
         mMap!!.uiSettings.isRotateGesturesEnabled = false
     }
 
     override fun onLocationChanged(location: Location) {
-        setLatLon(location.latitude, location.longitude)
+        setLatLon(location.latitude, location.longitude, true)
         super.onLocationChanged(location)
     }
 
-    private fun setLatLon(latitude: Double, longitude: Double) {
+    private fun setLatLon(latitude: Double, longitude: Double, move: Boolean) {
         latEditText.setText(String.format(Locale.ENGLISH, "%.7f", latitude))
         lonEditText.setText(String.format(Locale.ENGLISH, "%.7f", longitude))
-        setLocation()
+        setLocation(move)
     }
 }
