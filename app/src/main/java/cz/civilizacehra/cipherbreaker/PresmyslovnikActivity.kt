@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.os.Bundle
+import android.text.InputType
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_presmyslovnik.*
 import java.util.*
 
 import java.util.regex.PatternSyntaxException
@@ -21,8 +23,8 @@ class PresmyslovnikActivity : LocationActivity() {
     private var minLengthBox: EditText? = null
     private var maxLengthBox: EditText? = null
     internal var results: TextView? = null
-    internal var modeSpinner: Spinner? = null
-    internal var dictionarySpinner: Spinner? = null
+    private var modeSpinner: Spinner? = null
+    private var dictionarySpinner: Spinner? = null
     private var svjz: CheckBox? = null
 
     private var enDict: Dictionary? = null
@@ -62,6 +64,7 @@ class PresmyslovnikActivity : LocationActivity() {
         val modeSpinnerListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 refreshSvjz()
+                inputEditText.inputType = if (position >= 6) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}

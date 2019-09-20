@@ -13,6 +13,52 @@ import kotlin.math.min
 
 internal open class Dictionary(private val mContext: Context, private val mFilename: String, var mResults: TextView) {
 
+    private val mCountsLists = arrayOf(
+            arrayOf( // Morse
+                    "", // 0
+                    "et", // 1
+                    "aimn", // 2
+                    "dgkorsuw", // 3
+                    "bcfhjlpqvxyz" //4
+            ),
+            arrayOf( // Braille
+                    "", // 0
+                    "a", // 1
+                    "bceik", // 2
+                    "dfhjlmosu", // 3
+                    "gnprtvxz", // 4
+                    "qwy" // 5
+            ),
+            arrayOf( // Segments
+                    "", // 0
+                    "", // 1
+                    "ir", // 2
+                    "clnu", // 3
+                    "fhjoty", // 4
+                    "bdegkmpqsvxz", // 5
+                    "aw" // 6
+            ),
+            arrayOf( // Moves
+                    "", // 0
+                    "i", // 1
+                    "cjltvx", // 2
+                    "acdfhjknpsuyz", // 3
+                    "egmorw", // 4
+                    "bqs" // 5
+            ),
+            arrayOf( // Holes
+                    "cefghijklmnstuvwxyz", // 0
+                    "adopqr", // 1
+                    "b" // 2
+            ),
+            arrayOf( // Ends
+                    "bdo", // 0
+                    "p", // 1
+                    "acgijlmnqrsuvwz", // 2
+                    "efty", // 3
+                    "hkx" // 4
+            )
+    )
     private val mList = ArrayList<String>()
     var mStartTime: Long = 0
 
@@ -30,7 +76,10 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
         val superset = modeId == 3
         val hamming = modeId == 4
         val levenshtein = modeId == 5
-        if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein)) {
+        val countMode = modeId >= 6
+        val counts = if (countMode) mCountsLists[modeId - 6] else null
+        val countValues = if (countMode) ArrayList<Int>() else null
+        if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein xor countMode)) {
             Utils.toastIt(mContext, "No mode selected")
             return
         }
@@ -39,7 +88,24 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
         val pattern = Pattern.compile(input)
 
         val charCount = IntArray(26)
-        if (!regex and !hamming) {
+        if (countMode) {
+            for (i in 0 until input.length) {
+                val c = input[i]
+                val position = c - '0'
+                if (position > 9) {
+                    Utils.toastIt(mContext, "Invalid input letter \"$c\". Aborting caclulation")
+                    return
+                } else if (position >= counts!!.size) {
+                    Utils.toastIt(mContext, "Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
+                    return
+                } else if (counts[position].isEmpty()) {
+                    Utils.toastIt(mContext, "$position has no assigned letters in this mode. Aborting caclulation")
+                    return
+                } else {
+                    countValues!!.add(position)
+                }
+            }
+        } else if (!regex and !hamming) {
             for (i in 0 until input.length) {
                 val c = input[i]
                 val position = c - 'a'
@@ -69,6 +135,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
                         || superset && first!!.length < input.length
                         || exact && first!!.length != input.length
                         || hamming && first!!.length != input.length
+                        || countMode && first!!.length != input.length
                         || first!!.length < minLength || first.length > maxLength) {
                     continue
                 }
@@ -91,6 +158,17 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
                     val d = levenshteinDistance(first, input)
                     if (d < 6) {
                         matched("(" + d + ") " + word.second)
+                    }
+                } else if (countMode) {
+                    var allSatisfy = true
+                    for (i in 0 until first.length) {
+                        if (!counts!![countValues!![i]].contains(first[i])) {
+                            allSatisfy = false
+                            break
+                        }
+                    }
+                    if (allSatisfy) {
+                        matched(word.second!!)
                     }
                 } else {
                     val chars = IntArray(26)

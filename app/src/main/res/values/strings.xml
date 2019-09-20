@@ -20,6 +20,12 @@
         <item>Superset</item>
         <item>Hamming</item>
         <item>Levenshtein</item>
+        <item># Morse</item>
+        <item># Braille</item>
+        <item># Segments</item>
+        <item># Moves</item>
+        <item># Holes</item>
+        <item># Ends</item>
     </string-array>
 
     <string-array name="presmyslovnik_dictionary">
