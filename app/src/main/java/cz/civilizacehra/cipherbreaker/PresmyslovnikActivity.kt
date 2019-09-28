@@ -40,7 +40,7 @@ class PresmyslovnikActivity : LocationActivity() {
 
         dictionarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (position in 4..5 && mLocation == null) {
+                if (position in 4..6 && mLocation == null) {
                     acquireLocation()
                 }
                 refreshSvjz()
@@ -98,7 +98,7 @@ class PresmyslovnikActivity : LocationActivity() {
     private fun refreshSvjz() {
         val dictionaryPosition = dictionarySpinner.selectedItemPosition
         val modePosition = modeSpinner.selectedItemPosition
-        svjz.isEnabled = dictionaryPosition in 4..5 && modePosition in 2..3
+        svjz.isEnabled = dictionaryPosition in 4..6 && modePosition in 2..3
     }
 
     private fun searchDictionary() {
