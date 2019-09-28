@@ -8,7 +8,7 @@ import kotlin.math.round
 
 internal class MapDictionary(context: Context) : Dictionary(context) {
     private var mLocation: Location? = null
-    private val mSortedResults = ArrayList<Point>()
+    private val mSortedResults = ArrayList<Point>(2 * mMaxNumberOfResults)
 
     private var mSuffix: String? = null
     private val mWorldSides = arrayOf("s", "sv", "sz", "v", "z", "j", "jv", "jz")
@@ -45,7 +45,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
             }
         }
 
-        return conclude(false)
+        return conclude()
     }
 
     override fun prepare() {
@@ -71,9 +71,17 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
             distance = mLocation!!.distanceTo(targetLocation)
         }
         mSortedResults.add(Point(distance, name))
+        if (mSortedResults.size >= 2 * mMaxNumberOfResults) {
+            mSortedResults.sort()
+            val tempList = mSortedResults.take(mMaxNumberOfResults)
+            mSortedResults.clear()
+            for (value in tempList) {
+                mSortedResults.add(value)
+            }
+        }
     }
 
-    override fun conclude(sort: Boolean): String {
+    override fun conclude(): String {
         val resultStr = StringBuilder()
         var counter = 0
         mSortedResults.sort()
@@ -81,7 +89,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
             ++counter
             val row = point.name + " (${round(point.distance).toInt()}m)\n"
             resultStr.append(row)
-            if (counter >= 3000) {
+            if (counter >= mMaxNumberOfResults) {
                 break
             }
         }

@@ -58,14 +58,17 @@ internal open class Dictionary(private val mContext: Context) {
                     "hkx" // 4
             )
     )
-    private val mList = ArrayList<String>()
+    val mMaxNumberOfResults = 1000
+    private val mList = ArrayList<String>(2 * mMaxNumberOfResults)
     var mStartTime: Long = 0
+    var mShouldSort = false
 
     open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
                          dictFilename: String): String {
+        mShouldSort = modeId in 3..4
         prepare()
         findResultsInternal(input, modeId, minLength, maxLength, dictFilename)
-        return conclude(modeId in 3..4)
+        return conclude()
     }
 
     fun findResultsInternal(input: String, modeId: Int, minLength: Int, maxLength: Int,
@@ -235,19 +238,29 @@ internal open class Dictionary(private val mContext: Context) {
 
     protected open fun matched(match: String) {
         mList.add(match)
+        if (mList.size >= 2 * mMaxNumberOfResults) {
+            if (mShouldSort) {
+                mList.sort()
+            }
+            val tempList = mList.take(mMaxNumberOfResults)
+            mList.clear()
+            for (value in tempList) {
+                mList.add(value)
+            }
+        }
     }
 
-    protected open fun conclude(sort: Boolean): String {
+    protected open fun conclude(): String {
         val resultStr = StringBuilder()
         var counter = 0
-        if (sort) {
+        if (mShouldSort) {
             mList.sort()
         }
         for (point in mList) {
             ++counter
             val row = point + "\n"
             resultStr.append(row)
-            if (counter >= 3000) {
+            if (counter >= mMaxNumberOfResults) {
                 break
             }
         }
