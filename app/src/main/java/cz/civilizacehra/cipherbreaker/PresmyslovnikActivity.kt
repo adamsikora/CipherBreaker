@@ -26,13 +26,18 @@ class PresmyslovnikActivity : LocationActivity() {
     private val dictionarySpinner by lazy {findViewById<Spinner>(R.id.dictionarySpinner)}
     private val svjz by lazy {findViewById<CheckBox>(R.id.svjzCheckBox)}
 
-    private var enDict: Dictionary? = null
-    private var czPJDict: Dictionary? = null
-    private var czDict: Dictionary? = null
-    private var czBigDict: Dictionary? = null
-    private var pragueMap: MapDictionary? = null
-    private var brnoMap: MapDictionary? = null
-    private var czechiaMap: MapDictionary? = null
+    private val dict: Dictionary by lazy {Dictionary(applicationContext)}
+    private val mapDict: MapDictionary by lazy {MapDictionary(applicationContext)}
+
+    private val dictionaries = arrayOf(
+            "en.canon",
+            "podst_jm_cz.canon",
+            "cs_CZ_openoffice.canon",
+            "cs.canon",
+            "Prague.cbmap",
+            "Brno.cbmap",
+            "Czechia.cbmap"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +45,7 @@ class PresmyslovnikActivity : LocationActivity() {
 
         dictionarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (position in 4..6 && mLocation == null) {
+                if (isMapDictionaryChosen() && mLocation == null) {
                     acquireLocation()
                 }
                 refreshSvjz()
@@ -60,14 +65,6 @@ class PresmyslovnikActivity : LocationActivity() {
 
         loadSavedState()
         refreshSvjz()
-
-        enDict = Dictionary(applicationContext, "en.canon", results)
-        czPJDict = Dictionary(applicationContext, "podst_jm_cz.canon", results)
-        czDict = Dictionary(applicationContext, "cs_CZ_openoffice.canon", results)
-        czBigDict = Dictionary(applicationContext, "cs.canon", results)
-        pragueMap = MapDictionary(applicationContext, "Prague.cbmap", results)
-        brnoMap = MapDictionary(applicationContext, "Brno.cbmap", results)
-        czechiaMap = MapDictionary(applicationContext, "Czechia.cbmap", results)
 
         inputBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             // If the event is a key-down event on the "enter" button
@@ -96,9 +93,8 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     private fun refreshSvjz() {
-        val dictionaryPosition = dictionarySpinner.selectedItemPosition
         val modePosition = modeSpinner.selectedItemPosition
-        svjz.isEnabled = dictionaryPosition in 4..6 && modePosition in 2..3
+        svjz.isEnabled = isMapDictionaryChosen() && modePosition in 2..3
     }
 
     private fun searchDictionary() {
@@ -108,33 +104,20 @@ class PresmyslovnikActivity : LocationActivity() {
         val modeId = modeSpinner.selectedItemPosition
         val minLength = Utils.parseIntWithDefault(minLengthBox.text.toString(), 0)
         val maxLength = Utils.parseIntWithDefault(maxLengthBox.text.toString(), Int.MAX_VALUE)
-        results.text = "Result:\n"
+        results.text = getString(R.string.result)
 
         val input = inputBox.text.toString().toLowerCase(Locale.ENGLISH)
-
-        val findResults = fun(dict: Dictionary) { dict.findResults(input, modeId, minLength, maxLength)}
-        val findResultsInMap = fun(map: MapDictionary) {
-            if (mLocation == null) {
-                acquireLocation()
-            }
-            map.setSvjz(svjz.isEnabled && svjz.isChecked)
-            map.setLocation(mLocation!!)
-            map.findResults(input, modeId, minLength, maxLength)
-        }
-
+        val dictName = dictionaries[dictionarySpinner.selectedItemPosition]
         try {
-            when (dictionarySpinner.selectedItemPosition) {
-                0 -> findResults(enDict!!)
-                1 -> findResults(czPJDict!!)
-                2 -> findResults(czDict!!)
-                3 -> findResults(czBigDict!!)
-                4 -> findResultsInMap(pragueMap!!)
-                5 -> findResultsInMap(brnoMap!!)
-                6 -> findResultsInMap(czechiaMap!!)
-                else -> {
-                    Utils.toastIt(applicationContext, "No dictionary selected")
-                    return
+            if (isMapDictionaryChosen()) {
+                if (mLocation == null) {
+                    acquireLocation()
                 }
+                mapDict.setSvjz(svjz.isEnabled && svjz.isChecked)
+                mapDict.setLocation(mLocation!!)
+                results.text = mapDict.findResults(input, modeId, minLength, maxLength, dictName)
+            } else {
+                results.text = dict.findResults(input, modeId, minLength, maxLength, dictName)
             }
         } catch (e: PatternSyntaxException) {
             Utils.toastIt(applicationContext, "Invalid regex syntax")
@@ -143,6 +126,10 @@ class PresmyslovnikActivity : LocationActivity() {
         }
 
         saveState()
+    }
+
+    private fun isMapDictionaryChosen(): Boolean {
+        return dictionarySpinner.selectedItemPosition in 4..6
     }
 
     override fun onDestroy() {

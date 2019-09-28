@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
-import android.widget.TextView
 
 import java.io.BufferedReader
 import java.io.IOException
@@ -11,7 +10,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.min
 
-internal open class Dictionary(private val mContext: Context, private val mFilename: String, var mResults: TextView) {
+internal open class Dictionary(private val mContext: Context) {
 
     private val mCountsLists = arrayOf(
             arrayOf( // Morse
@@ -62,14 +61,15 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
     private val mList = ArrayList<String>()
     var mStartTime: Long = 0
 
-    open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int) {
+    open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
+                         dictFilename: String): String {
         prepare()
-        findResults_impl(input, modeId, minLength, maxLength)
-        conclude(modeId in 3..4)
+        findResultsInternal(input, modeId, minLength, maxLength, dictFilename)
+        return conclude(modeId in 3..4)
     }
 
-    fun findResults_impl(input: String, modeId: Int, minLength: Int, maxLength: Int) {
-
+    fun findResultsInternal(input: String, modeId: Int, minLength: Int, maxLength: Int,
+                            dictFilename: String) {
         val regex = modeId == 0
         val subset = modeId == 1
         val exact = modeId == 2
@@ -121,7 +121,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
         }
 
         try {
-            val inputStream = mContext.assets.open(mFilename)
+            val inputStream = mContext.assets.open(dictFilename)
             val `in` = BufferedReader(InputStreamReader(inputStream))
             var line: String?
             var assertInvalidLetters = true
@@ -237,7 +237,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
         mList.add(match)
     }
 
-    protected open fun conclude(sort: Boolean) {
+    protected open fun conclude(sort: Boolean): String {
         val resultStr = StringBuilder()
         var counter = 0
         if (sort) {
@@ -251,7 +251,7 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
                 break
             }
         }
-        mResults.text = "Result: ($counter)${computationTime()}\n$resultStr"
+        return "Result: ($counter)${computationTime()}\n$resultStr"
     }
 
     fun computationTime(): String {

@@ -2,12 +2,11 @@ package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
 import android.location.Location
-import android.widget.TextView
 import java.util.*
 
 import kotlin.math.round
 
-internal class MapDictionary(context: Context, filename: String, results: TextView) : Dictionary(context, filename, results) {
+internal class MapDictionary(context: Context) : Dictionary(context) {
     private var mLocation: Location? = null
     private val mSortedResults = ArrayList<Point>()
 
@@ -34,19 +33,19 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
         mLocation = location
     }
 
-    override fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int) {
-
+    override fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
+                             dictFilename: String): String {
         prepare()
 
         setSuffix("")
-        findResults_impl(input, modeId, minLength, maxLength)
+        findResultsInternal(input, modeId, minLength, maxLength, dictFilename)
         if (mSvjz) {
             for (s in mWorldSides) {
-                processWithWorldSide(input, s, modeId, minLength, maxLength)
+                processWithWorldSide(input, s, modeId, minLength, maxLength, dictFilename)
             }
         }
 
-        conclude(false)
+        return conclude(false)
     }
 
     override fun prepare() {
@@ -74,7 +73,7 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
         mSortedResults.add(Point(distance, name))
     }
 
-    override fun conclude(sort: Boolean) {
+    override fun conclude(sort: Boolean): String {
         val resultStr = StringBuilder()
         var counter = 0
         mSortedResults.sort()
@@ -86,14 +85,15 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
                 break
             }
         }
-        mResults.text = "Result: ($counter)${computationTime()}\n$resultStr"
+        return "Result: ($counter)${computationTime()}\n$resultStr"
     }
 
     private fun setSuffix(s: String) {
         mSuffix = if (s.isNotEmpty()) " (${s.toUpperCase(Locale.ENGLISH)})"  else  ""
     }
 
-    private fun processWithWorldSide(input: String, s: String, modeId: Int, minLength: Int, maxLength: Int) {
+    private fun processWithWorldSide(input: String, s: String, modeId: Int,
+                                     minLength: Int, maxLength: Int, dictFilename: String) {
         val arr = s.split("".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         var contains = true
         for (c in arr) {
@@ -107,7 +107,7 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
                 modified = modified.replaceFirst(c.toRegex(), "")
             }
             setSuffix(s)
-            findResults_impl(modified, modeId, minLength, maxLength)
+            findResultsInternal(modified, modeId, minLength, maxLength, dictFilename)
         }
     }
 }
