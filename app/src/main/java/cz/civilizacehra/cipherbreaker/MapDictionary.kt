@@ -26,10 +26,6 @@ internal class MapDictionary(context: Context, filename: String, results: TextVi
         }
     }
 
-    init {
-        mSvjz = false
-    }
-
     fun setSvjz(svjz: Boolean) {
         mSvjz = svjz
     }
