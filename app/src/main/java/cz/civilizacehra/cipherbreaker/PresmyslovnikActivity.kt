@@ -112,9 +112,10 @@ class PresmyslovnikActivity : LocationActivity() {
             if (isMapDictionaryChosen()) {
                 if (mLocation == null) {
                     acquireLocation()
+                } else {
+                    mapDict.setLocation(mLocation!!)
                 }
                 mapDict.setSvjz(svjz.isEnabled && svjz.isChecked)
-                mapDict.setLocation(mLocation!!)
                 results.text = mapDict.findResults(input, modeId, minLength, maxLength, dictName)
             } else {
                 results.text = dict.findResults(input, modeId, minLength, maxLength, dictName)

@@ -186,7 +186,7 @@ internal open class Dictionary(private val mContext: Context) {
                         } else {
                             // TODO map dictionaries contain invalid letters figure out a way to deal with it
                             if (assertInvalidLetters && c != ' ' && (c < '0' || c > '9')) {
-                                Utils.toastIt(mContext, "Invalid letter in dictionary \"$c\"")
+                                Utils.toastIt(mContext, "Invalid letter in dictionary \"$c\" in $word")
                                 assertInvalidLetters = false
                             }
                         }
