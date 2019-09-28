@@ -106,14 +106,8 @@ class PresmyslovnikActivity : LocationActivity() {
         inputManager.hideSoftInputFromWindow(Objects.requireNonNull(currentFocus).windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
         val modeId = modeSpinner.selectedItemPosition
-        var minLength = 0
-        if (minLengthBox.text.isNotEmpty()) {
-            minLength = Integer.parseInt(minLengthBox.text.toString())
-        }
-        var maxLength = 100
-        if (maxLengthBox.text.isNotEmpty()) {
-            maxLength = Integer.parseInt(maxLengthBox.text.toString())
-        }
+        val minLength = Utils.parseIntWithDefault(minLengthBox.text.toString(), 0)
+        val maxLength = Utils.parseIntWithDefault(maxLengthBox.text.toString(), Int.MAX_VALUE)
         results.text = "Result:\n"
 
         val input = inputBox.text.toString().toLowerCase(Locale.ENGLISH)

@@ -41,11 +41,11 @@ class CalendarActivity : Activity() {
         get() = sortBySwitch.isChecked
 
     private val year: Int
-        get() = parseWithDefault(yearEditText.text.toString())
+        get() = Utils.parseIntWithDefault(yearEditText.text.toString())
     private val month: Int
-        get() = parseWithDefault(monthSpinner.selectedItem.toString())
+        get() = Utils.parseIntWithDefault(monthSpinner.selectedItem.toString())
     private val day: Int
-        get() = parseWithDefault(daySpinner.selectedItem.toString())
+        get() = Utils.parseIntWithDefault(daySpinner.selectedItem.toString())
     private val dayOfWeek: String
         get() = dayOfWeekSpinner.selectedItem.toString()
     private val query: String
@@ -162,9 +162,5 @@ class CalendarActivity : Activity() {
             }
         }
         return result
-    }
-
-    private fun parseWithDefault(s: String): Int {
-        return if (s.matches("-?\\d+".toRegex())) s.toInt() else 0
     }
 }
