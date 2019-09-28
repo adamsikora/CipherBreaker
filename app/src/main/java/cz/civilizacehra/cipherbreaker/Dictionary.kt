@@ -92,17 +92,20 @@ internal open class Dictionary(private val mContext: Context, private val mFilen
             for (i in 0 until input.length) {
                 val c = input[i]
                 val position = c - '0'
-                if (position > 9) {
-                    Utils.toastIt(mContext, "Invalid input letter \"$c\". Aborting caclulation")
-                    return
-                } else if (position >= counts!!.size) {
-                    Utils.toastIt(mContext, "Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
-                    return
-                } else if (counts[position].isEmpty()) {
-                    Utils.toastIt(mContext, "$position has no assigned letters in this mode. Aborting caclulation")
-                    return
-                } else {
-                    countValues!!.add(position)
+                when {
+                    position > 9 -> {
+                        Utils.toastIt(mContext, "Invalid input letter \"$c\". Aborting caclulation")
+                        return
+                    }
+                    position >= counts!!.size -> {
+                        Utils.toastIt(mContext, "Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
+                        return
+                    }
+                    counts[position].isEmpty() -> {
+                        Utils.toastIt(mContext, "$position has no assigned letters in this mode. Aborting caclulation")
+                        return
+                    }
+                    else -> countValues!!.add(position)
                 }
             }
         } else if (!regex and !hamming) {

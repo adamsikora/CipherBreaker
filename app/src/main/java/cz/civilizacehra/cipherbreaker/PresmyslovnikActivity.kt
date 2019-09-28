@@ -164,4 +164,10 @@ class PresmyslovnikActivity : LocationActivity() {
 
         saveState()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        saveState()
+    }
 }
