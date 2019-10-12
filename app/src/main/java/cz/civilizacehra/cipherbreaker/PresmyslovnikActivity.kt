@@ -99,11 +99,16 @@ class PresmyslovnikActivity : LocationActivity() {
 
     private fun searchDictionary() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(Objects.requireNonNull(currentFocus).windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
         val modeId = modeSpinner.selectedItemPosition
         val minLength = Utils.parseIntWithDefault(minLengthBox.text.toString(), 0)
         val maxLength = Utils.parseIntWithDefault(maxLengthBox.text.toString(), Int.MAX_VALUE)
+        if (minLength > maxLength) {
+            val msg = "Min lenght ($minLength) is greater than max length ($maxLength). Aborting calculation"
+            Utils.toastIt(applicationContext, msg)
+            return
+        }
         results.text = getString(R.string.result)
 
         val input = inputBox.text.toString().toLowerCase(Locale.ENGLISH)
