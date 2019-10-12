@@ -44,23 +44,23 @@ class PresmyslovnikActivity : LocationActivity() {
         setContentView(R.layout.activity_presmyslovnik)
 
         dictionarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (isMapDictionaryChosen() && mLocation == null) {
                     acquireLocation()
                 }
                 refreshSvjz()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         modeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 refreshSvjz()
                 inputEditText.inputType = if (position >= 6) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         loadSavedState()
