@@ -15,6 +15,7 @@ class MainActivity : Activity() {
     private val calendar by lazy { findViewById<TextView>(R.id.Calendar) }
     private val principtrainer by lazy { findViewById<TextView>(R.id.PrincipTrainer) }
     private val principreader by lazy { findViewById<TextView>(R.id.PrincipReader) }
+    private val about by lazy { findViewById<TextView>(R.id.About) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +58,11 @@ class MainActivity : Activity() {
 
         principreader.setOnClickListener {
             val myIntent = Intent(this@MainActivity, PrincipReaderActivity::class.java)
+            this@MainActivity.startActivity(myIntent)
+        }
+
+        about.setOnClickListener {
+            val myIntent = Intent(this@MainActivity, AboutActivity::class.java)
             this@MainActivity.startActivity(myIntent)
         }
     }

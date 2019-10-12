@@ -48,4 +48,10 @@
         android:id="@+id/PrincipReader"
         style="@style/category_style"
         android:text="@string/principreader" />
+
+    <TextView
+        android:id="@+id/About"
+        style="@style/category_style"
+        android:text="@string/about" />
+
 </GridLayout>

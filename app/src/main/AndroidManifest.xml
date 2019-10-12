@@ -10,7 +10,6 @@
         android:label=""
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CalendarActivity" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -23,9 +22,11 @@
         <activity android:name=".PresmyslovnikActivity" />
         <activity android:name=".DebinarizatorActivity" />
         <activity android:name=".DeternarizatorActivity" />
-        <activity android:name=".PrincipTrainerActivity" />
         <activity android:name=".MrizkoDrticActivity" />
+        <activity android:name=".CalendarActivity" />
+        <activity android:name=".PrincipTrainerActivity" />
         <activity android:name=".PrincipReaderActivity" />
+        <activity android:name=".AboutActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

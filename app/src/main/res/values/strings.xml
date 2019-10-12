@@ -9,6 +9,7 @@
     <string name="calendar">Calendar</string>
     <string name="principtrainer">Princip Trainer</string>
     <string name="principreader">Princip Reader</string>
+    <string name="about">About</string>
 
     <string name="result">Results:\n</string>
     <string name="go">Go!</string>
