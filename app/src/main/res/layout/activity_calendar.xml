@@ -61,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:hint="year"/>
 
         <TextView
             android:id="@+id/weekView"

@@ -4,12 +4,15 @@ internal class StringPair private constructor(val first: String?, val second: St
 
     override fun equals(other: Any?): Boolean {
         if (other is StringPair) {
-            val otherPair = other as StringPair?
-            return this.first != null && otherPair!!.first != null && this.first == otherPair.first &&
-                    this.second != null && otherPair.second != null && this.second == otherPair.second
+            return this.first != null && other.first != null && this.first == other.first &&
+                    this.second != null && other.second != null && this.second == other.second
         }
 
         return false
+    }
+
+    override fun hashCode(): Int {
+        return this.toString().hashCode()
     }
 
     override fun toString(): String {

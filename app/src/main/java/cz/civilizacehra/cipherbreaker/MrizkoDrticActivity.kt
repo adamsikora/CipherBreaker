@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.TextView
 
 import java.util.Locale
-import java.util.Objects
 
 class MrizkoDrticActivity : Activity() {
 
@@ -28,9 +27,9 @@ class MrizkoDrticActivity : Activity() {
 
         goBtn.setOnClickListener {
             val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(Objects.requireNonNull(currentFocus).windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-            results.text = "Result:\n"
+            results.text = "Result:"
 
             val input = inputBox.text.toString().replace("[^A-Za-z0-9_]".toRegex(), "").toLowerCase(Locale.ENGLISH)
 
