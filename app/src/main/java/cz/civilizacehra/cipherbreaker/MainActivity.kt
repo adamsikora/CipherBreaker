@@ -3,67 +3,46 @@ package cz.civilizacehra.cipherbreaker
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TableLayout
 import android.widget.TextView
 
 class MainActivity : Activity() {
 
-    private val presmyslovnik by lazy { findViewById<TextView>(R.id.Presmyslovnik) }
-    private val debinarizator by lazy { findViewById<TextView>(R.id.Debinarizator) }
-    private val deternarizator by lazy { findViewById<TextView>(R.id.Deternarizator) }
-    private val mrizkodrtic by lazy { findViewById<TextView>(R.id.MrizkoDrtic) }
-    private val azimuther by lazy { findViewById<TextView>(R.id.Azimuther) }
-    private val calendar by lazy { findViewById<TextView>(R.id.Calendar) }
-    private val principtrainer by lazy { findViewById<TextView>(R.id.PrincipTrainer) }
-    private val principreader by lazy { findViewById<TextView>(R.id.PrincipReader) }
-    private val about by lazy { findViewById<TextView>(R.id.About) }
+    data class ActivityInstance(val name: String, val drawable: Int, val activity: Class<*>)
+
+    private val tableLayout by lazy { findViewById<TableLayout>(R.id.tableLayout) }
+
+    val activities by lazy {
+        listOf(
+                ActivityInstance(getString(R.string.presmyslovnik), R.drawable.ic_find_replace, PresmyslovnikActivity::class.java),
+                ActivityInstance(getString(R.string.debinarizator), R.drawable.ic_two, DebinarizatorActivity::class.java),
+                ActivityInstance(getString(R.string.deternarizator), R.drawable.ic_three, DeternarizatorActivity::class.java),
+                ActivityInstance(getString(R.string.mrizkodrtic), R.drawable.ic_grid_on, MrizkoDrticActivity::class.java),
+                ActivityInstance(getString(R.string.azimuther), R.drawable.ic_explore, AzimutherActivity::class.java),
+                ActivityInstance(getString(R.string.calendar), R.drawable.ic_calendar, CalendarActivity::class.java),
+                ActivityInstance(getString(R.string.principtrainer), R.drawable.ic_school, PrincipTrainerActivity::class.java),
+                ActivityInstance(getString(R.string.principreader), R.drawable.ic_assignment, PrincipReaderActivity::class.java),
+                ActivityInstance(getString(R.string.about), R.drawable.ic_info, AboutActivity::class.java)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presmyslovnik.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, PresmyslovnikActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
+        for (activity in activities) {
+            val layout = layoutInflater.inflate(R.layout.activity_item, tableLayout, false) as RelativeLayout
+            tableLayout.addView(layout)
 
-        debinarizator.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, DebinarizatorActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
+            layout.findViewById<ImageView>(R.id.activityIcon).setImageResource(activity.drawable)
+            layout.findViewById<TextView>(R.id.activityText).text = activity.name
 
-        deternarizator.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, DeternarizatorActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        mrizkodrtic.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, MrizkoDrticActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        azimuther.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, AzimutherActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        calendar.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, CalendarActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        principtrainer.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, PrincipTrainerActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        principreader.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, PrincipReaderActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
-        }
-
-        about.setOnClickListener {
-            val myIntent = Intent(this@MainActivity, AboutActivity::class.java)
-            this@MainActivity.startActivity(myIntent)
+            layout.setOnClickListener {
+                val myIntent = Intent(this@MainActivity, activity.activity)
+                this@MainActivity.startActivity(myIntent)
+            }
         }
     }
 }
