@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">Šifro Haluzič</string>
+    <string name="app_name">Cipher Breaker</string>
 
-    <string name="presmyslovnik">Přesmyslovník</string>
-    <string name="debinarizator">Debinarizátor</string>
-    <string name="deternarizator">Deternarizátor</string>
-    <string name="mrizkodrtic">Mřížkodrtič</string>
-    <string name="azimuther">Azimuther</string>
-    <string name="calendar">Calendar</string>
-    <string name="principtrainer">Princip Trainer</string>
-    <string name="principreader">Princip Reader</string>
+    <string name="presmyslovnik">Dictionary searcher</string>
+    <string name="debinarizator">Binary reader</string>
+    <string name="deternarizator">Ternary reader</string>
+    <string name="mrizkodrtic">Grille hacker</string>
+    <string name="azimuther">Azimuth finder</string>
+    <string name="calendar">Name day searcher</string>
+    <string name="principtrainer">Princip trainer quiz</string>
+    <string name="principreader">Princip trainer read</string>
     <string name="about">About</string>
 
     <string name="result">Results:\n</string>
@@ -16,9 +16,9 @@
 
     <string-array name="presmyslovnik_mode">
         <item>Regex</item>
-        <item>Subset</item>
-        <item>Exact</item>
-        <item>Superset</item>
+        <item>Subanagram</item>
+        <item>Anagram</item>
+        <item>Superanagram</item>
         <item>Hamming</item>
         <item>Levenshtein</item>
         <item># Morse</item>
@@ -30,10 +30,10 @@
     </string-array>
 
     <string-array name="presmyslovnik_dictionary">
-        <item>en</item>
-        <item>cz p.j.</item>
-        <item>cz</item>
-        <item>cz big</item>
+        <item>EN</item>
+        <item>CZ nouns</item>
+        <item>CZ</item>
+        <item>CZ big</item>
         <item>Prague</item>
         <item>Brno</item>
         <item>Czechia</item>
