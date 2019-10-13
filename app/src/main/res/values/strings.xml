@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">Cipher Breaker</string>
 
-    <string name="presmyslovnik">Dictionary searcher</string>
-    <string name="debinarizator">Binary reader</string>
-    <string name="deternarizator">Ternary reader</string>
-    <string name="mrizkodrtic">Grille hacker</string>
-    <string name="azimuther">Azimuth finder</string>
-    <string name="calendar">Name day searcher</string>
-    <string name="principtrainer">Princip trainer quiz</string>
-    <string name="principreader">Princip trainer read</string>
+    <string name="presmyslovnik">Dictionary Searcher</string>
+    <string name="debinarizator">Binary Reader</string>
+    <string name="deternarizator">Ternary Reader</string>
+    <string name="mrizkodrtic">Grille Hacker</string>
+    <string name="azimuther">Azimuth Finder</string>
+    <string name="calendar">Name Day Searcher</string>
+    <string name="principtrainer">Princip Trainer Quiz</string>
+    <string name="principreader">Princip Trainer Read</string>
     <string name="about">About</string>
 
     <string name="result">Result:</string>
-    <string name="go">Go!</string>
+    <string name="go">Go</string>
 
     <string-array name="presmyslovnik_mode">
         <item>Regex</item>
