@@ -35,7 +35,7 @@ class CalendarActivity : Activity() {
 
     private val holidaysTextView by lazy { findViewById<TextView>(R.id.holidaysTextView) }
 
-    internal var holidays: List<Holiday>? = null
+    internal val holidays by lazy { loadHolidays() }
 
     private val sortByName: Boolean
         get() = sortBySwitch.isChecked
@@ -58,8 +58,6 @@ class CalendarActivity : Activity() {
         setContentView(R.layout.activity_calendar)
 
         yearEditText.setText(Calendar.getInstance().get(Calendar.YEAR).toString())
-
-        holidays = loadHolidays()
 
         updateHolidays()
 
@@ -137,7 +135,7 @@ class CalendarActivity : Activity() {
 
         val year = year
         val sortByName = sortByName
-        for (holiday in holidays!!) {
+        for (holiday in holidays) {
             holiday.updateYear(year)
         }
         val filteredHolidays = filterHolidays()
@@ -156,7 +154,7 @@ class CalendarActivity : Activity() {
         val month = month
         val dayOfWeek = dayOfWeek
         val query = query
-        for (holiday in holidays!!) {
+        for (holiday in holidays) {
             if (holiday.satisfiesFilters(day, month, dayOfWeek, query)) {
                 result.add(holiday)
             }
