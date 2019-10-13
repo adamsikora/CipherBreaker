@@ -29,7 +29,7 @@ class MrizkoDrticActivity : Activity() {
             val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-            results.text = "Result:"
+            results.text = getString(R.string.presmyslovnik)
 
             val input = inputBox.text.toString().replace("[^A-Za-z0-9_]".toRegex(), "").toLowerCase(Locale.ENGLISH)
 
@@ -40,7 +40,8 @@ class MrizkoDrticActivity : Activity() {
                 }
                 val start = System.currentTimeMillis()
                 val solutions = grindGrid(input)
-                results.text = "Result: " + String.format(Locale.ENGLISH, "%.3f", 0.001 * (System.currentTimeMillis() - start)) + "s\n" + solutions
+                val time = (System.currentTimeMillis() - start) / 1000.0
+                results.text = "Result: ${time}s\n$solutions"
             } catch (e: Throwable) {
                 Utils.toastIt(applicationContext, "Error calculating grid")
             }

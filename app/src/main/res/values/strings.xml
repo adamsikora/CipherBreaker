@@ -11,7 +11,7 @@
     <string name="principreader">Princip trainer read</string>
     <string name="about">About</string>
 
-    <string name="result">Results:\n</string>
+    <string name="result">Result:</string>
     <string name="go">Go!</string>
 
     <string-array name="presmyslovnik_mode">

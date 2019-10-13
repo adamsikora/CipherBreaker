@@ -93,7 +93,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
                 break
             }
         }
-        return "Result: ($counter)${computationTime()}\n$resultStr"
+        return "Result: ($counter) ${computationTime()}\n$resultStr"
     }
 
     private fun setSuffix(s: String) {

@@ -264,10 +264,10 @@ internal open class Dictionary(private val mContext: Context) {
                 break
             }
         }
-        return "Result: ($counter)${computationTime()}\n$resultStr"
+        return "Result: ($counter) ${computationTime()}\n$resultStr"
     }
 
     fun computationTime(): String {
-        return "  " + (System.currentTimeMillis() - mStartTime) / 1000.0 + "s "
+        return "${(System.currentTimeMillis() - mStartTime) / 1000.0}s"
     }
 }
