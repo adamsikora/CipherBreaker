@@ -61,7 +61,7 @@ internal open class Dictionary(private val mContext: Context) {
     val mMaxNumberOfResults = 1000
     private val mList = ArrayList<String>(2 * mMaxNumberOfResults)
     var mStartTime: Long = 0
-    var mShouldSort = false
+    private var mShouldSort = false
 
     open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
                          dictFilename: String): String {
@@ -87,13 +87,11 @@ internal open class Dictionary(private val mContext: Context) {
             return
         }
 
-        var matcher: Matcher
         val pattern = Pattern.compile(input)
 
         val charCount = IntArray(26)
         if (countMode) {
-            for (i in 0 until input.length) {
-                val c = input[i]
+            for (c in input) {
                 val position = c - '0'
                 when {
                     position > 9 -> {
@@ -112,8 +110,7 @@ internal open class Dictionary(private val mContext: Context) {
                 }
             }
         } else if (!regex and !hamming) {
-            for (i in 0 until input.length) {
-                val c = input[i]
+            for (c in input) {
                 val position = c - 'a'
                 if (position in 0..25) {
                     ++charCount[position]
@@ -146,13 +143,12 @@ internal open class Dictionary(private val mContext: Context) {
                     continue
                 }
                 if (regex) {
-                    matcher = pattern.matcher(first)
-                    if (matcher.matches()) {
+                    if (pattern.matcher(first).matches()) {
                         matched(word.second!!)
                     }
                 } else if (hamming) {
                     var counter = 0
-                    for (i in 0 until first.length) {
+                    for (i in first.indices) {
                         if (first[i] != input[i]) {
                             ++counter
                         }
@@ -167,7 +163,7 @@ internal open class Dictionary(private val mContext: Context) {
                     }
                 } else if (countMode) {
                     var allSatisfy = true
-                    for (i in 0 until first.length) {
+                    for (i in first.indices) {
                         if (!counts!![countValues!![i]].contains(first[i])) {
                             allSatisfy = false
                             break
@@ -178,8 +174,7 @@ internal open class Dictionary(private val mContext: Context) {
                     }
                 } else {
                     val chars = IntArray(26)
-                    for (i in 0 until first.length) {
-                        val c = first[i]
+                    for (c in first) {
                         val position = c - 'a'
                         if (position in 0..25) {
                             ++chars[position]
