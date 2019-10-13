@@ -4,7 +4,18 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+Properties props = new Properties()
+props.load(new FileInputStream(file("local.properties")))
+
 android {
+    signingConfigs {
+        release {
+            storeFile file(props['keystore.path'])
+            storePassword props['keystore.password']
+            keyPassword props['keystore.password']
+            keyAlias = 'cipher_breaker_keystore'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "cz.civilizacehra.cipherbreaker"
@@ -23,6 +34,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     externalNativeBuild {
