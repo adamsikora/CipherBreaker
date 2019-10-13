@@ -141,7 +141,7 @@ class CalendarActivity : Activity() {
         val filteredHolidays = filterHolidays()
         Collections.sort(filteredHolidays,
                 if (sortByName) Holiday.nameFirstComparator else Holiday.dateFirstComparator)
-        val toShow = StringBuilder("\n")
+        val toShow = StringBuilder()
         for (holiday in filteredHolidays) {
             toShow.append(holiday.toString(sortByName))
         }

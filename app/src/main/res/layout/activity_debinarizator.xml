@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/combinationLayout"
-            android:baselineAligned="false"
-            android:layout_alignParentTop="true">
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/directionLayout"
@@ -85,7 +84,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:checkedButton="@+id/rbtn1"
             android:orientation="horizontal">
 

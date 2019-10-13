@@ -21,7 +21,7 @@ class MainActivity : Activity() {
                 ActivityInstance(getString(R.string.deternarizator), R.drawable.ic_three, DeternarizatorActivity::class.java),
                 ActivityInstance(getString(R.string.mrizkodrtic), R.drawable.ic_grid_on, MrizkoDrticActivity::class.java),
                 ActivityInstance(getString(R.string.azimuther), R.drawable.ic_explore, AzimutherActivity::class.java),
-                ActivityInstance(getString(R.string.calendar), R.drawable.ic_calendar, CalendarActivity::class.java),
+                ActivityInstance(getString(R.string.calendar), R.drawable.ic_date_range, CalendarActivity::class.java),
                 ActivityInstance(getString(R.string.principtrainer), R.drawable.ic_school, PrincipTrainerActivity::class.java),
                 ActivityInstance(getString(R.string.principreader), R.drawable.ic_assignment, PrincipReaderActivity::class.java),
                 ActivityInstance(getString(R.string.about), R.drawable.ic_info, AboutActivity::class.java)

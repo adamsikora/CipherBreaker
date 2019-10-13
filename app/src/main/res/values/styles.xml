@@ -34,4 +34,38 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+    <style name="azimuther_text_input_style">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:enabled">true</item>
+        <item name="android:inputType">numberDecimal</item>
+    </style>
+
+    <style name="item_with_description_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@color/lightGray</item>
+    </style>
+
+    <style name="strict_item_with_description_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@color/lightGray</item>
+    </style>
+
+    <style name="description_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">3dp</item>
+    </style>
+
+    <style name="spinner_style">
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
 </resources>

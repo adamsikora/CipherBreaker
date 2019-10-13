@@ -16,90 +16,102 @@
         android:layout_alignParentTop="true"
         android:id="@+id/relativeLayout">
 
-        <Spinner
-            android:id="@+id/modeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:dropDownWidth="wrap_content"
-            android:entries="@array/presmyslovnik_mode"
-            android:scrollbars="vertical"
-            android:spinnerMode="dropdown"
-            android:textAlignment="center" />
+        <RelativeLayout
+            android:id="@+id/modeLayout"
+            style="@style/item_with_description_style" >
 
-        <Spinner
-            android:id="@+id/dictionarySpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/modeSpinner"
-            android:dropDownWidth="wrap_content"
-            android:entries="@array/presmyslovnik_dictionary"
-            android:scrollbars="vertical"
-            android:spinnerMode="dropdown"
-            android:textAlignment="center" />
+            <TextView
+                android:id="@+id/modeTextView"
+                style="@style/description_style"
+                android:text="Mode:" />
+
+            <Spinner
+                android:id="@+id/modeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/modeTextView"
+                style="@style/spinner_style"
+                android:entries="@array/presmyslovnik_mode" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dictionaryLayout"
+            android:layout_toEndOf="@+id/modeLayout"
+            style="@style/item_with_description_style" >
+
+            <TextView
+                android:id="@+id/dictionaryTextView"
+                style="@style/description_style"
+                android:text="Dictionary:" />
+
+            <Spinner
+                android:id="@+id/dictionarySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dictionaryTextView"
+                style="@style/spinner_style"
+                android:entries="@array/presmyslovnik_dictionary" />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/inputEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/modeLayout"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/modeSpinner"
+            android:layout_toStartOf="@+id/GoBtn"
             android:clickable="false"
             android:enabled="true"
-            android:hint="Known Characters"
+            android:hint="Query"
             android:imeOptions="actionGo"
             android:inputType="text" />
 
-        <EditText
-            android:id="@+id/minEditText"
-            android:layout_width="100dp"
+        <Button
+            android:id="@+id/GoBtn"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:ems="10"
-            android:enabled="true"
-            android:hint="Min Length"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/maxEditText"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/minEditText"
-            android:ems="10"
-            android:enabled="true"
-            android:hint="Max Length"
-            android:inputType="number" />
+            android:layout_toStartOf="@+id/svjzCheckBox"
+            android:layout_below="@+id/modeLayout"
+            android:text="@string/go" />
 
         <CheckBox
             android:id="@+id/svjzCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/maxEditText"
+            android:layout_alignEnd="@+id/dictionaryLayout"
+            android:layout_below="@+id/modeLayout"
             android:text="SVJZ" />
 
-        <Button
-            android:id="@+id/GoBtn"
-            android:layout_width="70dp"
+        <EditText
+            android:id="@+id/minEditText"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/inputEditText"
-            android:layout_below="@+id/modeSpinner"
-            android:text="@string/go" />
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/dictionaryLayout"
+            android:ems="10"
+            android:enabled="true"
+            android:hint="Min Len"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/maxEditText"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/minEditText"
+            android:layout_toEndOf="@+id/dictionaryLayout"
+            android:ems="10"
+            android:enabled="true"
+            android:hint="Max Len"
+            android:inputType="number" />
 
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:fillViewport="true"
         android:scrollbars="vertical"
         android:layout_below="@+id/relativeLayout"
@@ -107,7 +119,7 @@
 
         <TextView
             android:id="@+id/resultTextView"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/result" />
 
