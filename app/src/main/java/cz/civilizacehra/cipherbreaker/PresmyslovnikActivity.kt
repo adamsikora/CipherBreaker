@@ -106,7 +106,7 @@ class PresmyslovnikActivity : LocationActivity() {
         val maxLength = Utils.parseIntWithDefault(maxLengthBox.text.toString(), Int.MAX_VALUE)
         if (minLength > maxLength) {
             val msg = "Min lenght ($minLength) is greater than max length ($maxLength). Aborting calculation"
-            Utils.toastIt(applicationContext, msg)
+            applicationContext.toastIt(msg)
             return
         }
         results.text = getString(R.string.result)
@@ -126,9 +126,9 @@ class PresmyslovnikActivity : LocationActivity() {
                 results.text = dict.findResults(input, modeId, minLength, maxLength, dictName)
             }
         } catch (e: PatternSyntaxException) {
-            Utils.toastIt(applicationContext, "Invalid regex syntax")
+            applicationContext.toastIt("Invalid regex syntax")
         } catch (e: Throwable) {
-            Utils.toastIt(applicationContext, "Unknown error ${e.message}")
+            applicationContext.toastIt("Unknown error ${e.message}")
         }
 
         saveState()

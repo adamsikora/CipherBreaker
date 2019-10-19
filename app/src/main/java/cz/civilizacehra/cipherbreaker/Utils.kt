@@ -9,15 +9,15 @@ internal object Utils {
     fun parseIntWithDefault(s: String, default: Int = 0): Int {
         return if (s.matches("-?\\d+".toRegex())) s.toInt() else default
     }
-
-    fun toastIt(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-    }
 }
 
 fun Context.copyToClipboard(label: String, text: String){
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText(label, text)
     clipboard.primaryClip = clip
-    Utils.toastIt(applicationContext, "$label copied to clipboard")
+    applicationContext.toastIt("$label copied to clipboard")
+}
+
+fun Context.toastIt(msg: String) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }

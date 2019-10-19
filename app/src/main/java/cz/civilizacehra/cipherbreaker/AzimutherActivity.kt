@@ -77,7 +77,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
             if (mDestination != null) {
                 applicationContext.copyToClipboard("Coordinates", formatLatLng(mDestination!!))
             } else {
-                Utils.toastIt(applicationContext, "Destination not set")
+                applicationContext.toastIt("Destination not set")
             }
         }
 
@@ -88,7 +88,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 val url = "https://en.mapy.cz/zakladni?x=$lon&y=$lat&z=17&source=coor&id=$lon%2C$lat"
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else {
-                Utils.toastIt(applicationContext, "Destination not set")
+                applicationContext.toastIt("Destination not set")
             }
         }
     }
@@ -182,7 +182,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
         mMap!!.setOnMapLongClickListener { latLng ->
             setLatLon(latLng.latitude, latLng.longitude, false)
-            Utils.toastIt(applicationContext, "Set new starting location")
+            applicationContext.toastIt("Set new starting location")
         }
         mMap!!.uiSettings.isRotateGesturesEnabled = false
     }

@@ -82,7 +82,7 @@ internal open class Dictionary(private val mContext: Context) {
         val counts = if (countMode) mCountsLists[modeId - 6] else null
         val countValues = if (countMode) ArrayList<Int>() else null
         if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein xor countMode)) {
-            Utils.toastIt(mContext, "No mode selected")
+            mContext.toastIt("No mode selected")
             return
         }
 
@@ -94,15 +94,15 @@ internal open class Dictionary(private val mContext: Context) {
                 val position = c - '0'
                 when {
                     position > 9 -> {
-                        Utils.toastIt(mContext, "Invalid input letter \"$c\". Aborting caclulation")
+                        mContext.toastIt("Invalid input letter \"$c\". Aborting caclulation")
                         return
                     }
                     position >= counts!!.size -> {
-                        Utils.toastIt(mContext, "Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
+                        mContext.toastIt("Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
                         return
                     }
                     counts[position].isEmpty() -> {
-                        Utils.toastIt(mContext, "$position has no assigned letters in this mode. Aborting caclulation")
+                        mContext.toastIt("$position has no assigned letters in this mode. Aborting caclulation")
                         return
                     }
                     else -> countValues!!.add(position)
@@ -114,7 +114,7 @@ internal open class Dictionary(private val mContext: Context) {
                 if (position in 0..25) {
                     ++charCount[position]
                 } else {
-                    Utils.toastIt(mContext, "Invalid input letter \"$c\"")
+                    mContext.toastIt("Invalid input letter \"$c\"")
                 }
             }
         }
@@ -180,7 +180,7 @@ internal open class Dictionary(private val mContext: Context) {
                         } else {
                             // TODO map dictionaries contain invalid letters figure out a way to deal with it
                             if (assertInvalidLetters && c != ' ' && (c < '0' || c > '9')) {
-                                Utils.toastIt(mContext, "Invalid letter in dictionary \"$c\" in $word")
+                                mContext.toastIt("Invalid letter in dictionary \"$c\" in $word")
                                 assertInvalidLetters = false
                             }
                         }
@@ -202,7 +202,7 @@ internal open class Dictionary(private val mContext: Context) {
                 }
             }
         } catch (e: IOException) {
-            Utils.toastIt(mContext, "Error loading dictionary file")
+            mContext.toastIt("Error loading dictionary file")
         }
 
     }

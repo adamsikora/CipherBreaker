@@ -43,7 +43,7 @@ class MrizkoDrticActivity : Activity() {
                 val time = (System.currentTimeMillis() - start) / 1000.0
                 results.text = "Result: ${time}s\n$solutions"
             } catch (e: Throwable) {
-                Utils.toastIt(applicationContext, "Error calculating grid")
+                applicationContext.toastIt("Error calculating grid")
             }
         }
     }

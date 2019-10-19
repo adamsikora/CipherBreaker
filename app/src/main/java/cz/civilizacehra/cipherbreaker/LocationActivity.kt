@@ -38,9 +38,9 @@ abstract class LocationActivity : FragmentActivity(), LocationListener {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
         }
         if (!isGps && !isNetwork) {
-            Utils.toastIt(applicationContext, "Enable Location")
+            applicationContext.toastIt("Enable Location")
         } else {
-            Utils.toastIt(applicationContext, "Acquiring Location...")
+            applicationContext.toastIt("Acquiring Location...")
         }
     }
 
@@ -53,7 +53,7 @@ abstract class LocationActivity : FragmentActivity(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         mLocation = location
-        Utils.toastIt(applicationContext, "Location Acquired")
+        applicationContext.toastIt("Location Acquired")
         ceaseLocation()
     }
 

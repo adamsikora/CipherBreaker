@@ -119,7 +119,7 @@ class CalendarActivity : Activity() {
                 result.add(Holiday(year, month, day, data))
             }
         } catch (e: IOException) {
-            Utils.toastIt(applicationContext, "Error loading holidays file")
+            applicationContext.toastIt("Error loading holidays file")
         }
 
         return result
@@ -129,7 +129,7 @@ class CalendarActivity : Activity() {
         try {
             Pattern.compile(query)
         } catch (e: PatternSyntaxException) {
-            Utils.toastIt(applicationContext, "Invalid regex syntax")
+            applicationContext.toastIt("Invalid regex syntax")
             return
         }
 
