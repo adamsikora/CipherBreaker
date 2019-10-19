@@ -7,24 +7,41 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TableLayout
 import android.widget.TextView
+import android.net.Uri
+
 
 class MainActivity : Activity() {
 
-    data class ActivityInstance(val name: String, val drawable: Int, val activity: Class<*>)
+    data class ActivityInstance(val name: String, val drawable: Int, val intent: Intent)
 
     private val tableLayout by lazy { findViewById<TableLayout>(R.id.tableLayout) }
 
     val activities by lazy {
         listOf(
-                ActivityInstance(getString(R.string.presmyslovnik), R.drawable.ic_find_replace, PresmyslovnikActivity::class.java),
-                ActivityInstance(getString(R.string.debinarizator), R.drawable.ic_two, DebinarizatorActivity::class.java),
-                ActivityInstance(getString(R.string.deternarizator), R.drawable.ic_three, DeternarizatorActivity::class.java),
-                ActivityInstance(getString(R.string.mrizkodrtic), R.drawable.ic_grid_on, MrizkoDrticActivity::class.java),
-                ActivityInstance(getString(R.string.azimuther), R.drawable.ic_explore, AzimutherActivity::class.java),
-                ActivityInstance(getString(R.string.calendar), R.drawable.ic_date_range, CalendarActivity::class.java),
-                ActivityInstance(getString(R.string.principtrainer), R.drawable.ic_school, PrincipTrainerActivity::class.java),
-                ActivityInstance(getString(R.string.principreader), R.drawable.ic_assignment, PrincipReaderActivity::class.java),
-                ActivityInstance(getString(R.string.about), R.drawable.ic_info, AboutActivity::class.java)
+                ActivityInstance(
+                        getString(R.string.presmyslovnik), R.drawable.ic_find_replace,
+                        Intent(this@MainActivity, PresmyslovnikActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.debinarizator), R.drawable.ic_two,
+                        Intent(this@MainActivity, DebinarizatorActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.deternarizator), R.drawable.ic_three,
+                        Intent(this@MainActivity, DeternarizatorActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.mrizkodrtic), R.drawable.ic_grid_on,
+                        Intent(this@MainActivity, MrizkoDrticActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.azimuther), R.drawable.ic_explore,
+                        Intent(this@MainActivity, AzimutherActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.calendar), R.drawable.ic_date_range,
+                        Intent(this@MainActivity, CalendarActivity::class.java)),
+                ActivityInstance(
+                        getString(R.string.principtrainer), R.drawable.ic_school,
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://app.civilizacehra.cz"))),
+                ActivityInstance(
+                        getString(R.string.about), R.drawable.ic_info,
+                        Intent(this@MainActivity, AboutActivity::class.java))
         )
     }
 
@@ -40,8 +57,7 @@ class MainActivity : Activity() {
             layout.findViewById<TextView>(R.id.activityText).text = activity.name
 
             layout.setOnClickListener {
-                val myIntent = Intent(this@MainActivity, activity.activity)
-                this@MainActivity.startActivity(myIntent)
+                this@MainActivity.startActivity(activity.intent)
             }
         }
     }
