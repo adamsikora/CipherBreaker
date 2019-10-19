@@ -1,12 +1,15 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
+import android.content.Intent
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.TextView
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,12 +29,18 @@ import kotlin.math.*
 class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
     private var mMap: GoogleMap? = null
+    private var mDestination: LatLng? = null
 
-    private val latEditText by lazy {findViewById<EditText>(R.id.latitudeEditText)}
-    private val lonEditText by lazy {findViewById<EditText>(R.id.longitudeEditText)}
-    private val distEditText by lazy {findViewById<EditText>(R.id.distanceEditText)}
-    private val angleEditText by lazy {findViewById<EditText>(R.id.angleEditText)}
-    private val currentLocationButton by lazy {findViewById<Button>(R.id.currBtn)}
+    private val latEditText by lazy { findViewById<EditText>(R.id.latitudeEditText) }
+    private val lonEditText by lazy { findViewById<EditText>(R.id.longitudeEditText) }
+    private val distEditText by lazy { findViewById<EditText>(R.id.distanceEditText) }
+    private val angleEditText by lazy { findViewById<EditText>(R.id.angleEditText) }
+    private val currentLocationButton by lazy { findViewById<Button>(R.id.currBtn) }
+
+    private val resultTextView by lazy { findViewById<TextView>(R.id.resultCoordinatesView) }
+    private val resultLayout by lazy { findViewById<RelativeLayout>(R.id.resultDescriptionLayout) }
+    private val clipboardIcon by lazy { findViewById<RelativeLayout>(R.id.clipboardIconLayout) }
+    private val mapyIcon by lazy { findViewById<RelativeLayout>(R.id.mapyIconLayout) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +51,6 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         Objects.requireNonNull(mapFragment!!).getMapAsync(this)
 
         currentLocationButton.setOnClickListener { acquireLocation() }
-
 
         val onEdit = TextView.OnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -58,6 +66,31 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         lonEditText.setOnEditorActionListener(onEdit)
         distEditText.setOnEditorActionListener(onEdit)
         angleEditText.setOnEditorActionListener(onEdit)
+
+        resultLayout.setOnClickListener {
+            if (mDestination != null) {
+                applicationContext.copyToClipboard("Coordinates", formatLatLng(mDestination!!))
+            }
+        }
+
+        clipboardIcon.setOnClickListener {
+            if (mDestination != null) {
+                applicationContext.copyToClipboard("Coordinates", formatLatLng(mDestination!!))
+            } else {
+                Utils.toastIt(applicationContext, "Destination not set")
+            }
+        }
+
+        mapyIcon.setOnClickListener {
+            if (mDestination != null) {
+                val lat = formatCoord(mDestination!!.latitude)
+                val lon = formatCoord(mDestination!!.longitude)
+                val url = "https://en.mapy.cz/zakladni?x=$lon&y=$lat&z=17&source=coor&id=$lon%2C$lat"
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            } else {
+                Utils.toastIt(applicationContext, "Destination not set")
+            }
+        }
     }
 
     private fun setLocation(move: Boolean = true) {
@@ -73,6 +106,9 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
             if (!dist.isNaN() && !angle.isNaN()) {
                 val dest = computeLatLng(lat, lon, dist, angle)
+                mDestination = dest
+                resultTextView.text = formatLatLng(dest)
+
                 mMap!!.addMarker(MarkerOptions().position(dest).title("Destination"))
                 mMap!!.addPolyline(PolylineOptions().color(-0x10000).add(loc, dest))
                 if (move) {
@@ -89,6 +125,15 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.toFloat()))
             }
         }
+    }
+
+    private fun formatLatLng(coords: LatLng): String {
+        return "${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)}"
+    }
+
+    private fun formatCoord(coord: Double): String {
+        // 5 digits produces coordinates with precision of ~1m
+        return String.format(Locale.ENGLISH, "%.5f", coord)
     }
 
     private fun getDouble(et: EditText): Double {
@@ -148,8 +193,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     }
 
     private fun setLatLon(latitude: Double, longitude: Double, move: Boolean) {
-        latEditText.setText(String.format(Locale.ENGLISH, "%.7f", latitude))
-        lonEditText.setText(String.format(Locale.ENGLISH, "%.7f", longitude))
+        latEditText.setText(formatCoord(latitude))
+        lonEditText.setText(formatCoord(longitude))
         setLocation(move)
     }
 }

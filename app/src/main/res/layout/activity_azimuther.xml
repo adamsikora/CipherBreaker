@@ -7,7 +7,7 @@
     tools:context="cz.civilizacehra.cipherbreaker.MrizkoDrticActivity">
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/inputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -55,12 +55,90 @@
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/divider1"
+        style="@style/Divider.Horizontal"
+        android:layout_below="@id/inputLayout" />
+
+    <RelativeLayout
+        android:id="@+id/resultLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/divider1">
+
+        <RelativeLayout
+            android:id="@+id/resultDescriptionLayout"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/clipboardIconLayout"
+            android:padding="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/resultDescriptionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:text="Destination:" />
+
+            <TextView
+                android:id="@+id/resultCoordinatesView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/resultDescriptionView"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/clipboardIconLayout"
+            android:layout_toStartOf="@id/mapyIconLayout"
+            android:layout_centerVertical="true"
+            android:padding="6dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp" >
+
+            <ImageView
+                android:id="@+id/clipboIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_clipboard" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mapyIconLayout"
+            android:layout_alignParentEnd="true"
+            android:padding="6dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp" >
+
+            <ImageView
+                android:id="@+id/mapyIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_mapy_cz" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider2"
+        style="@style/Divider.Horizontal"
+        android:layout_below="@id/resultLayout" />
+
     <fragment
         android:id="@+id/azimutherMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@id/divider2"
         tools:context=".AzimutherActivity" />
 
 </RelativeLayout>
