@@ -11,6 +11,7 @@ class AboutActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_about)
 
         val copyRightsElement = Element()
         copyRightsElement.title = "© Adam Sikora 2019"

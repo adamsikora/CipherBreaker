@@ -14,7 +14,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:id="@+id/interpretationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -60,7 +59,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/rgTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

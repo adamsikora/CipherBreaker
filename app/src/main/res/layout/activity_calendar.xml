@@ -15,7 +15,6 @@
         android:baselineAligned="false">
 
             <RelativeLayout
-                android:id="@+id/dayLayout"
                 style="@style/strict_item_with_description_style"
                 android:layout_weight="1" >
 
@@ -37,7 +36,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/monthLayout"
                 style="@style/strict_item_with_description_style"
                 android:layout_weight="1" >
 
@@ -57,7 +55,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/yearLayout"
                 style="@style/strict_item_with_description_style"
                 android:layout_weight="1" >
 
@@ -79,7 +76,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/weekLayout"
                 style="@style/strict_item_with_description_style"
                 android:layout_weight="1" >
 
@@ -129,7 +125,6 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/holidayScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"

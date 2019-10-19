@@ -3,21 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="main_selection_size">100dp</dimen>
-
-    <dimen name="text_larger">18sp</dimen>
-    <dimen name="text_large">16sp</dimen>
-    <dimen name="text_sublarge">16sp</dimen>
-    <dimen name="text_apptitle">24sp</dimen>
-    <dimen name="text_menuitems">20sp</dimen>
-    <dimen name="text_medium">15sp</dimen>
-    <dimen name="text_subsmall">14sp</dimen>
-
-
-    <dimen name="stats_leftcolumn_padright">10dp</dimen>
-    <dimen name="stats_leftcolumn_padleft">10dp</dimen>
-    <dimen name="stats_leftcolumn_padbottom">10dp</dimen>
-    <dimen name="stats_rightcolumn_padleft">20dp</dimen>
 
     <dimen name="cube_size">36dp</dimen>
     <dimen name="cube_size_p1">37dp</dimen>
