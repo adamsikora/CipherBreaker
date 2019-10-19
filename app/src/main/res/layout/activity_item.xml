@@ -24,6 +24,6 @@
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/activityIconLayout"
         android:gravity="center_vertical"
-        android:textSize="32sp" />
+        android:textSize="24sp" />
 
 </RelativeLayout>
