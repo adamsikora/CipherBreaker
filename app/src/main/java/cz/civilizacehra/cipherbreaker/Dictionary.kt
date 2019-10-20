@@ -156,7 +156,7 @@ internal open class Dictionary(private val mContext: Context) {
                         uiHandlers.updateProgress(progress, resultsSize(), computationTime())
                     }
                 }
-                
+
                 line = `in`.readLine()
                 if (line == null) {
                     break
@@ -179,12 +179,12 @@ internal open class Dictionary(private val mContext: Context) {
                 } else if (hamming) {
                     val d = hammingDistance(first, input)
                     if (d < 6) {
-                        matched("(" + d + ") " + word.second)
+                        matched("($d) ${word.second}")
                     }
                 } else if (levenshtein) {
                     val d = levenshteinDistance(first, input)
                     if (d < 6) {
-                        matched("(" + d + ") " + word.second)
+                        matched("($d) ${word.second}")
                     }
                 } else if (countMode) {
                     var allSatisfy = true
