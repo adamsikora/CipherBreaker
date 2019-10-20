@@ -147,6 +147,16 @@ internal open class Dictionary(private val mContext: Context) {
             var assertInvalidLetters = true
 
             while (true) {
+                ++lineCounter
+                if (lineCounter % 10000 == 0) {
+                    val time = System.currentTimeMillis()
+                    if (time - lastUpdate > 100) {
+                        lastUpdate = time
+                        val progress = (100 * lineCounter / totalSize)
+                        uiHandlers.updateProgress(progress, resultsSize(), computationTime())
+                    }
+                }
+                
                 line = `in`.readLine()
                 if (line == null) {
                     break
@@ -167,14 +177,9 @@ internal open class Dictionary(private val mContext: Context) {
                         matched(word.second!!)
                     }
                 } else if (hamming) {
-                    var counter = 0
-                    for (i in first.indices) {
-                        if (first[i] != input[i]) {
-                            ++counter
-                        }
-                    }
-                    if (counter < 6) {
-                        matched("(" + counter + ") " + word.second)
+                    val d = hammingDistance(first, input)
+                    if (d < 6) {
+                        matched("(" + d + ") " + word.second)
                     }
                 } else if (levenshtein) {
                     val d = levenshteinDistance(first, input)
@@ -221,38 +226,11 @@ internal open class Dictionary(private val mContext: Context) {
                         }
                     }
                 }
-                ++lineCounter
-                if (lineCounter % 10000 == 0) {
-                    val time = System.currentTimeMillis()
-                    if (time - lastUpdate > 100) {
-                        lastUpdate = time
-                        val progress = (100 * lineCounter / totalSize)
-                        uiHandlers.updateProgress(progress, resultsSize(), computationTime())
-                    }
-                }
             }
         } catch (e: IOException) {
             uiHandlers.toastIt("Error loading dictionary file")
         }
 
-    }
-
-    private fun levenshteinDistance(aInput: String, bInput: String): Int {
-        val a = aInput.toLowerCase(Locale.ENGLISH)
-        val b = bInput.toLowerCase(Locale.ENGLISH)
-        val costs = IntArray(b.length + 1)
-        for (j in costs.indices)
-            costs[j] = j
-        for (i in 1..a.length) {
-            costs[0] = i
-            var nw = i - 1
-            for (j in 1..b.length) {
-                val cj = min(1 + min(costs[j], costs[j - 1]), if (a[i - 1] == b[j - 1]) nw else nw + 1)
-                nw = costs[j]
-                costs[j] = cj
-            }
-        }
-        return costs[b.length]
     }
 
     protected open fun prepare() {
