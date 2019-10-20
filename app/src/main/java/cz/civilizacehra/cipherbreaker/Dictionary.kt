@@ -204,7 +204,6 @@ internal open class Dictionary(private val mContext: Context) {
                         if (position in 0..25) {
                             ++chars[position]
                         } else {
-                            // TODO map dictionaries contain invalid letters figure out a way to deal with it
                             if (assertInvalidLetters && c != ' ' && (c < '0' || c > '9')) {
                                 uiHandlers.toastIt("Invalid letter in dictionary \"$c\" in $word")
                                 assertInvalidLetters = false

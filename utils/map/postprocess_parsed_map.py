@@ -34,9 +34,10 @@ for line in lines:
     split = line.strip().split(';')
     name = ';'.join(split[0:len(split)-2])
     lat, lon = (float(c) for c in split[-2:])
-    cleared = pattern.sub('', name.lower())
-    unaccented = unidecode.unidecode(cleared)
-    features.append(Feature(unaccented, name, lat, lon))
+    unaccented = unidecode.unidecode(name)
+    cleared = pattern.sub('', unaccented.lower())
+    if cleared:
+        features.append(Feature(cleared, name, lat, lon))
 
 sorted_features = sorted(features)
 filtered_features = []

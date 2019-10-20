@@ -42,7 +42,7 @@ class PresmyslovnikActivity : LocationActivity() {
             DictInfo("cs.canon", 4269351),
             DictInfo("Prague.cbmap", 35874),
             DictInfo("Brno.cbmap", 12842),
-            DictInfo("Czechia.cbmap", 366669)
+            DictInfo("Czechia.cbmap", 366663)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
