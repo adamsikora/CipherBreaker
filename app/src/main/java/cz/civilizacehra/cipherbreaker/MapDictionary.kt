@@ -3,6 +3,7 @@ package cz.civilizacehra.cipherbreaker
 import android.content.Context
 import android.location.Location
 import java.util.*
+import kotlin.math.min
 
 import kotlin.math.round
 
@@ -33,19 +34,20 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
         mLocation = location
     }
 
-    override fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
-                             dictFilename: String): String {
+    override suspend fun findResults(
+            input: String, queryParams: QueryParams, dictInfo: DictInfo,
+            uiHandlers: UiHandlers): String {
         prepare()
 
         setSuffix("")
-        findResultsInternal(input, modeId, minLength, maxLength, dictFilename)
+        findResultsInternal(input, queryParams, dictInfo, uiHandlers)
         if (mSvjz) {
             for (s in mWorldSides) {
-                processWithWorldSide(input, s, modeId, minLength, maxLength, dictFilename)
+                processWithWorldSide(input, s, queryParams, dictInfo, uiHandlers)
             }
         }
 
-        return conclude()
+        return conclude(uiHandlers.updateProgress)
     }
 
     override fun prepare() {
@@ -81,7 +83,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
         }
     }
 
-    override fun conclude(): String {
+    override suspend fun conclude(updateProgress: UpdateProgress): String {
         val resultStr = StringBuilder()
         var counter = 0
         mSortedResults.sort()
@@ -93,15 +95,17 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
                 break
             }
         }
-        return "Result: ($counter) ${computationTime()}\n$resultStr"
+        updateProgress(100, resultsSize(), computationTime())
+        return resultStr.toString()
     }
 
     private fun setSuffix(s: String) {
         mSuffix = if (s.isNotEmpty()) " (${s.toUpperCase(Locale.ENGLISH)})"  else  ""
     }
 
-    private fun processWithWorldSide(input: String, s: String, modeId: Int,
-                                     minLength: Int, maxLength: Int, dictFilename: String) {
+    private suspend fun processWithWorldSide(
+            input: String, s: String, queryParams: QueryParams, dictInfo: DictInfo,
+            uiHandlers: UiHandlers) {
         val arr = s.split("".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         var contains = true
         for (c in arr) {
@@ -115,7 +119,11 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
                 modified = modified.replaceFirst(c.toRegex(), "")
             }
             setSuffix(s)
-            findResultsInternal(modified, modeId, minLength, maxLength, dictFilename)
+            findResultsInternal(modified, queryParams, dictInfo, uiHandlers)
         }
+    }
+
+    override fun resultsSize(): Int {
+        return min(mSortedResults.size, mMaxNumberOfResults)
     }
 }

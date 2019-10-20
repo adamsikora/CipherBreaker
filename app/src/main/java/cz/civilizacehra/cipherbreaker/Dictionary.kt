@@ -7,7 +7,15 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 import java.util.regex.Pattern
+import java.util.regex.PatternSyntaxException
 import kotlin.math.min
+
+data class DictInfo(val name: String, val size: Int)
+data class QueryParams(val modeId: Int, val minLength: Int, val maxLength: Int)
+
+typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double) -> Unit
+typealias ToastIt = suspend (text: String) -> Unit
+data class UiHandlers(val toastIt: ToastIt, val updateProgress: UpdateProgress)
 
 internal open class Dictionary(private val mContext: Context) {
 
@@ -62,16 +70,21 @@ internal open class Dictionary(private val mContext: Context) {
     var mStartTime: Long = 0
     private var mShouldSort = false
 
-    open fun findResults(input: String, modeId: Int, minLength: Int, maxLength: Int,
-                         dictFilename: String): String {
-        mShouldSort = modeId in 3..4
+    open suspend fun findResults(input: String, queryParams: QueryParams, dictInfo: DictInfo,
+                                 uiHandlers: UiHandlers): String {
+        mShouldSort = queryParams.modeId in 3..4
         prepare()
-        findResultsInternal(input, modeId, minLength, maxLength, dictFilename)
-        return conclude()
+        findResultsInternal(input, queryParams, dictInfo, uiHandlers)
+        return conclude(uiHandlers.updateProgress)
     }
 
-    fun findResultsInternal(input: String, modeId: Int, minLength: Int, maxLength: Int,
-                            dictFilename: String) {
+    suspend fun findResultsInternal(input: String, queryParams: QueryParams, dictInfo: DictInfo,
+                                    uiHandlers: UiHandlers) {
+
+        val modeId = queryParams.modeId
+        val minLength = queryParams.minLength
+        val maxLength = queryParams.maxLength
+
         val regex = modeId == 0
         val subset = modeId == 1
         val exact = modeId == 2
@@ -82,11 +95,16 @@ internal open class Dictionary(private val mContext: Context) {
         val counts = if (countMode) mCountsLists[modeId - 6] else null
         val countValues = if (countMode) ArrayList<Int>() else null
         if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein xor countMode)) {
-            mContext.toastIt("No mode selected")
+            uiHandlers.toastIt("No mode selected")
             return
         }
 
-        val pattern = Pattern.compile(input)
+        val pattern = try {
+            Pattern.compile(input)
+        } catch (e: PatternSyntaxException) {
+            uiHandlers.toastIt("Invalid regex syntax")
+            return
+        }
 
         val charCount = IntArray(26)
         if (countMode) {
@@ -94,15 +112,15 @@ internal open class Dictionary(private val mContext: Context) {
                 val position = c - '0'
                 when {
                     position > 9 -> {
-                        mContext.toastIt("Invalid input letter \"$c\". Aborting caclulation")
+                        uiHandlers.toastIt("Invalid input letter \"$c\". Aborting caclulation")
                         return
                     }
                     position >= counts!!.size -> {
-                        mContext.toastIt("Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
+                        uiHandlers.toastIt("Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
                         return
                     }
                     counts[position].isEmpty() -> {
-                        mContext.toastIt("$position has no assigned letters in this mode. Aborting caclulation")
+                        uiHandlers.toastIt("$position has no assigned letters in this mode. Aborting caclulation")
                         return
                     }
                     else -> countValues!!.add(position)
@@ -114,15 +132,18 @@ internal open class Dictionary(private val mContext: Context) {
                 if (position in 0..25) {
                     ++charCount[position]
                 } else {
-                    mContext.toastIt("Invalid input letter \"$c\"")
+                    uiHandlers.toastIt("Invalid input letter \"$c\"")
                 }
             }
         }
 
         try {
-            val inputStream = mContext.assets.open(dictFilename)
+            val inputStream = mContext.assets.open(dictInfo.name)
             val `in` = BufferedReader(InputStreamReader(inputStream))
             var line: String?
+            var lineCounter = 0
+            val totalSize = dictInfo.size
+            var lastUpdate = System.currentTimeMillis()
             var assertInvalidLetters = true
 
             while (true) {
@@ -180,7 +201,7 @@ internal open class Dictionary(private val mContext: Context) {
                         } else {
                             // TODO map dictionaries contain invalid letters figure out a way to deal with it
                             if (assertInvalidLetters && c != ' ' && (c < '0' || c > '9')) {
-                                mContext.toastIt("Invalid letter in dictionary \"$c\" in $word")
+                                uiHandlers.toastIt("Invalid letter in dictionary \"$c\" in $word")
                                 assertInvalidLetters = false
                             }
                         }
@@ -200,9 +221,18 @@ internal open class Dictionary(private val mContext: Context) {
                         }
                     }
                 }
+                ++lineCounter
+                if (lineCounter % 10000 == 0) {
+                    val time = System.currentTimeMillis()
+                    if (time - lastUpdate > 100) {
+                        lastUpdate = time
+                        val progress = (100 * lineCounter / totalSize)
+                        uiHandlers.updateProgress(progress, resultsSize(), computationTime())
+                    }
+                }
             }
         } catch (e: IOException) {
-            mContext.toastIt("Error loading dictionary file")
+            uiHandlers.toastIt("Error loading dictionary file")
         }
 
     }
@@ -244,7 +274,7 @@ internal open class Dictionary(private val mContext: Context) {
         }
     }
 
-    protected open fun conclude(): String {
+    protected open suspend fun conclude(updateProgress: UpdateProgress): String {
         val resultStr = StringBuilder()
         var counter = 0
         if (mShouldSort) {
@@ -258,10 +288,15 @@ internal open class Dictionary(private val mContext: Context) {
                 break
             }
         }
-        return "Result: ($counter) ${computationTime()}\n$resultStr"
+        updateProgress(100, resultsSize(), computationTime())
+        return resultStr.toString()
     }
 
-    fun computationTime(): String {
-        return "${(System.currentTimeMillis() - mStartTime) / 1000.0}s"
+    fun computationTime(): Double {
+        return (System.currentTimeMillis() - mStartTime) / 1000.0
+    }
+
+    open fun resultsSize(): Int {
+        return min(mList.size, mMaxNumberOfResults)
     }
 }

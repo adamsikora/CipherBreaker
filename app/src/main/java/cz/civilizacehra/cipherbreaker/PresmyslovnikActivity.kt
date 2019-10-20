@@ -9,9 +9,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_presmyslovnik.*
+import kotlinx.coroutines.*
 import java.util.*
-
-import java.util.regex.PatternSyntaxException
 
 class PresmyslovnikActivity : LocationActivity() {
 
@@ -21,22 +20,29 @@ class PresmyslovnikActivity : LocationActivity() {
     private val inputBox by lazy {findViewById<EditText>(R.id.inputEditText)}
     private val minLengthBox by lazy {findViewById<EditText>(R.id.minEditText)}
     private val maxLengthBox by lazy {findViewById<EditText>(R.id.maxEditText)}
-    internal val results by lazy {findViewById<TextView>(R.id.resultTextView)}
     private val modeSpinner by lazy {findViewById<Spinner>(R.id.modeSpinner)}
     private val dictionarySpinner by lazy {findViewById<Spinner>(R.id.dictionarySpinner)}
     private val svjz by lazy {findViewById<CheckBox>(R.id.svjzCheckBox)}
+
+    private val countView by lazy {findViewById<TextView>(R.id.countValueView)}
+    private val timeView by lazy {findViewById<TextView>(R.id.timeValueView)}
+    private val progressBar by lazy {findViewById<ProgressBar>(R.id.progressBar)}
+
+    private val resultView by lazy {findViewById<TextView>(R.id.resultTextView)}
+
+    private var mJob: Job = Job()
 
     private val dict: Dictionary by lazy {Dictionary(applicationContext)}
     private val mapDict: MapDictionary by lazy {MapDictionary(applicationContext)}
 
     private val dictionaries = arrayOf(
-            "en.canon",
-            "podst_jm_cz.canon",
-            "cs_CZ_openoffice.canon",
-            "cs.canon",
-            "Prague.cbmap",
-            "Brno.cbmap",
-            "Czechia.cbmap"
+            DictInfo("en.canon", 88955),
+            DictInfo("podst_jm_cz.canon", 23219),
+            DictInfo("cs_CZ_openoffice.canon", 166566),
+            DictInfo("cs.canon", 4269351),
+            DictInfo("Prague.cbmap", 35874),
+            DictInfo("Brno.cbmap", 12842),
+            DictInfo("Czechia.cbmap", 366669)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,29 +115,61 @@ class PresmyslovnikActivity : LocationActivity() {
             applicationContext.toastIt(msg)
             return
         }
-        results.text = getString(R.string.result)
+        val queryParams = QueryParams(modeId, minLength, maxLength)
 
         val input = inputBox.text.toString().toLowerCase(Locale.ENGLISH)
-        val dictName = dictionaries[dictionarySpinner.selectedItemPosition]
-        try {
-            if (isMapDictionaryChosen()) {
-                if (mLocation == null) {
-                    acquireLocation()
-                } else {
-                    mapDict.setLocation(mLocation!!)
-                }
-                mapDict.setSvjz(svjz.isEnabled && svjz.isChecked)
-                results.text = mapDict.findResults(input, modeId, minLength, maxLength, dictName)
+        val dictInfo = dictionaries[dictionarySpinner.selectedItemPosition]
+
+        if (isMapDictionaryChosen()) {
+            if (mLocation == null) {
+                acquireLocation()
             } else {
-                results.text = dict.findResults(input, modeId, minLength, maxLength, dictName)
+                mapDict.setLocation(mLocation!!)
             }
-        } catch (e: PatternSyntaxException) {
-            applicationContext.toastIt("Invalid regex syntax")
-        } catch (e: Throwable) {
-            applicationContext.toastIt("Unknown error ${e.message}")
+            mapDict.setSvjz(svjz.isEnabled && svjz.isChecked)
         }
+        val currentDict = if (isMapDictionaryChosen()) mapDict else dict
 
         saveState()
+
+        asynchronousSearch(currentDict, input, queryParams, dictInfo)
+    }
+
+    private fun asynchronousSearch(dict: Dictionary, input: String, queryParams: QueryParams, dictInfo: DictInfo) {
+        progressBar.progress = 0
+        progressBar.visibility = View.VISIBLE
+        if (mJob.isActive) {
+            mJob.cancel()
+            // TODO make sure job got cancelled
+        }
+        mJob = GlobalScope.launch(Dispatchers.Main) {
+            var text = ""
+            try {
+                withContext(Dispatchers.Default) {
+                    val uiHandlers = UiHandlers(
+                            { text -> withContext(Dispatchers.Main) {
+                                    applicationContext.toastIt(text)
+                                }
+                            },
+                            { progress, count, time -> withContext(Dispatchers.Main) {
+                                    updateProgress(progress, count, time)
+                                }
+                            }
+                    )
+                    text = dict.findResults(input, queryParams, dictInfo, uiHandlers)
+                }
+            } catch (e: Throwable) {
+                applicationContext.toastIt("Unknown error ${e.message}")
+            }
+            progressBar.visibility = View.INVISIBLE
+            resultView.text = text
+        }
+    }
+
+    private fun updateProgress(progress: Int, count: Int, time: Double) {
+        progressBar.progress = progress
+        countView.text = count.toString()
+        timeView.text = String.format(Locale.ENGLISH, "%.3f", time)
     }
 
     private fun isMapDictionaryChosen(): Boolean {
