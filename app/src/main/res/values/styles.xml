@@ -78,9 +78,4 @@
 
     </style>
 
-    <style name="Divider.Vertical" parent="Divider">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
 </resources>
