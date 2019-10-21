@@ -9,49 +9,41 @@
     <RelativeLayout
         android:id="@+id/inputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp" >
 
-        <TableLayout
+        <TextView
+            android:id="@+id/distanceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnCount = "2" >
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:text="Distance:" />
 
-            <TableRow>
+        <EditText
+            android:id="@+id/distanceEditText"
+            android:layout_toEndOf="@+id/distanceTextView"
+            style="@style/azimuther_text_input_style"
+            android:layout_marginEnd="10dp"
+            android:hint="m" />
 
-                <EditText
-                    android:id="@+id/latitudeEditText"
-                    style="@style/azimuther_text_input_style"
-                    android:hint="Latitude" />
-
-                <EditText
-                    android:id="@+id/longitudeEditText"
-                    style="@style/azimuther_text_input_style"
-                    android:hint="Longitude" />
-
-            </TableRow>
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/distanceEditText"
-                    style="@style/azimuther_text_input_style"
-                    android:hint="Distance (m)" />
-
-                <EditText
-                    android:id="@+id/angleEditText"
-                    style="@style/azimuther_text_input_style"
-                    android:hint="Angle (°)" />
-
-            </TableRow>
-
-        </TableLayout>
-
-        <Button
-            android:id="@+id/currBtn"
-            android:layout_width="120dp"
+        <TextView
+            android:id="@+id/angleTextView"
+            android:layout_toEndOf="@+id/distanceEditText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:text="Current Location" />
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:text="Angle:" />
+
+        <EditText
+            android:id="@+id/angleEditText"
+            android:layout_toEndOf="@+id/angleTextView"
+            style="@style/azimuther_text_input_style"
+            android:hint="°" />
 
     </RelativeLayout>
 
@@ -61,16 +53,75 @@
         android:layout_below="@id/inputLayout" />
 
     <RelativeLayout
+        android:id="@+id/positionLayout"
+        android:layout_below="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp" >
+
+        <RelativeLayout
+            android:id="@+id/positionDescriptionLayout"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/currLocationIconLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/positionDescriptionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:text="Position:" />
+
+            <TextView
+                android:id="@+id/positionCoordinatesView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/positionDescriptionView"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/currLocationIconLayout"
+            android:layout_alignParentEnd="true"
+            android:padding="6dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp" >
+
+            <ImageView
+                android:id="@+id/currLocationIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_my_location" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider2"
+        style="@style/Divider.Horizontal"
+        android:layout_below="@id/positionLayout" />
+
+    <RelativeLayout
         android:id="@+id/resultLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@id/divider1">
+        android:layout_below="@id/divider2"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp" >
 
         <RelativeLayout
             android:id="@+id/resultDescriptionLayout"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@id/clipboardIconLayout"
-            android:padding="6dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" >
 
@@ -103,7 +154,7 @@
             android:layout_height="42dp" >
 
             <ImageView
-                android:id="@+id/clipboIcon"
+                android:id="@+id/clipboardIcon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_clipboard" />
@@ -129,7 +180,7 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/divider3"
         style="@style/Divider.Horizontal"
         android:layout_below="@id/resultLayout" />
 
@@ -138,7 +189,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/divider2"
+        android:layout_below="@id/divider3"
         tools:context=".AzimutherActivity" />
 
 </RelativeLayout>

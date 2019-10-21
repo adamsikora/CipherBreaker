@@ -1,6 +1,7 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
+import android.location.Location
 import android.preference.PreferenceManager
 import android.os.Bundle
 import android.text.InputType
@@ -8,32 +9,38 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_presmyslovnik.*
 import kotlinx.coroutines.*
 import java.util.*
 
 class PresmyslovnikActivity : LocationActivity() {
 
-    private val sharedPreferences by lazy {PreferenceManager.getDefaultSharedPreferences(this)}
+    private val sharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
-    private val goBtn by lazy {findViewById<Button>(R.id.GoBtn)}
-    private val inputBox by lazy {findViewById<EditText>(R.id.inputEditText)}
-    private val minLengthBox by lazy {findViewById<EditText>(R.id.minEditText)}
-    private val maxLengthBox by lazy {findViewById<EditText>(R.id.maxEditText)}
-    private val modeSpinner by lazy {findViewById<Spinner>(R.id.modeSpinner)}
-    private val dictionarySpinner by lazy {findViewById<Spinner>(R.id.dictionarySpinner)}
-    private val svjz by lazy {findViewById<CheckBox>(R.id.svjzCheckBox)}
+    private val goBtn by lazy { findViewById<Button>(R.id.GoBtn) }
+    private val inputBox by lazy { findViewById<EditText>(R.id.inputEditText) }
+    private val minLengthBox by lazy { findViewById<EditText>(R.id.minEditText) }
+    private val maxLengthBox by lazy { findViewById<EditText>(R.id.maxEditText) }
+    private val modeSpinner by lazy { findViewById<Spinner>(R.id.modeSpinner) }
+    private val dictionarySpinner by lazy { findViewById<Spinner>(R.id.dictionarySpinner) }
+    private val svjz by lazy { findViewById<CheckBox>(R.id.svjzCheckBox) }
 
-    private val countView by lazy {findViewById<TextView>(R.id.countValueView)}
-    private val timeView by lazy {findViewById<TextView>(R.id.timeValueView)}
-    private val progressBar by lazy {findViewById<ProgressBar>(R.id.progressBar)}
+    private val positionLayout by lazy { findViewById<RelativeLayout>(R.id.positionLayout) }
+    private val positionTextView by lazy { findViewById<TextView>(R.id.positionCoordinatesView) }
+    private val pickFromMapIcon by lazy { findViewById<RelativeLayout>(R.id.pickFromMapIconLayout) }
+    private val currentLocationIcon by lazy { findViewById<RelativeLayout>(R.id.currLocationIconLayout) }
 
-    private val resultView by lazy {findViewById<TextView>(R.id.resultTextView)}
+    private val countView by lazy { findViewById<TextView>(R.id.countValueView) }
+    private val timeView by lazy { findViewById<TextView>(R.id.timeValueView) }
+    private val progressBar by lazy { findViewById<ProgressBar>(R.id.progressBar) }
+
+    private val resultView by lazy { findViewById<TextView>(R.id.resultTextView) }
 
     private var mJob: Job = Job()
 
-    private val dict: Dictionary by lazy {Dictionary(applicationContext)}
-    private val mapDict: MapDictionary by lazy {MapDictionary(applicationContext)}
+    private val dict: Dictionary by lazy { Dictionary(applicationContext) }
+    private val mapDict: MapDictionary by lazy { MapDictionary(applicationContext) }
 
     private val dictionaries = arrayOf(
             DictInfo("en.canon", 88955),
@@ -51,6 +58,7 @@ class PresmyslovnikActivity : LocationActivity() {
 
         dictionarySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                showPositionLayout()
                 if (isMapDictionaryChosen() && mLocation == null) {
                     acquireLocation()
                 }
@@ -70,6 +78,7 @@ class PresmyslovnikActivity : LocationActivity() {
         }
 
         loadSavedState()
+        showPositionLayout()
         refreshSvjz()
 
         inputBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
@@ -84,6 +93,11 @@ class PresmyslovnikActivity : LocationActivity() {
         inputBox.requestFocus()
 
         goBtn.setOnClickListener { searchDictionary() }
+
+        pickFromMapIcon.setOnClickListener {
+            // TODO implement through new activity
+        }
+        currentLocationIcon.setOnClickListener { acquireLocation() }
     }
 
     private fun saveState() {
@@ -174,6 +188,19 @@ class PresmyslovnikActivity : LocationActivity() {
 
     private fun isMapDictionaryChosen(): Boolean {
         return dictionarySpinner.selectedItemPosition in 4..6
+    }
+
+    private fun showPositionLayout() {
+        if (isMapDictionaryChosen()) {
+            positionLayout.visibility = View.VISIBLE
+        } else {
+            positionLayout.visibility = View.GONE
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        positionTextView.text = formatLatLng(LatLng(location.latitude, location.longitude))
+        super.onLocationChanged(location)
     }
 
     override fun onDestroy() {

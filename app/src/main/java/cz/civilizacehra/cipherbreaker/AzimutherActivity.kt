@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -22,20 +21,20 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 
-import java.util.Locale
 import java.util.Objects
 import kotlin.math.*
 
 class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
     private var mMap: GoogleMap? = null
+    private var mPosition: LatLng? = null
     private var mDestination: LatLng? = null
 
-    private val latEditText by lazy { findViewById<EditText>(R.id.latitudeEditText) }
-    private val lonEditText by lazy { findViewById<EditText>(R.id.longitudeEditText) }
     private val distEditText by lazy { findViewById<EditText>(R.id.distanceEditText) }
     private val angleEditText by lazy { findViewById<EditText>(R.id.angleEditText) }
-    private val currentLocationButton by lazy { findViewById<Button>(R.id.currBtn) }
+
+    private val positionTextView by lazy { findViewById<TextView>(R.id.positionCoordinatesView) }
+    private val currentLocationIcon by lazy { findViewById<RelativeLayout>(R.id.currLocationIconLayout) }
 
     private val resultTextView by lazy { findViewById<TextView>(R.id.resultCoordinatesView) }
     private val resultLayout by lazy { findViewById<RelativeLayout>(R.id.resultDescriptionLayout) }
@@ -50,7 +49,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.azimutherMap) as SupportMapFragment?
         Objects.requireNonNull(mapFragment!!).getMapAsync(this)
 
-        currentLocationButton.setOnClickListener { acquireLocation() }
+        currentLocationIcon.setOnClickListener { acquireLocation() }
 
         val onEdit = TextView.OnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -62,8 +61,6 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
             false
         }
 
-        latEditText.setOnEditorActionListener(onEdit)
-        lonEditText.setOnEditorActionListener(onEdit)
         distEditText.setOnEditorActionListener(onEdit)
         angleEditText.setOnEditorActionListener(onEdit)
 
@@ -94,8 +91,9 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     }
 
     private fun setLocation(move: Boolean = true) {
-        val lat = getDouble(latEditText)
-        val lon = getDouble(lonEditText)
+        positionTextView.text = formatLatLng(mPosition!!)
+        val lat = mPosition!!.latitude
+        val lon = mPosition!!.longitude
         val dist = getDouble(distEditText)
         val angle = getDouble(angleEditText)
         if (!lat.isNaN() && !lon.isNaN()) {
@@ -125,15 +123,6 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.toFloat()))
             }
         }
-    }
-
-    private fun formatLatLng(coords: LatLng): String {
-        return "${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)}"
-    }
-
-    private fun formatCoord(coord: Double): String {
-        // 5 digits produces coordinates with precision of ~1m
-        return String.format(Locale.ENGLISH, "%.5f", coord)
     }
 
     private fun getDouble(et: EditText): Double {
@@ -193,8 +182,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     }
 
     private fun setLatLon(latitude: Double, longitude: Double, move: Boolean) {
-        latEditText.setText(formatCoord(latitude))
-        lonEditText.setText(formatCoord(longitude))
+        mPosition = LatLng(latitude, longitude)
         setLocation(move)
     }
 }
