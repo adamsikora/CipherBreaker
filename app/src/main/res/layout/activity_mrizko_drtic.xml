@@ -23,7 +23,7 @@
             android:layout_toStartOf="@+id/GoBtn"
             android:clickable="false"
             android:enabled="true"
-            android:hint="Zadej mrizku..."
+            android:hint="Input Grille to hack. Input must contain n^2 characters. Whitespaces are ignored."
             android:inputType="textMultiLine"
             android:text="helsit\nkeoonv\nnevizr\naecokh\nomovsl\nyctrba" />
 
@@ -37,20 +37,54 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/progressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputLayout" >
+
+        <TextView
+            android:id="@+id/timeDescriptionView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:text="Time:" />
+
+        <TextView
+            android:id="@+id/timeValueView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/timeDescriptionView"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/indeterminateProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressLayout"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:scrollbars="vertical"
-        android:layout_below="@+id/inputLayout"
+        android:layout_below="@+id/indeterminateProgressBar"
         android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/resultTextView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/result" />
+            android:layout_height="wrap_content" />
 
     </ScrollView>
 
