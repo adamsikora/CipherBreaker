@@ -70,7 +70,6 @@ class MrizkoDrticActivity : Activity() {
     }
     private suspend fun <T> runWithProgress(block: suspend CoroutineScope.() -> T) {
         progressBar.visibility = View.VISIBLE
-        // TODO figure out why progress bar is not being animated
         val start = System.currentTimeMillis()
         val progressJob = GlobalScope.launch(Dispatchers.Main) {
             while (true) {
