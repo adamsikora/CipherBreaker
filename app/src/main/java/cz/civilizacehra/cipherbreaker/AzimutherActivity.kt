@@ -66,13 +66,13 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
         resultLayout.setOnClickListener {
             if (mDestination != null) {
-                applicationContext.copyToClipboard("Coordinates", formatLatLng(mDestination!!))
+                applicationContext.copyToClipboard("Coordinates", Utils.formatLatLng(mDestination!!))
             }
         }
 
         clipboardIcon.setOnClickListener {
             if (mDestination != null) {
-                applicationContext.copyToClipboard("Coordinates", formatLatLng(mDestination!!))
+                applicationContext.copyToClipboard("Coordinates", Utils.formatLatLng(mDestination!!))
             } else {
                 applicationContext.toastIt("Destination not set")
             }
@@ -80,8 +80,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
         mapyIcon.setOnClickListener {
             if (mDestination != null) {
-                val lat = formatCoord(mDestination!!.latitude)
-                val lon = formatCoord(mDestination!!.longitude)
+                val lat = Utils.formatCoord(mDestination!!.latitude)
+                val lon = Utils.formatCoord(mDestination!!.longitude)
                 val url = "https://en.mapy.cz/zakladni?x=$lon&y=$lat&z=17&source=coor&id=$lon%2C$lat"
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             } else {
@@ -91,7 +91,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     }
 
     private fun setLocation(move: Boolean = true) {
-        positionTextView.text = formatLatLng(mPosition!!)
+        positionTextView.text = Utils.formatLatLng(mPosition!!)
         val lat = mPosition!!.latitude
         val lon = mPosition!!.longitude
         val dist = getDouble(distEditText)
@@ -105,7 +105,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
             if (!dist.isNaN() && !angle.isNaN()) {
                 val dest = computeLatLng(lat, lon, dist, angle)
                 mDestination = dest
-                resultTextView.text = formatLatLng(dest)
+                resultTextView.text = Utils.formatLatLng(dest)
 
                 mMap!!.addMarker(MarkerOptions().position(dest).title("Destination"))
                 mMap!!.addPolyline(PolylineOptions().color(-0x10000).add(loc, dest))

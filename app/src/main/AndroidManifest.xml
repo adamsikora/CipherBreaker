@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PresmyslovnikActivity" />
+        <activity android:name=".PickFromMapActivity" />
         <activity android:name=".DebinarizatorActivity" />
         <activity android:name=".DeternarizatorActivity" />
         <activity android:name=".MrizkoDrticActivity" />

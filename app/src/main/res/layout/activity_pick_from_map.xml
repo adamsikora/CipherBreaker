@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:importantForAutofill="noExcludeDescendants"
+    tools:context="cz.civilizacehra.cipherbreaker.MrizkoDrticActivity">
+
+    <RelativeLayout
+        android:id="@+id/positionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp" >
+
+        <RelativeLayout
+            android:id="@+id/positionDescriptionLayout"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/confirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/positionDescriptionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:text="Position:" />
+
+            <TextView
+                android:id="@+id/positionCoordinatesView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/positionDescriptionView"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Confirm" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider1"
+        style="@style/Divider.Horizontal"
+        android:layout_below="@id/positionLayout" />
+
+    <fragment
+        android:id="@+id/azimutherMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/divider1"
+        tools:context=".AzimutherActivity" />
+
+</RelativeLayout>

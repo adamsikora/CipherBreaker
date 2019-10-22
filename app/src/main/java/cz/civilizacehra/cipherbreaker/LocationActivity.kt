@@ -10,8 +10,6 @@ import android.os.Bundle
 
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
-import com.google.android.gms.maps.model.LatLng
-import java.util.*
 
 abstract class LocationActivity : FragmentActivity(), LocationListener {
 
@@ -51,15 +49,6 @@ abstract class LocationActivity : FragmentActivity(), LocationListener {
             return
         }
         mLocationManager.removeUpdates(this)
-    }
-
-    internal fun formatCoord(coord: Double): String {
-        // 5 digits produces coordinates with precision of ~1m
-        return String.format(Locale.ENGLISH, "%.5f", coord)
-    }
-
-    internal fun formatLatLng(coords: LatLng): String {
-        return "${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)}"
     }
 
     override fun onLocationChanged(location: Location) {

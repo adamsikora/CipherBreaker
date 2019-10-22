@@ -1,5 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
+import android.app.Activity
 import android.content.Context
 import android.location.Location
 import android.preference.PreferenceManager
@@ -13,6 +14,8 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_presmyslovnik.*
 import kotlinx.coroutines.*
 import java.util.*
+import android.content.Intent
+
 
 class PresmyslovnikActivity : LocationActivity() {
 
@@ -100,7 +103,14 @@ class PresmyslovnikActivity : LocationActivity() {
         goBtn.setOnClickListener { searchDictionary() }
 
         pickFromMapIcon.setOnClickListener {
-            // TODO implement through new activity
+            val intent = Intent(this@PresmyslovnikActivity, PickFromMapActivity::class.java)
+            if (mLocation != null) {
+                val bundle = Bundle()
+                bundle.putDouble("latitude", mLocation!!.latitude)
+                bundle.putDouble("longitude", mLocation!!.longitude)
+                intent.putExtras(bundle)
+            }
+            this@PresmyslovnikActivity.startActivityForResult(intent, 1)
         }
         currentLocationIcon.setOnClickListener { acquireLocation() }
     }
@@ -204,8 +214,25 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     override fun onLocationChanged(location: Location) {
-        positionTextView.text = formatLatLng(LatLng(location.latitude, location.longitude))
+        positionTextView.text = Utils.formatLatLng(LatLng(location.latitude, location.longitude))
         super.onLocationChanged(location)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                val lat = data!!.getDoubleExtra("selectedLatitude", 0.0)
+                val lon = data.getDoubleExtra("selectedLongitude", 0.0)
+                if (lat != 0.0 && lon != 0.0) {
+                    val selectedLocation = Location("")
+                    selectedLocation.latitude = lat
+                    selectedLocation.longitude = lon
+                    mLocation = selectedLocation
+                    positionTextView.text = Utils.formatLatLng(LatLng(lat, lon))
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
