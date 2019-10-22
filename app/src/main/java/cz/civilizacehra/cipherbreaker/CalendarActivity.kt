@@ -1,16 +1,14 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Switch
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 
 import java.io.BufferedReader
 import java.io.IOException
@@ -26,11 +24,15 @@ class CalendarActivity : Activity() {
 
     private val daySpinner by lazy { findViewById<Spinner>(R.id.daySpinner) }
     private val monthSpinner by lazy { findViewById<Spinner>(R.id.monthSpinner) }
+    private val yearEditText by lazy { findViewById<EditText>(R.id.yearEditText) }
     private val dayOfWeekSpinner by lazy { findViewById<Spinner>(R.id.dayOfWeekSpinner) }
 
-    private val sortBySwitch by lazy { findViewById<Switch>(R.id.sortBySwitch) }
+    private val dayLayout by lazy { findViewById<RelativeLayout>(R.id.dayLayout) }
+    private val monthLayout by lazy { findViewById<RelativeLayout>(R.id.monthLayout) }
+    private val yearLayout by lazy { findViewById<RelativeLayout>(R.id.yearLayout) }
+    private val dayOfWeekLayout by lazy { findViewById<RelativeLayout>(R.id.dayOfWeekLayout) }
 
-    private val yearEditText by lazy { findViewById<EditText>(R.id.yearEditText) }
+    private val sortBySwitch by lazy { findViewById<Switch>(R.id.sortBySwitch) }
     private val queryEditText by lazy { findViewById<EditText>(R.id.queryEditText) }
 
     private val holidaysTextView by lazy { findViewById<TextView>(R.id.holidaysTextView) }
@@ -72,9 +74,6 @@ class CalendarActivity : Activity() {
         daySpinner.onItemSelectedListener = spinnerListener
         monthSpinner.onItemSelectedListener = spinnerListener
         dayOfWeekSpinner.onItemSelectedListener = spinnerListener
-
-        sortBySwitch.setOnCheckedChangeListener { _, _ -> updateHolidays() }
-
         yearEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -82,6 +81,18 @@ class CalendarActivity : Activity() {
                 updateHolidays()
             }
         })
+
+        dayLayout.setOnClickListener{ daySpinner.performClick() }
+        monthLayout.setOnClickListener{ monthSpinner.performClick() }
+        yearLayout.setOnClickListener{
+            yearEditText.requestFocus()
+            yearEditText.setSelection(yearEditText.text.length)
+            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.showSoftInput(yearEditText, InputMethodManager.SHOW_IMPLICIT)
+        }
+        dayOfWeekLayout.setOnClickListener{ dayOfWeekSpinner.performClick() }
+
+        sortBySwitch.setOnCheckedChangeListener { _, _ -> updateHolidays() }
         queryEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

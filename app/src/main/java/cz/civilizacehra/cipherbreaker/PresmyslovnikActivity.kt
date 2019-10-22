@@ -24,6 +24,8 @@ class PresmyslovnikActivity : LocationActivity() {
     private val maxLengthBox by lazy { findViewById<EditText>(R.id.maxEditText) }
     private val modeSpinner by lazy { findViewById<Spinner>(R.id.modeSpinner) }
     private val dictionarySpinner by lazy { findViewById<Spinner>(R.id.dictionarySpinner) }
+    private val modeLayout by lazy { findViewById<RelativeLayout>(R.id.modeLayout) }
+    private val dictionaryLayout by lazy { findViewById<RelativeLayout>(R.id.dictionaryLayout) }
     private val svjz by lazy { findViewById<CheckBox>(R.id.svjzCheckBox) }
 
     private val positionLayout by lazy { findViewById<RelativeLayout>(R.id.positionLayout) }
@@ -76,6 +78,9 @@ class PresmyslovnikActivity : LocationActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        dictionaryLayout.setOnClickListener{ dictionarySpinner.performClick() }
+        modeLayout.setOnClickListener{ modeSpinner.performClick() }
 
         loadSavedState()
         showPositionLayout()
