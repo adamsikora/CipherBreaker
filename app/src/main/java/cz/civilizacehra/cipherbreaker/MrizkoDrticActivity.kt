@@ -32,6 +32,8 @@ class MrizkoDrticActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mrizko_drtic)
 
+        mJob.cancel()
+
         goBtn.setOnClickListener {
             val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -48,8 +50,8 @@ class MrizkoDrticActivity : Activity() {
 
     private fun computeGrid(input: String) {
         if (mJob.isActive) {
-            mJob.cancel()
-            // TODO make sure job got cancelled
+            applicationContext.toastIt("Computation already running")
+            return
         }
         mJob = GlobalScope.launch(Dispatchers.Main) {
             if (!isTrieInitialized) {
