@@ -165,33 +165,40 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     private fun asynchronousSearch(dict: Dictionary, input: String, queryParams: QueryParams, dictInfo: DictInfo) {
-        progressBar.progress = 0
-        progressBar.visibility = View.VISIBLE
-        if (mJob.isActive) {
-            mJob.cancel()
-            // TODO make sure job got cancelled
-        }
-        mJob = GlobalScope.launch(Dispatchers.Main) {
-            var text = ""
-            try {
-                withContext(Dispatchers.Default) {
-                    val uiHandlers = UiHandlers(
-                            { text -> withContext(Dispatchers.Main) {
-                                    applicationContext.toastIt(text)
-                                }
-                            },
-                            { progress, count, time -> withContext(Dispatchers.Main) {
-                                    updateProgress(progress, count, time)
-                                }
-                            }
-                    )
-                    text = dict.findResults(input, queryParams, dictInfo, uiHandlers)
-                }
-            } catch (e: Throwable) {
-                applicationContext.toastIt("Unknown error ${e.message}")
+        GlobalScope.launch(Dispatchers.Main) {
+            if (mJob.isActive) {
+                mJob.cancelAndJoin()
             }
-            progressBar.visibility = View.INVISIBLE
-            resultView.text = text
+            mJob = GlobalScope.launch(Dispatchers.Main) {
+                progressBar.progress = 0
+                progressBar.visibility = View.VISIBLE
+                var text = ""
+                try {
+                    withContext(Dispatchers.Default) {
+                        val uiHandlers = UiHandlers(
+                                { text ->
+                                    withContext(Dispatchers.Main) {
+                                        applicationContext.toastIt(text)
+                                    }
+                                },
+                                { progress, count, time ->
+                                    withContext(Dispatchers.Main) {
+                                        updateProgress(progress, count, time)
+                                    }
+                                }
+                        )
+                        text = dict.findResults(input, queryParams, dictInfo, uiHandlers)
+                        progressBar.visibility = View.INVISIBLE
+                    }
+                } catch (e: Throwable) {
+                    if (e is CancellationException) {
+                        throw e
+                    } else {
+                        applicationContext.toastIt("Unknown error ${e.message}")
+                    }
+                }
+                resultView.text = text
+            }
         }
     }
 
