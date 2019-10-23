@@ -13,7 +13,7 @@ import kotlin.math.min
 data class DictInfo(val name: String, val size: Int)
 data class QueryParams(val modeId: Int, val minLength: Int, val maxLength: Int)
 
-typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double) -> Unit
+typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double, result: String) -> Unit
 typealias ToastIt = suspend (text: String) -> Unit
 data class UiHandlers(val toastIt: ToastIt, val updateProgress: UpdateProgress)
 
@@ -71,11 +71,11 @@ internal open class Dictionary(private val mContext: Context) {
     private var mShouldSort = false
 
     open suspend fun findResults(input: String, queryParams: QueryParams, dictInfo: DictInfo,
-                                 uiHandlers: UiHandlers): String {
+                                 uiHandlers: UiHandlers) {
         mShouldSort = queryParams.modeId in 3..4
         prepare()
         findResultsInternal(input, queryParams, dictInfo, uiHandlers)
-        return conclude(uiHandlers.updateProgress)
+        uiHandlers.updateProgress(100, resultsSize(), computationTime(), conclude())
     }
 
     suspend fun findResultsInternal(input: String, queryParams: QueryParams, dictInfo: DictInfo,
@@ -153,7 +153,7 @@ internal open class Dictionary(private val mContext: Context) {
                     if (time - lastUpdate > 100) {
                         lastUpdate = time
                         val progress = (100 * lineCounter / totalSize)
-                        uiHandlers.updateProgress(progress, resultsSize(), computationTime())
+                        uiHandlers.updateProgress(progress, resultsSize(), computationTime(), conclude())
                     }
                 }
 
@@ -251,7 +251,7 @@ internal open class Dictionary(private val mContext: Context) {
         }
     }
 
-    protected open suspend fun conclude(updateProgress: UpdateProgress): String {
+    protected open suspend fun conclude(): String {
         val resultStr = StringBuilder()
         var counter = 0
         if (mShouldSort) {
@@ -265,7 +265,6 @@ internal open class Dictionary(private val mContext: Context) {
                 break
             }
         }
-        updateProgress(100, resultsSize(), computationTime())
         return resultStr.toString()
     }
 

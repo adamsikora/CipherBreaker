@@ -172,7 +172,6 @@ class PresmyslovnikActivity : LocationActivity() {
             mJob = GlobalScope.launch(Dispatchers.Main) {
                 progressBar.progress = 0
                 progressBar.visibility = View.VISIBLE
-                var text = ""
                 try {
                     withContext(Dispatchers.Default) {
                         val uiHandlers = UiHandlers(
@@ -181,13 +180,13 @@ class PresmyslovnikActivity : LocationActivity() {
                                         applicationContext.toastIt(text)
                                     }
                                 },
-                                { progress, count, time ->
+                                { progress, count, time, result ->
                                     withContext(Dispatchers.Main) {
-                                        updateProgress(progress, count, time)
+                                        updateProgress(progress, count, time, result)
                                     }
                                 }
                         )
-                        text = dict.findResults(input, queryParams, dictInfo, uiHandlers)
+                        dict.findResults(input, queryParams, dictInfo, uiHandlers)
                         progressBar.visibility = View.INVISIBLE
                     }
                 } catch (e: Throwable) {
@@ -197,15 +196,15 @@ class PresmyslovnikActivity : LocationActivity() {
                         applicationContext.toastIt("Unknown error ${e.message}")
                     }
                 }
-                resultView.text = text
             }
         }
     }
 
-    private fun updateProgress(progress: Int, count: Int, time: Double) {
+    private fun updateProgress(progress: Int, count: Int, time: Double, result: String) {
         progressBar.progress = progress
         countView.text = count.toString()
         timeView.text = String.format(Locale.ENGLISH, "%.3f", time)
+        resultView.text = result
     }
 
     private fun isMapDictionaryChosen(): Boolean {

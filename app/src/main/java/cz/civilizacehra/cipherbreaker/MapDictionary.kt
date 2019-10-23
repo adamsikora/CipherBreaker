@@ -35,8 +35,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
     }
 
     override suspend fun findResults(
-            input: String, queryParams: QueryParams, dictInfo: DictInfo,
-            uiHandlers: UiHandlers): String {
+            input: String, queryParams: QueryParams, dictInfo: DictInfo, uiHandlers: UiHandlers) {
         prepare()
 
         setSuffix("")
@@ -47,7 +46,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
             }
         }
 
-        return conclude(uiHandlers.updateProgress)
+        uiHandlers.updateProgress(100, resultsSize(), computationTime(), conclude())
     }
 
     override fun prepare() {
@@ -83,7 +82,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
         }
     }
 
-    override suspend fun conclude(updateProgress: UpdateProgress): String {
+    override suspend fun conclude(): String {
         val resultStr = StringBuilder()
         var counter = 0
         mSortedResults.sort()
@@ -95,7 +94,6 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
                 break
             }
         }
-        updateProgress(100, resultsSize(), computationTime())
         return resultStr.toString()
     }
 
