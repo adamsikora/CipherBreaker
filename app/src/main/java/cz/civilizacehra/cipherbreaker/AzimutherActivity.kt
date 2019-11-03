@@ -55,7 +55,12 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
-                setLocation()
+                if (mPosition != null) {
+                    setLocation()
+                } else {
+                    val msg = "Set starting location either by clicking in map or by getting your current location"
+                    applicationContext.toastIt(msg)
+                }
                 return@OnEditorActionListener true
             }
             false
