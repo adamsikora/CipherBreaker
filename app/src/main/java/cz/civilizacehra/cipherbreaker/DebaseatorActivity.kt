@@ -69,7 +69,7 @@ abstract class DebaseatorActivity : Activity() {
     private fun addRow() {
         val layout = layoutInflater.inflate(mRowLayout, null, false) as RelativeLayout
         rows.add(layout)
-        rowsLayout!!.addView(layout)
+        rowsLayout.addView(layout)
 
         for (j in 0 until mBaseLength) {
             val view = layout.findViewById<ImageView>(bits!![j])

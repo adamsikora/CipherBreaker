@@ -28,6 +28,9 @@ class MainActivity : Activity() {
                         getString(R.string.deternarizator), R.drawable.ic_three,
                         Intent(this@MainActivity, DeternarizatorActivity::class.java)),
                 ActivityInstance(
+                        getString(R.string.griller), R.drawable.ic_grid_on,
+                        Intent(this@MainActivity, GrillerActivity::class.java)),
+                ActivityInstance(
                         getString(R.string.mrizkodrtic), R.drawable.ic_grid_on,
                         Intent(this@MainActivity, MrizkoDrticActivity::class.java)),
                 ActivityInstance(

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:importantForAutofill="noExcludeDescendants"
+    tools:context="cz.civilizacehra.cipherbreaker.MrizkoDrticActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/inputLayout">
+
+        <RelativeLayout
+            android:id="@+id/grilleControlsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <RelativeLayout
+                android:id="@+id/sizeLayout"
+                style="@style/item_with_description_style">
+
+                <TextView
+                    android:id="@+id/sizeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="Size:" />
+
+                <Spinner
+                    android:id="@+id/sizeSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sizeView"
+                    android:entries="@array/sizes" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/grilleInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/grilleControlsLayout">
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/inputLayout">
+
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="32sp" />
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -24,6 +24,7 @@
         <activity android:name=".PickFromMapActivity" />
         <activity android:name=".DebinarizatorActivity" />
         <activity android:name=".DeternarizatorActivity" />
+        <activity android:name=".GrillerActivity" />
         <activity android:name=".MrizkoDrticActivity" />
         <activity android:name=".CalendarActivity" />
         <activity android:name=".AboutActivity" />

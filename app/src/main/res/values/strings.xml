@@ -4,6 +4,7 @@
     <string name="presmyslovnik">Dictionary Searcher</string>
     <string name="debinarizator">Binary Reader</string>
     <string name="deternarizator">Ternary Reader</string>
+    <string name="griller">Grille Helper</string>
     <string name="mrizkodrtic">Grille Hacker</string>
     <string name="azimuther">Azimuth Finder</string>
     <string name="calendar">Name Day Searcher</string>
@@ -97,5 +98,15 @@
         <item>10</item>
         <item>11</item>
         <item>12</item>
+    </string-array>
+
+    <string-array name="sizes">
+        <item>4x4</item>
+        <item>5x5</item>
+        <item>6x6</item>
+        <item>7x7</item>
+        <item>8x8</item>
+        <item>9x9</item>
+        <item>10x10</item>
     </string-array>
 </resources>
