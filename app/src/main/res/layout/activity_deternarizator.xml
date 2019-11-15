@@ -6,105 +6,199 @@
     tools:context="cz.civilizacehra.cipherbreaker.DebinarizatorActivity">
 
     <RelativeLayout
-        android:id="@+id/legendLayout"
+        android:id="@+id/topLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:paddingTop="12dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/settingsLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@color/gray">
 
-            <ImageView
-                android:id="@+id/interpretation1"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary1" />
-
-            <ImageView
-                android:id="@+id/interpretation2"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary3" />
-
-            <ImageView
-                android:id="@+id/interpretation3"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary2" />
-
-            <ImageView
-                android:id="@+id/interpretation4"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary4" />
-
-            <ImageView
-                android:id="@+id/interpretation5"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary5" />
-
-            <ImageView
-                android:id="@+id/interpretation6"
-                style="@style/ternary_result_type_style"
-                android:src="@drawable/ternary6" />
-
-        </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/startRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/chCheckBox"
-            android:checkedButton="@+id/rbtn1"
-            android:orientation="horizontal">
-
-            <TextView
+            <RadioGroup
+                android:id="@+id/startRadioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Start " />
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:checkedButton="@+id/rbtn1"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rbtn1"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alphabet Start " />
+
+                <RadioButton
+                    android:id="@+id/rbtn1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1" />
+
+                <RadioButton
+                    android:id="@+id/rbtn0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </RadioGroup>
+
+            <Switch
+                android:id="@+id/chSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1" />
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/startRadioGroup"
+                android:checked="false"
+                android:text="Include CH " />
 
-            <RadioButton
-                android:id="@+id/rbtn0"
+            <RadioGroup
+                android:id="@+id/directionRadioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0" />
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/chSwitch"
+                android:checkedButton="@+id/rbtnRight"
+                android:orientation="horizontal">
 
-        </RadioGroup>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reading Direction " />
 
-        <CheckBox
-            android:id="@+id/chCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:checked="false"
-            android:text="Ch" />
+                <RadioButton
+                    android:id="@+id/rbtnRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="-&gt;" />
 
-        <Switch
-            android:id="@+id/directionSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/chCheckBox"
-            android:layout_alignStart="@+id/startRadioGroup"
-            android:checked="true"
-            android:text="Dir" />
+                <RadioButton
+                    android:id="@+id/rbtnLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="&lt;-" />
 
-        <Switch
-            android:id="@+id/modeSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/chCheckBox"
-            android:layout_alignParentEnd="true"
-            android:text="Val/Ord" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/modeRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/directionRadioGroup"
+                android:checkedButton="@+id/rbtnValues"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Permutate " />
+
+                <RadioButton
+                    android:id="@+id/rbtnValues"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Values" />
+
+                <RadioButton
+                    android:id="@+id/rbtnOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Order" />
+
+            </RadioGroup>
+
+            <RelativeLayout
+                android:id="@+id/closeIconLayout"
+                android:layout_alignParentEnd="true"
+                android:padding="6dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp" >
+
+                <ImageView
+                    android:id="@+id/closeIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_close" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/legendLayout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/settingsLayout">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/interpretation1"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary1" />
+
+                <ImageView
+                    android:id="@+id/interpretation2"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary3" />
+
+                <ImageView
+                    android:id="@+id/interpretation3"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary2" />
+
+                <ImageView
+                    android:id="@+id/interpretation4"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary4" />
+
+                <ImageView
+                    android:id="@+id/interpretation5"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary5" />
+
+                <ImageView
+                    android:id="@+id/interpretation6"
+                    style="@style/ternary_result_type_style"
+                    android:src="@drawable/ternary6" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/settingsIconLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="6dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp" >
+
+                <ImageView
+                    android:id="@+id/settingsIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_settings" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -112,7 +206,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/legendLayout">
+        android:layout_below="@+id/topLayout">
 
         <LinearLayout
             android:id="@+id/rowsLayout"
