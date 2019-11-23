@@ -72,7 +72,7 @@ internal open class Dictionary(private val mContext: Context) {
 
     open suspend fun findResults(input: String, queryParams: QueryParams, dictInfo: DictInfo,
                                  uiHandlers: UiHandlers) {
-        mShouldSort = queryParams.modeId in 3..4
+        mShouldSort = queryParams.modeId in 4..5
         prepare()
         findResultsInternal(input, queryParams, dictInfo, uiHandlers)
         uiHandlers.updateProgress(100, resultsSize(), computationTime(), conclude())
