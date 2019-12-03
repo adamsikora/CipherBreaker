@@ -23,7 +23,7 @@ class AboutActivity : Activity() {
                                 "Note that it contains some powerful tools and usage of some " +
                                 "might be against the rules of some particular Puzzle Hunts. " +
                                 "Suggestions or contributions on github are welcome. ")
-                .addItem(Element().setTitle("Version 1.1"))
+                .addItem(Element().setTitle("Version 1.2"))
                 .addEmail("adam.sikora73@gmail.com")
                 .addGitHub("adamsikora/CipherBreaker")
                 .addItem(copyRightsElement)
