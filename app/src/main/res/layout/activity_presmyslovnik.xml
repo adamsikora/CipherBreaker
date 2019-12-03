@@ -81,7 +81,8 @@
                 android:ems="10"
                 android:enabled="true"
                 android:hint="Min"
-                android:inputType="number" />
+                android:inputType="number"
+                android:selectAllOnFocus="true" />
 
             <TextView
                 android:id="@+id/dashDescriptionView"
@@ -102,7 +103,8 @@
                 android:ems="10"
                 android:enabled="true"
                 android:hint="Max"
-                android:inputType="number" />
+                android:inputType="number"
+                android:selectAllOnFocus="true" />
 
             <CheckBox
                 android:id="@+id/svjzCheckBox"
@@ -124,7 +126,8 @@
             android:enabled="true"
             android:hint="Query"
             android:imeOptions="actionGo"
-            android:inputType="text" />
+            android:inputType="text"
+            android:selectAllOnFocus="true" />
 
         <Button
             android:id="@+id/GoBtn"

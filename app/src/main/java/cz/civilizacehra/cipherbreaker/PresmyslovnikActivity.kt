@@ -119,12 +119,18 @@ class PresmyslovnikActivity : LocationActivity() {
         val editor = sharedPreferences.edit()
         editor.putInt("modeSpinner", modeSpinner.selectedItemPosition)
         editor.putInt("dictionarySpinner", dictionarySpinner.selectedItemPosition)
+        editor.putString("minLength", minLengthBox.text.toString())
+        editor.putString("maxLength", maxLengthBox.text.toString())
+        editor.putString("query", inputBox.text.toString())
         editor.apply()
     }
 
     private fun loadSavedState() {
         modeSpinner.setSelection(sharedPreferences.getInt("modeSpinner", 0))
         dictionarySpinner.setSelection(sharedPreferences.getInt("dictionarySpinner", 0))
+        minLengthBox.setText(sharedPreferences.getString("minLength", ""))
+        maxLengthBox.setText(sharedPreferences.getString("maxLength", ""))
+        inputBox.setText(sharedPreferences.getString("query", ""))
     }
 
     private fun refreshSvjz() {
