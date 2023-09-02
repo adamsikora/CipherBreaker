@@ -40,6 +40,9 @@ class MainActivity : Activity() {
                         getString(R.string.calendar), R.drawable.ic_date_range,
                         Intent(this@MainActivity, CalendarActivity::class.java)),
                 ActivityInstance(
+                        getString(R.string.primes), R.drawable.ic_prime,
+                        Intent(this@MainActivity, PrimeActivity::class.java)),
+                ActivityInstance(
                         getString(R.string.principtrainer), R.drawable.ic_school,
                         Intent(Intent.ACTION_VIEW, Uri.parse("https://app.civilizacehra.cz"))),
                 ActivityInstance(
