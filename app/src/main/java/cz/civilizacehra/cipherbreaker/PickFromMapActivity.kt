@@ -63,7 +63,7 @@ class PickFromMapActivity : FragmentActivity(), OnMapReadyCallback {
                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
 
             if (move) {
-                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(mPosition, 16.toFloat()))
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(mPosition!!, 16.toFloat()))
             }
         }
     }

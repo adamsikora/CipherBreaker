@@ -41,8 +41,8 @@ class Holiday internal constructor(year: Int, val month: Int, val day: Int, val 
 
     private fun tryMatch(name: String, query: String): Boolean {
         val pattern = Pattern.compile(query)
-        val test = name.toLowerCase(Locale.ENGLISH)
-        return pattern.matcher(test).find() || test.contains(query.toLowerCase(Locale.ENGLISH))
+        val test = name.lowercase(Locale.ENGLISH)
+        return pattern.matcher(test).find() || test.contains(query.lowercase(Locale.ENGLISH))
     }
 
     companion object {

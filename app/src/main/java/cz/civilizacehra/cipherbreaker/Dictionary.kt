@@ -112,15 +112,15 @@ internal open class Dictionary(private val mContext: Context) {
                 val position = c - '0'
                 when {
                     position > 9 -> {
-                        uiHandlers.toastIt("Invalid input letter \"$c\". Aborting caclulation")
+                        uiHandlers.toastIt("Invalid input letter \"$c\". Aborting calculation")
                         return
                     }
                     position >= counts!!.size -> {
-                        uiHandlers.toastIt("Only numbers up to ${counts.size} are usable in this mode. Aborting caclulation")
+                        uiHandlers.toastIt("Only numbers up to ${counts.size} are usable in this mode. Aborting calculation")
                         return
                     }
                     counts[position].isEmpty() -> {
-                        uiHandlers.toastIt("$position has no assigned letters in this mode. Aborting caclulation")
+                        uiHandlers.toastIt("$position has no assigned letters in this mode. Aborting calculation")
                         return
                     }
                     else -> countValues!!.add(position)

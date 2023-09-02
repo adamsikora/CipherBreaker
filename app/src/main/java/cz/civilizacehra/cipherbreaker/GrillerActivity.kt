@@ -317,7 +317,7 @@ class GrillerActivity : Activity() {
         for (i in 0 until size) {
             for (j in 0 until size) {
                 val cell = grille!![i][j]
-                val inputLetter = inputLetters[i*size + j].toString().toUpperCase(Locale.ENGLISH)
+                val inputLetter = inputLetters[i*size + j].toString().uppercase(Locale.ENGLISH)
                 if (inputLetter != "_") {
                     cell.setText(inputLetter)
                 }

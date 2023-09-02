@@ -5,8 +5,8 @@ import kotlin.math.min
 
 
 fun levenshteinDistance(aInput: String, bInput: String): Int {
-    val a = aInput.toLowerCase(Locale.ENGLISH)
-    val b = bInput.toLowerCase(Locale.ENGLISH)
+    val a = aInput.lowercase(Locale.ENGLISH)
+    val b = bInput.lowercase(Locale.ENGLISH)
     val costs = IntArray(b.length + 1)
     for (j in costs.indices)
         costs[j] = j
@@ -23,8 +23,8 @@ fun levenshteinDistance(aInput: String, bInput: String): Int {
 }
 
 fun hammingDistance(aInput: String, bInput: String): Int {
-    val a = aInput.toLowerCase(Locale.ENGLISH)
-    val b = bInput.toLowerCase(Locale.ENGLISH)
+    val a = aInput.lowercase(Locale.ENGLISH)
+    val b = bInput.lowercase(Locale.ENGLISH)
     var counter = 0
     for (i in a.indices) {
         if (a[i] != b[i]) {

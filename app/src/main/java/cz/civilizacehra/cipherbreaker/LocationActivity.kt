@@ -57,6 +57,7 @@ abstract class LocationActivity : FragmentActivity(), LocationListener {
         ceaseLocation()
     }
 
+    @Deprecated("")
     override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
 
     }

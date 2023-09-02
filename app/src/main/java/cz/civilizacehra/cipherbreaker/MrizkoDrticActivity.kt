@@ -38,7 +38,7 @@ class MrizkoDrticActivity : Activity() {
             val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-            val input = inputBox.text.toString().replace("[^A-Za-z0-9_]".toRegex(), "").toLowerCase(Locale.ENGLISH)
+            val input = inputBox.text.toString().replace("[^A-Za-z0-9_]".toRegex(), "").lowercase(Locale.ENGLISH)
 
             try {
                 computeGrid(input)

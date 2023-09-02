@@ -98,7 +98,7 @@ internal class MapDictionary(context: Context) : Dictionary(context) {
     }
 
     private fun setSuffix(s: String) {
-        mSuffix = if (s.isNotEmpty()) " (${s.toUpperCase(Locale.ENGLISH)})"  else  ""
+        mSuffix = if (s.isNotEmpty()) " (${s.uppercase(Locale.ENGLISH)})"  else  ""
     }
 
     private suspend fun processWithWorldSide(

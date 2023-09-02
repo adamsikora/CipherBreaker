@@ -11,7 +11,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.activity_presmyslovnik.*
 import kotlinx.coroutines.*
 import java.util.*
 import android.content.Intent
@@ -76,7 +75,7 @@ class PresmyslovnikActivity : LocationActivity() {
         modeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 refreshSvjz()
-                inputEditText.inputType = if (position >= 6) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
+                findViewById<EditText>(R.id.inputEditText).inputType = if (position >= 6) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -152,7 +151,7 @@ class PresmyslovnikActivity : LocationActivity() {
         }
         val queryParams = QueryParams(modeId, minLength, maxLength)
 
-        val input = inputBox.text.toString().toLowerCase(Locale.ENGLISH)
+        val input = inputBox.text.toString().lowercase(Locale.ENGLISH)
         val dictInfo = dictionaries[dictionarySpinner.selectedItemPosition]
 
         if (isMapDictionaryChosen()) {
@@ -229,7 +228,7 @@ class PresmyslovnikActivity : LocationActivity() {
         positionTextView.text = Utils.formatLatLng(LatLng(location.latitude, location.longitude))
         super.onLocationChanged(location)
     }
-
+    @Deprecated("")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
