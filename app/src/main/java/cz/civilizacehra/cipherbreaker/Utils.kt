@@ -25,7 +25,7 @@ internal object Utils {
 fun Context.copyToClipboard(label: String, text: String){
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText(label, text)
-    clipboard.primaryClip = clip
+    clipboard.setPrimaryClip(clip)
     applicationContext.toastIt("$label copied to clipboard")
 }
 
