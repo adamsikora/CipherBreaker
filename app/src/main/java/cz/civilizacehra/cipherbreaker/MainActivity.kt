@@ -30,9 +30,9 @@ class MainActivity : Activity() {
                 ActivityInstance(
                         getString(R.string.griller), R.drawable.ic_grid_on,
                         Intent(this@MainActivity, GrillerActivity::class.java)),
-                ActivityInstance(
-                        getString(R.string.mrizkodrtic), R.drawable.ic_grid_on,
-                        Intent(this@MainActivity, MrizkoDrticActivity::class.java)),
+                // ActivityInstance(
+                //         getString(R.string.mrizkodrtic), R.drawable.ic_grid_on,
+                //         Intent(this@MainActivity, MrizkoDrticActivity::class.java)),
                 ActivityInstance(
                         getString(R.string.azimuther), R.drawable.ic_explore,
                         Intent(this@MainActivity, AzimutherActivity::class.java)),
