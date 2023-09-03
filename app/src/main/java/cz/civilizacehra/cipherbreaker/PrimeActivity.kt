@@ -29,17 +29,22 @@ class PrimeActivity : Activity() {
                 if (input.isEmpty()) {
                     textView.text = ""
                 } else {
-                    val factors: ArrayList<ULong> = factorNumber(input)
-                    val frequencies = factors.groupingBy { it }.eachCount()
-                    var text = ""
-                    for ((key, value) in frequencies.entries) {
-                        text += key.toString()
-                        if (value > 1) {
-                            text += "<sup><small>$value</small></sup>"
+                    val number = input.toULongOrNull()
+                    if (number == null) {
+                        textView.text = "Unable to factor the number"
+                    } else {
+                        val factors: ArrayList<ULong> = factorNumber(number)
+                        val frequencies = factors.groupingBy { it }.eachCount()
+                        var text = ""
+                        for ((key, value) in frequencies.entries) {
+                            text += key.toString()
+                            if (value > 1) {
+                                text += "<sup><small>$value</small></sup>"
+                            }
+                            text += " "
                         }
-                        text += " "
+                        textView.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     }
-                    textView.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 }
             }
         })
@@ -64,9 +69,8 @@ class PrimeActivity : Activity() {
         }
     }
 
-    private fun factorNumber(numberString: String):  ArrayList<ULong> {
+    private fun factorNumber(number: ULong):  ArrayList<ULong> {
         val factors: ArrayList<ULong> = arrayListOf()
-        val number = numberString.toULong()
         var n = number
         val squareRoot = sqrt(number.toDouble()).toULong()
 
