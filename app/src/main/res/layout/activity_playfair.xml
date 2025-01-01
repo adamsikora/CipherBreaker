@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:importantForAutofill="noExcludeDescendants"
+    tools:context="cz.civilizacehra.cipherbreaker.MrizkoDrticActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/inputLayout">
+
+        <LinearLayout
+            android:id="@+id/playfairControlsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <RelativeLayout
+                android:id="@+id/widthLayout"
+                style="@style/item_with_description_style">
+
+                <TextView
+                    android:id="@+id/widthView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="Width:" />
+
+                <Spinner
+                    android:id="@+id/widthSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/widthView"
+                    android:entries="@array/playfairSizes" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/heightLayout"
+                style="@style/item_with_description_style">
+
+                <TextView
+                    android:id="@+id/heightView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="Height:" />
+
+                <Spinner
+                    android:id="@+id/heightSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/heightView"
+                    android:entries="@array/playfairSizes" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/playfairInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/playfairControlsLayout">
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/inputLayout"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/inputEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:clickable="false"
+                android:enabled="true"
+                android:hint="Text to decipher"
+                android:imeOptions="actionGo"
+                android:inputType="textMultiLine"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/decryptedDescriptionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@+id/inputEditText"
+                android:textSize="16sp"
+                android:text="Decrypted text:" />
+
+            <TextView
+                android:id="@+id/decryptedTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/decryptedDescriptionView"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/encryptedDescriptionView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@+id/decryptedTextView"
+                android:textSize="16sp"
+                android:text="Encrypted text:" />
+
+            <TextView
+                android:id="@+id/encryptedTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/encryptedDescriptionView"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

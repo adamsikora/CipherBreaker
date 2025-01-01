@@ -9,6 +9,7 @@
     <string name="azimuther">Azimuth Finder</string>
     <string name="calendar">Name Day Searcher</string>
     <string name="primes">Prime Factorizer</string>
+    <string name="playfair">Playfair Helper</string>
     <string name="principtrainer">Princip Trainer</string>
     <string name="about">About</string>
 
@@ -109,5 +110,15 @@
         <item>8x8</item>
         <item>9x9</item>
         <item>10x10</item>
+    </string-array>
+
+    <string-array name="playfairSizes">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 </resources>

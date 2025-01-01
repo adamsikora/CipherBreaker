@@ -28,6 +28,7 @@
         <activity android:name=".MrizkoDrticActivity" />
         <activity android:name=".CalendarActivity" />
         <activity android:name=".PrimeActivity" />
+        <activity android:name=".PlayfairActivity" />
         <activity android:name=".AboutActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
