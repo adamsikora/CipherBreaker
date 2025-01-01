@@ -14,7 +14,7 @@ class AboutActivity : Activity() {
         setContentView(R.layout.activity_about)
 
         val copyRightsElement = Element()
-        copyRightsElement.title = "© Adam Sikora 2023"
+        copyRightsElement.title = "© Adam Sikora 2023-2025"
         copyRightsElement.gravity = Gravity.CENTER
 
         val aboutPage = AboutPage(this)
@@ -23,7 +23,7 @@ class AboutActivity : Activity() {
                                 "Note that it contains some powerful tools and usage of some " +
                                 "might be against the rules of some particular Puzzle Hunts. " +
                                 "Suggestions or contributions on github are welcome. ")
-                .addItem(Element().setTitle("Version 1.3.2"))
+                .addItem(Element().setTitle("Version 1.4.0"))
                 .addEmail("adam.sikora73@gmail.com")
                 .addGitHub("adamsikora/CipherBreaker")
                 .addItem(copyRightsElement)
