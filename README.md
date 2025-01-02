@@ -6,7 +6,7 @@ Suggestions and contributions welcome.
 
 # Making a release #
 
-1. Bump version in `AboutActivity.kt`
+1. Bump `about_version` in `strings.xml`
 2. Bump `versionCode` and `versionName` in `app/build.gradle`
 3. `Build` -> `Make Project`
 4. `Build` -> `Generate Signed App Bundle / APK`
