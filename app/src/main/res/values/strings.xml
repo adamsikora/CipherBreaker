@@ -13,6 +13,16 @@
     <string name="principtrainer">Princip Trainer</string>
     <string name="about">About</string>
 
+    <string name="about_description">This app was created to help with Puzzle Hunt competitions.
+\n\nNote that it contains powerful tools and usage of some of them
+might be against the rules of particular Puzzle Hunts.
+\n\nSuggestions or contributions on GitHub are welcome.
+</string>
+    <string name="about_version">Version 1.4.1</string>
+    <string name="about_email">adam.sikora73@gmail.com</string>
+    <string name="about_github"><a href="https://github.com/adamsikora/CipherBreaker">GitHub repository</a></string>
+    <string name="about_copyright">© Adam Sikora 2023–2025</string>
+
     <string name="go">Go</string>
 
     <string-array name="presmyslovnik_mode">
