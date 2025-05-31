@@ -64,11 +64,52 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/inputLayout">
 
-        <TextView
-            android:id="@+id/resultTextView"
-            android:layout_width="fill_parent"
+
+        <RelativeLayout
+            android:id="@+id/resultLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="32sp" />
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/resultTextView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/resultTextView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resultTextView1"
+                android:textColor="@color/green"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/resultTextView3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resultTextView2"
+                android:textColor="@color/yellow"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/resultTextView4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resultTextView3"
+                android:textColor="@color/red"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/warningTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resultTextView4"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
 
     </ScrollView>
 

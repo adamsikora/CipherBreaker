@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 
 import java.util.Locale
 
@@ -26,14 +27,28 @@ class GrillerActivity : Activity() {
     private val sizeSpinner by lazy { findViewById<Spinner>(R.id.sizeSpinner) }
     private val sizeLayout by lazy { findViewById<RelativeLayout>(R.id.sizeLayout) }
 
-    private val resultView by lazy { findViewById<TextView>(R.id.resultTextView) }
+    private val warningView by lazy { findViewById<TextView>(R.id.warningTextView) }
+    private val resultViews by lazy { arrayOf(
+        findViewById<TextView>(R.id.resultTextView1),
+        findViewById<TextView>(R.id.resultTextView2),
+        findViewById<TextView>(R.id.resultTextView3),
+        findViewById<TextView>(R.id.resultTextView4)
+    ) }
 
     private var size = 0
     private var grille: Array<Array<EditText>>? = null
 
+    //private val grilleColors by lazy { arrayOf(
+    //    ContextCompat.getColor(applicationContext, android.R.color.white),
+    //    ContextCompat.getColor(applicationContext, R.color.colorPrimaryLight),
+    //    ContextCompat.getColor(applicationContext, R.color.lightGray),
+    //    ContextCompat.getColor(applicationContext, R.color.gray)
+    //) }
     private val grilleColors by lazy { arrayOf(
-            ContextCompat.getColor(applicationContext, android.R.color.white),
             ContextCompat.getColor(applicationContext, R.color.colorPrimaryLight),
+            ColorUtils.blendARGB(ContextCompat.getColor(applicationContext, R.color.green),  ContextCompat.getColor(applicationContext, android.R.color.white), .8F),
+            ColorUtils.blendARGB(ContextCompat.getColor(applicationContext, R.color.yellow), ContextCompat.getColor(applicationContext, android.R.color.white), .8F),
+            ColorUtils.blendARGB(ContextCompat.getColor(applicationContext, R.color.red),    ContextCompat.getColor(applicationContext, android.R.color.white), .8F),
             ContextCompat.getColor(applicationContext, R.color.lightGray),
             ContextCompat.getColor(applicationContext, R.color.gray)
     ) }
@@ -65,26 +80,29 @@ class GrillerActivity : Activity() {
             for (i in 0 until size) {
                 for (j in 0 until size) {
                     val tag = grille!![i][j].tag as Int
-                    if (tag == 1) {
+                    if (tag == 0) {
                         presets += Pair(i, j)
                     }
                 }
             }
             if (presets.size != desiredPresets()) {
-                val msg = "Insufficient reading positions specified. Specify them through long tap."
-                resultView.text = msg
-                return
+                warningView.text = "Not all reading positions are set. Specify them through long tap."
+            } else {
+                warningView.text = ""
             }
-            var text = ""
             for (rot in 0 until 4) {
+                var text = ""
                 val indices = Array(presets.size) { i -> getRotation(presets[i].first, presets[i].second, rot) }
                 val sortedIndices = indices.sortedWith(compareBy({ it.first }, { it.second }))
                 for (index in sortedIndices) {
-                    text += grille!![index.first][index.second].text.toString()
+                    var char = grille!![index.first][index.second].text.toString()
+                    if (char.isEmpty()) {
+                        char = "_"
+                    }
+                    text += char
                 }
-                text += "\n"
+                resultViews[rot].text = text
             }
-            resultView.text = text
         } catch (e: Throwable) {
             applicationContext.toastIt("Error calculating grid ${e.message}")
         }
@@ -129,12 +147,12 @@ class GrillerActivity : Activity() {
                 cell.height = dimensions
                 // TODO make cell rectangular
                 if (size % 2 == 1 && i == j && 2*i + 1 == size) {
-                    cell.tag = 3
-                    cell.setBackgroundColor(grilleColors[3])
+                    cell.tag = 5
+                    cell.setBackgroundColor(grilleColors[5])
                     cell.isEnabled = false
                 } else {
-                    cell.tag = 2
-                    cell.setBackgroundColor(grilleColors[2])
+                    cell.tag = 4
+                    cell.setBackgroundColor(grilleColors[4])
                     cell.inputType = InputType.TYPE_CLASS_TEXT or EditorInfo.TYPE_TEXT_FLAG_CAP_CHARACTERS
                     cell.setSelectAllOnFocus(true)
                     cell.gravity = Gravity.CENTER_HORIZONTAL
@@ -239,20 +257,20 @@ class GrillerActivity : Activity() {
     private fun setState(i: Int, j: Int) {
         val cell = grille!![i][j]
         val rotations = getRotations(i, j)
-        if (cell.tag as Int == 1) {
+        if (cell.tag as Int == 0) {
             for (yx in rotations) {
                 val currCell = grille!![yx.first][yx.second]
-                currCell.tag = 2
-                currCell.setBackgroundColor(grilleColors[2])
+                currCell.tag = 4
+                currCell.setBackgroundColor(grilleColors[4])
             }
         } else {
-            cell.tag = 1
-            cell.setBackgroundColor(grilleColors[1])
+            cell.tag = 0
+            cell.setBackgroundColor(grilleColors[0])
             for (k in 1 until 4) {
                 val yx = rotations[k]
                 val currCell = grille!![yx.first][yx.second]
-                currCell.tag = 0
-                currCell.setBackgroundColor(grilleColors[0])
+                currCell.tag = k
+                currCell.setBackgroundColor(grilleColors[k])
 
             }
         }
@@ -286,7 +304,7 @@ class GrillerActivity : Activity() {
                 }
                 letters += letter
                 val tag = cell.tag as Int
-                if (tag < 2) {
+                if (tag < 4) {
                     isEmpty = false
                 }
                 holes += tag.toString()
@@ -307,7 +325,7 @@ class GrillerActivity : Activity() {
     private fun loadSavedState() {
         val sizeSpinnerIndex = sharedPreferences.getInt("sizeSpinner", 0)
         val inputLetters = sharedPreferences.getString("inputLetters", "kcuerloulmnyutsv")
-        val inputHoles = sharedPreferences.getString("inputHoles",     "0101000000100100")
+        val inputHoles = sharedPreferences.getString("inputHoles",     "3020123131032021")
         sizeSpinner.setSelection(sizeSpinnerIndex, false)
         reloadGrille()
         if (inputHoles!!.length != size*size || inputLetters!!.length != size*size) {
@@ -322,7 +340,7 @@ class GrillerActivity : Activity() {
                     cell.setText(inputLetter)
                 }
                 val tag = inputHoles[i*size + j].toString().toInt()
-                if (tag < 0 || tag > 3) {
+                if (tag < 0 || tag > 5) {
                     applicationContext.toastIt("Invalid cell state $tag")
                     return
                 }
