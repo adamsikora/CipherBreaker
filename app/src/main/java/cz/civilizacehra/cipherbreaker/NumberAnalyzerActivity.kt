@@ -13,6 +13,8 @@ import kotlin.math.sqrt
 class NumberAnalyzerActivity : Activity() {
 
     private val rowsLayout by lazy { findViewById<LinearLayout>(R.id.rowsLayout) }
+    private val inputTypeSpinner by lazy { findViewById<Spinner>(R.id.inputTypeSpinner) }
+    private val outputTypeSpinner by lazy { findViewById<Spinner>(R.id.outputTypeSpinner) }
     internal var rows = ArrayList<View>()
 
     private fun addRow() {
@@ -54,6 +56,13 @@ class NumberAnalyzerActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_number_analyzer)
+
+        // Start on the common case rather than on the first entry of each list
+        val inputTypes = resources.getStringArray(R.array.input_type)
+        inputTypeSpinner.setSelection(inputTypes.indexOf("base-10").coerceAtLeast(0), false)
+        val outputTypes = resources.getStringArray(R.array.output_type)
+        outputTypeSpinner.setSelection(outputTypes.indexOf("prime factors").coerceAtLeast(0), false)
+
         val add30Rows = fun() {
             for (i in 0..29) {
                 addRow()

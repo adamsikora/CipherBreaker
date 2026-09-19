@@ -131,4 +131,25 @@ might be against the rules of particular Puzzle Hunts.
         <item>9</item>
         <item>10</item>
     </string-array>
+
+    <string-array name="input_type">
+        <item>base-2</item>
+        <item>base-3</item>
+        <item>base-5</item>
+        <item>base-7</item>
+        <item>base-10</item>
+        <item>base-16</item>
+        <item>roman numerals</item>
+    </string-array>
+
+    <string-array name="output_type">
+        <item>base-2</item>
+        <item>base-3</item>
+        <item>base-5</item>
+        <item>base-7</item>
+        <item>base-10</item>
+        <item>base-16</item>
+        <item>roman numerals</item>
+        <item>prime factors</item>
+    </string-array>
 </resources>

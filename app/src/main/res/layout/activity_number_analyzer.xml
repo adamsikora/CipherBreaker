@@ -16,7 +16,6 @@
             android:id="@+id/legendLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -31,21 +30,49 @@
                 android:layout_centerHorizontal="true"
                 android:visibility="invisible" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:id="@+id/inputTypeLayout"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_toLeftOf="@+id/centerShim"
-                android:text="Number" />
+                style="@style/item_with_description_style">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/inputTypeTextView"
+                    style="@style/description_style"
+                    android:text="input:" />
+
+                <Spinner
+                    android:id="@+id/inputTypeSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/inputTypeTextView"
+                    android:entries="@array/input_type" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/outputTypeLayout"
+                style="@style/item_with_description_style"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@+id/centerShim"
-                android:text="Factors" />
+                android:layout_toRightOf="@+id/centerShim">
+
+                <TextView
+                    android:id="@+id/outputTypeTextView"
+                    style="@style/description_style"
+                    android:text="output:" />
+
+                <Spinner
+                    android:id="@+id/outputTypeSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/outputTypeTextView"
+                    android:entries="@array/output_type" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
