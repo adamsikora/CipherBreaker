@@ -48,6 +48,31 @@ class NumberAnalyzerActivity : Activity() {
             return
         }
 
+        textView.text = formatNumber(number)
+    }
+
+    private fun analyzeAllRows() {
+        for (row in rows) {
+            analyzeRow(row)
+        }
+    }
+
+    // Renders the number in the output type currently selected in the spinner.
+    private fun formatNumber(number: ULong): CharSequence {
+        val outputType = outputTypeSpinner.selectedItem?.toString() ?: return ""
+        if (outputType == PRIME_FACTORS) {
+            return formatPrimeFactors(number)
+        }
+        if (outputType == ROMAN_NUMERALS) {
+            return formatRomanNumeral(number) ?: "Unable to write the number in roman numerals"
+        }
+        val radix = outputType.removePrefix("base-").toIntOrNull() ?: return ""
+        val digits = number.toString(radix)
+        // Hexadecimal reads better in capitals, and matches what the hex keyboard types
+        return if (radix > 10) digits.uppercase() else digits
+    }
+
+    private fun formatPrimeFactors(number: ULong): CharSequence {
         val frequencies = factorNumber(number).groupingBy { it }.eachCount()
         var text = ""
         for ((key, value) in frequencies.entries) {
@@ -57,7 +82,24 @@ class NumberAnalyzerActivity : Activity() {
             }
             text += " "
         }
-        textView.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        return HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    }
+
+    private fun formatRomanNumeral(number: ULong): String? {
+        if (number < 1.toULong() || number > MAX_ROMAN_NUMERAL) {
+            return null
+        }
+
+        var remainder = number
+        val numeral = StringBuilder()
+        // Greedily take the largest symbol that still fits, subtractive pairs included
+        for ((value, symbol) in ROMAN_SYMBOLS) {
+            while (remainder >= value) {
+                numeral.append(symbol)
+                remainder -= value
+            }
+        }
+        return numeral.toString()
     }
 
     // Interprets the input according to the input type currently selected in the spinner.
@@ -119,8 +161,15 @@ class NumberAnalyzerActivity : Activity() {
                 val keyboard = keyboardInputType()
                 for (row in rows) {
                     row.findViewById<EditText>(R.id.numberInput).inputType = keyboard
-                    analyzeRow(row)
                 }
+                analyzeAllRows()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        outputTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                analyzeAllRows()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -176,6 +225,17 @@ class NumberAnalyzerActivity : Activity() {
 
     companion object {
         private const val ROMAN_NUMERALS = "roman numerals"
+        private const val PRIME_FACTORS = "prime factors"
+
+        // Above this the numeral is a wall of M characters, so it is not worth showing
+        private val MAX_ROMAN_NUMERAL = 100000.toULong()
+
+        private val ROMAN_SYMBOLS = listOf(
+                1000.toULong() to "M", 900.toULong() to "CM", 500.toULong() to "D",
+                400.toULong() to "CD", 100.toULong() to "C", 90.toULong() to "XC",
+                50.toULong() to "L", 40.toULong() to "XL", 10.toULong() to "X",
+                9.toULong() to "IX", 5.toULong() to "V", 4.toULong() to "IV",
+                1.toULong() to "I")
         // Only canonical numerals: IV/IX/XL/XC/CD/CM are the only subtractive pairs,
         // I/X/C repeat at most three times and V/L/D at most once. Thousands are left
         // unbounded, because values above MMM have no other plain text notation.
