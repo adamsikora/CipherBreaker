@@ -15,7 +15,7 @@
 
 
     <EditText
-        android:id="@+id/primeInput"
+        android:id="@+id/numberInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -28,7 +28,7 @@
         android:text="" />
 
     <TextView
-        android:id="@+id/primeFactorsView"
+        android:id="@+id/numberAnalysisView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

@@ -10,18 +10,18 @@ import androidx.core.text.HtmlCompat
 import java.util.ArrayList
 import kotlin.math.sqrt
 
-class PrimeActivity : Activity() {
+class NumberAnalyzerActivity : Activity() {
 
     private val rowsLayout by lazy { findViewById<LinearLayout>(R.id.rowsLayout) }
     internal var rows = ArrayList<View>()
 
     private fun addRow() {
-        val layout = layoutInflater.inflate(R.layout.primerow, null, false) as RelativeLayout
+        val layout = layoutInflater.inflate(R.layout.number_analysis_row, null, false) as RelativeLayout
         rows.add(layout)
         rowsLayout.addView(layout)
 
-        val textView = layout.findViewById<TextView>(R.id.primeFactorsView)
-        layout.findViewById<EditText>(R.id.primeInput).addTextChangedListener(object : TextWatcher {
+        val textView = layout.findViewById<TextView>(R.id.numberAnalysisView)
+        layout.findViewById<EditText>(R.id.numberInput).addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -53,7 +53,7 @@ class PrimeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_prime)
+        setContentView(R.layout.activity_number_analyzer)
         val add30Rows = fun() {
             for (i in 0..29) {
                 addRow()

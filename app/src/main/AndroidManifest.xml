@@ -27,7 +27,7 @@
         <activity android:name=".GrillerActivity" />
         <activity android:name=".MrizkoDrticActivity" />
         <activity android:name=".CalendarActivity" />
-        <activity android:name=".PrimeActivity" />
+        <activity android:name=".NumberAnalyzerActivity" />
         <activity android:name=".PlayfairActivity" />
         <activity android:name=".AboutActivity" />
         <!--

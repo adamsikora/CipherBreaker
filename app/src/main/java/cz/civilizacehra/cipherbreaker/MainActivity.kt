@@ -40,8 +40,8 @@ class MainActivity : Activity() {
                 getString(R.string.calendar), R.drawable.ic_date_range,
                 Intent(this@MainActivity, CalendarActivity::class.java)),
             ActivityInstance(
-                getString(R.string.primes), R.drawable.ic_prime,
-                Intent(this@MainActivity, PrimeActivity::class.java)),
+                getString(R.string.number_analyzer), R.drawable.ic_number_analyzer,
+                Intent(this@MainActivity, NumberAnalyzerActivity::class.java)),
             ActivityInstance(
                 getString(R.string.playfair), R.drawable.ic_playfair,
                 Intent(this@MainActivity, PlayfairActivity::class.java)),

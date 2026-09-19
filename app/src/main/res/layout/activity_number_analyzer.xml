@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:fitsSystemWindows="true"
-    tools:context="cz.civilizacehra.cipherbreaker.PrimeActivity">
+    tools:context="cz.civilizacehra.cipherbreaker.NumberAnalyzerActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
