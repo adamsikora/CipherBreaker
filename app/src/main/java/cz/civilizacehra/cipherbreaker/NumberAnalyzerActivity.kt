@@ -3,6 +3,7 @@ package cz.civilizacehra.cipherbreaker
 import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
@@ -22,34 +23,84 @@ class NumberAnalyzerActivity : Activity() {
         rows.add(layout)
         rowsLayout.addView(layout)
 
-        val textView = layout.findViewById<TextView>(R.id.numberAnalysisView)
-        layout.findViewById<EditText>(R.id.numberInput).addTextChangedListener(object : TextWatcher {
+        val editText = layout.findViewById<EditText>(R.id.numberInput)
+        editText.inputType = keyboardInputType()
+        editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val input = s.toString()
-                if (input.isEmpty()) {
-                    textView.text = ""
-                } else {
-                    val number = input.toULongOrNull()
-                    if (number == null) {
-                        textView.text = "Unable to factor the number"
-                    } else {
-                        val factors: ArrayList<ULong> = factorNumber(number)
-                        val frequencies = factors.groupingBy { it }.eachCount()
-                        var text = ""
-                        for ((key, value) in frequencies.entries) {
-                            text += key.toString()
-                            if (value > 1) {
-                                text += "<sup><small>$value</small></sup>"
-                            }
-                            text += " "
-                        }
-                        textView.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
-                    }
-                }
+                analyzeRow(layout)
             }
         })
+    }
+
+    private fun analyzeRow(row: View) {
+        val textView = row.findViewById<TextView>(R.id.numberAnalysisView)
+        val input = row.findViewById<EditText>(R.id.numberInput).text.toString().trim()
+        if (input.isEmpty()) {
+            textView.text = ""
+            return
+        }
+
+        val number = parseNumber(input)
+        if (number == null) {
+            textView.text = "Unable to parse the number"
+            return
+        }
+
+        val frequencies = factorNumber(number).groupingBy { it }.eachCount()
+        var text = ""
+        for ((key, value) in frequencies.entries) {
+            text += key.toString()
+            if (value > 1) {
+                text += "<sup><small>$value</small></sup>"
+            }
+            text += " "
+        }
+        textView.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    }
+
+    // Interprets the input according to the input type currently selected in the spinner.
+    private fun parseNumber(input: String): ULong? {
+        val inputType = inputTypeSpinner.selectedItem?.toString() ?: return null
+        if (inputType == ROMAN_NUMERALS) {
+            return parseRomanNumeral(input)
+        }
+        val radix = inputType.removePrefix("base-").toIntOrNull() ?: return null
+        return input.toULongOrNull(radix)
+    }
+
+    private fun parseRomanNumeral(input: String): ULong? {
+        val numeral = input.uppercase()
+        if (numeral.isEmpty() || !ROMAN_PATTERN.matches(numeral)) {
+            return null
+        }
+
+        var total = 0.toULong()
+        var previous = 0.toULong()
+        // Walk right to left: a numeral smaller than the one to its right is subtracted
+        for (c in numeral.reversed()) {
+            val value = ROMAN_VALUES.getValue(c)
+            if (value < previous) {
+                total -= value
+            } else {
+                total += value
+                previous = value
+            }
+        }
+        return total
+    }
+
+    // Hexadecimal and roman numerals need letters, the remaining bases only digits.
+    private fun keyboardInputType(): Int {
+        val inputType = inputTypeSpinner.selectedItem?.toString()
+        return if (inputType == ROMAN_NUMERALS || inputType == "base-16") {
+            InputType.TYPE_CLASS_TEXT or
+                    InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS or
+                    InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+        } else {
+            InputType.TYPE_CLASS_NUMBER
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +113,18 @@ class NumberAnalyzerActivity : Activity() {
         inputTypeSpinner.setSelection(inputTypes.indexOf("base-10").coerceAtLeast(0), false)
         val outputTypes = resources.getStringArray(R.array.output_type)
         outputTypeSpinner.setSelection(outputTypes.indexOf("prime factors").coerceAtLeast(0), false)
+
+        inputTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val keyboard = keyboardInputType()
+                for (row in rows) {
+                    row.findViewById<EditText>(R.id.numberInput).inputType = keyboard
+                    analyzeRow(row)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         val add30Rows = fun() {
             for (i in 0..29) {
@@ -80,6 +143,9 @@ class NumberAnalyzerActivity : Activity() {
 
     private fun factorNumber(number: ULong):  ArrayList<ULong> {
         val factors: ArrayList<ULong> = arrayListOf()
+        if (number < 2.toULong()) {
+            return factors
+        }
         var n = number
         val squareRoot = sqrt(number.toDouble()).toULong()
 
@@ -106,5 +172,18 @@ class NumberAnalyzerActivity : Activity() {
             factors.add(n)
         }
         return factors
+    }
+
+    companion object {
+        private const val ROMAN_NUMERALS = "roman numerals"
+        // Only canonical numerals: IV/IX/XL/XC/CD/CM are the only subtractive pairs,
+        // I/X/C repeat at most three times and V/L/D at most once. Thousands are left
+        // unbounded, because values above MMM have no other plain text notation.
+        private val ROMAN_PATTERN =
+                Regex("M*(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})")
+
+        private val ROMAN_VALUES = mapOf(
+                'I' to 1.toULong(), 'V' to 5.toULong(), 'X' to 10.toULong(), 'L' to 50.toULong(),
+                'C' to 100.toULong(), 'D' to 500.toULong(), 'M' to 1000.toULong())
     }
 }
