@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:layout_marginTop="8dp"
-    android:background="@color/lightGray" >
+    android:background="@color/lightGray">
 
     <RelativeLayout
         android:id="@+id/activityIconLayout"
-        android:padding="6dp"
         android:layout_width="64dp"
-        android:layout_height="64dp" >
+        android:layout_height="64dp"
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/activityIcon"

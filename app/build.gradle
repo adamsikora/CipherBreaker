@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "cz.civilizacehra.cipherbreaker"
         minSdkVersion 23
-        targetSdkVersion 35
+        targetSdkVersion 37
         versionCode 14
         versionName "1.4.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

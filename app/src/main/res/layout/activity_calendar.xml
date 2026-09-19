@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16sp"
-    android:importantForAutofill="noExcludeDescendants"
+    android:background="@android:color/black"
+    android:fitsSystemWindows="true"
     tools:context="cz.civilizacehra.cipherbreaker.CalendarActivity">
 
-    <LinearLayout
-        android:id="@+id/line1Buttons"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:baselineAligned="false">
+        android:layout_height="match_parent"
+        android:padding="16sp"
+        android:fitsSystemWindows="true"
+        android:importantForAutofill="noExcludeDescendants"
+        android:background="@android:color/background_light">
+
+        <LinearLayout
+            android:id="@+id/line1Buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:weightSum="4">
 
             <RelativeLayout
                 android:id="@+id/dayLayout"
                 style="@style/strict_item_with_description_style"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/dayView"
@@ -28,10 +36,10 @@
 
                 <Spinner
                     android:id="@+id/daySpinner"
+                    style="@style/spinner_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/dayView"
-                    style="@style/spinner_style"
                     android:entries="@array/days" />
 
             </RelativeLayout>
@@ -39,7 +47,7 @@
             <RelativeLayout
                 android:id="@+id/monthLayout"
                 style="@style/strict_item_with_description_style"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/monthView"
@@ -48,10 +56,10 @@
 
                 <Spinner
                     android:id="@+id/monthSpinner"
+                    style="@style/spinner_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/monthView"
-                    style="@style/spinner_style"
                     android:entries="@array/months" />
 
             </RelativeLayout>
@@ -59,7 +67,7 @@
             <RelativeLayout
                 android:id="@+id/yearLayout"
                 style="@style/strict_item_with_description_style"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/yearView"
@@ -70,18 +78,18 @@
                     android:id="@+id/yearEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/yearView"
                     android:layout_marginEnd="10dp"
+                    android:layout_toEndOf="@+id/yearView"
                     android:ems="10"
-                    android:inputType="number"
-                    android:hint="Year"/>
+                    android:hint="Year"
+                    android:inputType="number" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/dayOfWeekLayout"
                 style="@style/strict_item_with_description_style"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/weekView"
@@ -90,54 +98,56 @@
 
                 <Spinner
                     android:id="@+id/dayOfWeekSpinner"
+                    style="@style/spinner_style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/weekView"
-                    style="@style/spinner_style"
                     android:entries="@array/days_in_week" />
 
             </RelativeLayout>
 
-    </LinearLayout>
+        </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/line2Buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/line1Buttons"
-        android:layout_alignEnd="@+id/line1Buttons" >
-
-        <EditText
-            android:id="@+id/queryEditText"
+        <RelativeLayout
+            android:id="@+id/line2Buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:ems="10"
-            android:hint="Regex"
-            android:inputType="textPersonName" />
+            android:layout_below="@id/line1Buttons"
+            android:layout_alignEnd="@+id/line1Buttons"
+            android:layout_alignParentStart="true">
 
-        <Switch
-            android:id="@+id/sortBySwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/queryEditText"
-            android:layout_centerVertical="true"
-            android:text="Sort by day/name " />
+            <EditText
+                android:id="@+id/queryEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:ems="10"
+                android:hint="Regex"
+                android:inputType="textPersonName" />
 
-        <requestFocus />
+            <Switch
+                android:id="@+id/sortBySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/queryEditText"
+                android:text="Sort by day/name " />
+
+            <requestFocus />
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/line2Buttons"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/holidaysTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/line2Buttons">
-
-        <TextView
-            android:id="@+id/holidaysTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
-
-</RelativeLayout>
+</FrameLayout>

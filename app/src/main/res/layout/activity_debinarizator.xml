@@ -1,121 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cz.civilizacehra.cipherbreaker.DebinarizatorActivity" >
+    android:background="@android:color/black"
+    android:fitsSystemWindows="true"
+    tools:context="cz.civilizacehra.cipherbreaker.DebinarizatorActivity">
 
     <RelativeLayout
-        android:id="@+id/legendLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    style="@style/result_type_style"
-                    android:src="@drawable/right" />
-
-                <ImageView
-                    style="@style/result_type_style"
-                    android:src="@drawable/right" />
-
-                <ImageView
-                    style="@style/result_type_style"
-                    android:src="@drawable/left" />
-
-                <ImageView
-                    style="@style/result_type_style"
-                    android:src="@drawable/left" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/interpretation1"
-                    style="@style/result_type_style"
-                    android:src="@drawable/black_horizontal" />
-
-                <ImageView
-                    android:id="@+id/interpretation2"
-                    style="@style/result_type_style"
-                    android:src="@drawable/white_horizontal" />
-
-                <ImageView
-                    android:id="@+id/interpretation3"
-                    style="@style/result_type_style"
-                    android:src="@drawable/black_horizontal" />
-
-                <ImageView
-                    android:id="@+id/interpretation4"
-                    style="@style/result_type_style"
-                    android:src="@drawable/white_horizontal" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/startRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:checkedButton="@+id/rbtn1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Alphabet Start " />
-
-            <RadioButton
-                android:id="@+id/rbtn1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1" />
-
-            <RadioButton
-                android:id="@+id/rbtn0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0" />
-
-        </RadioGroup>
-    </RelativeLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/legendLayout">
+        android:background="@android:color/background_light">
 
-        <LinearLayout
-            android:id="@+id/rowsLayout"
+        <RelativeLayout
+            android:id="@+id/legendLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:background="@color/gray"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin" />
-    </ScrollView>
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
-</RelativeLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/result_type_style"
+                        android:src="@drawable/right" />
+
+                    <ImageView
+                        style="@style/result_type_style"
+                        android:src="@drawable/right" />
+
+                    <ImageView
+                        style="@style/result_type_style"
+                        android:src="@drawable/left" />
+
+                    <ImageView
+                        style="@style/result_type_style"
+                        android:src="@drawable/left" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/interpretation1"
+                        style="@style/result_type_style"
+                        android:src="@drawable/black_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/interpretation2"
+                        style="@style/result_type_style"
+                        android:src="@drawable/white_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/interpretation3"
+                        style="@style/result_type_style"
+                        android:src="@drawable/black_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/interpretation4"
+                        style="@style/result_type_style"
+                        android:src="@drawable/white_horizontal" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/startRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:checkedButton="@+id/rbtn1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alphabet Start " />
+
+                <RadioButton
+                    android:id="@+id/rbtn1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1" />
+
+                <RadioButton
+                    android:id="@+id/rbtn0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </RadioGroup>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/legendLayout">
+
+            <LinearLayout
+                android:id="@+id/rowsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin" />
+        </ScrollView>
+
+    </RelativeLayout>
+
+</FrameLayout>

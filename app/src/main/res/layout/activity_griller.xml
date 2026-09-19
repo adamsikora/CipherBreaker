@@ -1,116 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cz.civilizacehra.cipherbreaker.GrillerActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:importantForAutofill="noExcludeDescendants"
-    tools:context="cz.civilizacehra.cipherbreaker.GrillerActivity">
+    android:fitsSystemWindows="true"
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/inputLayout">
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:importantForAutofill="noExcludeDescendants"
+        android:background="@android:color/background_light">
 
         <RelativeLayout
-            android:id="@+id/grilleControlsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp">
+            android:id="@+id/inputLayout">
 
             <RelativeLayout
-                android:id="@+id/sizeLayout"
-                style="@style/item_with_description_style">
+                android:id="@+id/grilleControlsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
 
-                <TextView
-                    android:id="@+id/sizeView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:text="Size:" />
+                <RelativeLayout
+                    android:id="@+id/sizeLayout"
+                    style="@style/item_with_description_style">
 
-                <Spinner
-                    android:id="@+id/sizeSpinner"
-                    style="@style/spinner_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/sizeView"
-                    android:entries="@array/sizes" />
+                    <TextView
+                        android:id="@+id/sizeView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:text="Size:" />
+
+                    <Spinner
+                        android:id="@+id/sizeSpinner"
+                        style="@style/spinner_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/sizeView"
+                        android:entries="@array/sizes" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/grilleInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@+id/grilleControlsLayout">
 
             </RelativeLayout>
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/grilleInputLayout"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:layout_below="@+id/grilleControlsLayout">
+            android:fillViewport="true"
+            android:scrollbars="vertical"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/inputLayout">
 
-        </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/resultLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/resultTextView1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryLight"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/resultTextView2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/resultTextView1"
+                    android:textColor="@color/green"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/resultTextView3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/resultTextView2"
+                    android:textColor="@color/yellow"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/resultTextView4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/resultTextView3"
+                    android:textColor="@color/red"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:id="@+id/warningTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/resultTextView4"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+        </ScrollView>
 
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:scrollbars="vertical"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/inputLayout">
-
-
-        <RelativeLayout
-            android:id="@+id/resultLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:id="@+id/resultTextView1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryLight"
-                android:textSize="32sp" />
-
-            <TextView
-                android:id="@+id/resultTextView2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/resultTextView1"
-                android:textColor="@color/green"
-                android:textSize="32sp" />
-
-            <TextView
-                android:id="@+id/resultTextView3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/resultTextView2"
-                android:textColor="@color/yellow"
-                android:textSize="32sp" />
-
-            <TextView
-                android:id="@+id/resultTextView4"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/resultTextView3"
-                android:textColor="@color/red"
-                android:textSize="32sp" />
-
-            <TextView
-                android:id="@+id/warningTextView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/resultTextView4"
-                android:textSize="12sp" />
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-</RelativeLayout>
+</FrameLayout>
