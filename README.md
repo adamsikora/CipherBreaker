@@ -8,7 +8,7 @@ Suggestions and contributions welcome.
 
 1. Bump `about_version` in `strings.xml`
 2. Bump `versionCode` and `versionName` in `app/build.gradle`
-3. `Build` -> `Make Project`
+3. `Build` -> `Assemble Project`
 4. `Build` -> `Generate Signed App Bundle / APK`
 5. fill passwords on second page
 6. Select `release` type
