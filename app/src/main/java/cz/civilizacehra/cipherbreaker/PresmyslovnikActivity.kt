@@ -51,7 +51,7 @@ class PresmyslovnikActivity : LocationActivity() {
             DictInfo("podst_jm_cz.canon", 23219),
             DictInfo("cs_CZ_openoffice.canon", 166566),
             DictInfo("cs.canon", 4269351),
-            DictInfo("Czechia.cbmap", 366663)
+            DictInfo("Czechia.cbmap", 592505)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
