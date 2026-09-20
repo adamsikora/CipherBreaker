@@ -42,8 +42,8 @@ class PresmyslovnikActivity : LocationActivity() {
 
     private var mJob: Job = Job()
 
-    private val dict: Dictionary by lazy { Dictionary(applicationContext) }
-    private val mapDict: MapDictionary by lazy { MapDictionary(applicationContext) }
+    private val dict: Dictionary by lazy { Dictionary { assets.open(it) } }
+    private val mapDict: MapDictionary by lazy { MapDictionary { assets.open(it) } }
 
     private val dictionaries = arrayOf(
             DictInfo("en.canon", 88955),

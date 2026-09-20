@@ -36,6 +36,7 @@ class GrillerActivity : Activity() {
     ) }
 
     private var size = 0
+    private val geometry get() = Grille(size)
     private var grille: Array<Array<EditText>>? = null
 
     //private val grilleColors by lazy { arrayOf(
@@ -85,44 +86,18 @@ class GrillerActivity : Activity() {
                     }
                 }
             }
-            if (presets.size != desiredPresets()) {
+            if (presets.size != geometry.desiredPresets()) {
                 warningView.text = "Not all reading positions are set. Specify them through long tap."
             } else {
                 warningView.text = ""
             }
+            val letters = List(size) { i -> List(size) { j -> grille!![i][j].text.toString() } }
             for (rot in 0 until 4) {
-                var text = ""
-                val indices = Array(presets.size) { i -> getRotation(presets[i].first, presets[i].second, rot) }
-                val sortedIndices = indices.sortedWith(compareBy({ it.first }, { it.second }))
-                for (index in sortedIndices) {
-                    var char = grille!![index.first][index.second].text.toString()
-                    if (char.isEmpty()) {
-                        char = "_"
-                    }
-                    text += char
-                }
-                resultViews[rot].text = text
+                resultViews[rot].text = geometry.read(letters, presets.toList(), rot)
             }
         } catch (e: Throwable) {
             applicationContext.toastIt("Error calculating grid ${e.message}")
         }
-    }
-
-    private fun getRotation(i: Int, j: Int, rotation: Int): Pair<Int, Int> {
-        return when(rotation % 4) {
-            0 -> Pair(i, j)
-            1 -> Pair(j, size - i - 1)
-            2 -> Pair(size - i - 1, size - j - 1)
-            3 -> Pair(size - j - 1, i)
-            else -> {
-                applicationContext.toastIt("Internal error, invalid rotation")
-                Pair(i, j)
-            }
-        }
-    }
-
-    private fun getRotations(i: Int, j: Int): Array<Pair<Int, Int>> {
-        return Array(4) { rot -> getRotation(i, j, rot) }
     }
 
     private fun reloadGrille() {
@@ -146,7 +121,7 @@ class GrillerActivity : Activity() {
                 cell.width = dimensions
                 cell.height = dimensions
                 // TODO make cell rectangular
-                if (size % 2 == 1 && i == j && 2*i + 1 == size) {
+                if (geometry.isCenterCell(i, j)) {
                     cell.tag = 5
                     cell.setBackgroundColor(grilleColors[5])
                     cell.isEnabled = false
@@ -159,7 +134,7 @@ class GrillerActivity : Activity() {
                     cell.textSize = dimensions / 5.toFloat()
 
                     fun goToNextCell() {
-                        val next = nextCell(i, j)
+                        val next = geometry.nextCell(i, j)
                         if (next.first == size) {
                             val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -168,7 +143,7 @@ class GrillerActivity : Activity() {
                         }
                     }
                     fun goToPrevCell() {
-                        val prev = prevCell(i, j)
+                        val prev = geometry.prevCell(i, j)
                         if (prev.first == -1) {
                             val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
@@ -232,31 +207,9 @@ class GrillerActivity : Activity() {
         computeGrid()
     }
 
-    private fun isCenterCell(i: Int, j: Int): Boolean {
-        return size % 2 == 1 && i == j && 2*i + 1 == size
-    }
-
-    private fun nextCell(i: Int, j: Int): Pair<Int, Int> {
-        var nextJ = (j + 1) % size
-        val nextI = if (nextJ == 0) i + 1 else i
-        if (isCenterCell(nextI, nextJ)) {
-            nextJ += 1
-        }
-        return Pair(nextI, nextJ)
-    }
-
-    private fun prevCell(i: Int, j: Int): Pair<Int, Int> {
-        var prevJ = (j - 1 + size) % size
-        val prevI = if (j == 0) i - 1 else i
-        if (isCenterCell(prevI, prevJ)) {
-            prevJ -= 1
-        }
-        return Pair(prevI, prevJ)
-    }
-
     private fun setState(i: Int, j: Int) {
         val cell = grille!![i][j]
-        val rotations = getRotations(i, j)
+        val rotations = geometry.getRotations(i, j)
         if (cell.tag as Int == 0) {
             for (yx in rotations) {
                 val currCell = grille!![yx.first][yx.second]
@@ -275,14 +228,6 @@ class GrillerActivity : Activity() {
             }
         }
         computeGrid()
-    }
-
-    private fun desiredPresets(): Int {
-        var desiredPresets = size * size
-        if (size % 2 == 1) {
-            desiredPresets -= 1
-        }
-        return desiredPresets / 4
     }
 
     private fun saveState() {

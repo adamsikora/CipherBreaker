@@ -1,9 +1,8 @@
 package cz.civilizacehra.cipherbreaker
 
-import android.content.Context
-
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
@@ -16,7 +15,8 @@ typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double, 
 typealias ToastIt = suspend (text: String) -> Unit
 data class UiHandlers(val toastIt: ToastIt, val updateProgress: UpdateProgress)
 
-internal open class Dictionary(private val mContext: Context) {
+// Dictionaries are opened by name through given function, so that they do not have to be assets
+internal open class Dictionary(private val openDictionary: (String) -> InputStream) {
 
     private val mCountsLists = arrayOf(
             arrayOf( // Morse
@@ -137,8 +137,8 @@ internal open class Dictionary(private val mContext: Context) {
         }
 
         try {
-            val inputStream = mContext.assets.open(dictInfo.name)
-            val `in` = BufferedReader(InputStreamReader(inputStream))
+            val inputStream = openDictionary(dictInfo.name)
+            val `in` = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
             var line: String?
             var lineCounter = 0
             val totalSize = dictInfo.size

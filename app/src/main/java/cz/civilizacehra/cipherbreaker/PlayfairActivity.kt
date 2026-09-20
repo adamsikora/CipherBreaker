@@ -73,87 +73,19 @@ class PlayfairActivity : Activity() {
 
     private fun computeGrid() {
         try {
-            val letterIndexes = mutableMapOf<String, Pair<Int, Int>>()
-            for (i in 0 until height) {
-                for (j in 0 until width) {
-                    val cell = grid!![i][j]
-                    var letter = cell.text.toString()
-                    if (letter.length > 1) {
-                        letter = letter[0].toString()
-                    }
-                    if (letter.isEmpty()) {
-                        val msg = "Fill the grid with letters first."
-                        decryptedView.text = msg
-                        encryptedView.text = msg
-                        return
-                    }
-                    if (letterIndexes.contains(letter)) {
-                        val msg = "Symbol \"$letter\" is present in grid multiple times."
-                        decryptedView.text = msg
-                        encryptedView.text = msg
-                        return
-                    }
-                    letterIndexes[letter] = Pair(i, j)
-                }
-            }
+            val cells = List(height) { i -> List(width) { j -> grid!![i][j].text.toString() } }
             val text = inputEditText.text.toString()
-            if (text.isEmpty()) {
-                val msg = "Fill the text to decipher first."
-                decryptedView.text = msg
-                encryptedView.text = msg
+            val problem = Playfair.findProblem(cells, text)
+            if (problem != null) {
+                decryptedView.text = problem
+                encryptedView.text = problem
                 return
             }
-            if (text.length % 2 != 0) {
-                val msg = "Length of text must divisible by 2."
-                decryptedView.text = msg
-                encryptedView.text = msg
-                return
-            }
-            val letters = text.map { it.toString() }
-            for (letter in letters) {
-                if (!letterIndexes.contains(letter)) {
-                    val msg = "Symbol \"$letter\" is not present in the grid."
-                    decryptedView.text = msg
-                    encryptedView.text = msg
-                    return
-                }
-            }
-            for (i in 0 until letters.size / 2) {
-                if (letters[2*i] == letters[2*i + 1]) {
-                    val msg = "Two same letters (${letters[2*i]}) in a pair are not allowed."
-                    decryptedView.text = msg
-                    encryptedView.text = msg
-                    return
-                }
-            }
-            decryptedView.text = enryptLetters(letters, letterIndexes, decrypt=true)
-            encryptedView.text = enryptLetters(letters, letterIndexes, decrypt=false)
+            decryptedView.text = Playfair.crypt(cells, text, decrypt=true)
+            encryptedView.text = Playfair.crypt(cells, text, decrypt=false)
         } catch (e: Throwable) {
             applicationContext.toastIt("Error calculating grid ${e.message}")
         }
-    }
-
-    private fun enryptLetters(letters: List<String>, letterIndexes: Map<String, Pair<Int, Int>>, decrypt: Boolean): String {
-        var result = ""
-        val indexLetters = letterIndexes.entries.associate { (k, v) -> v to k }
-        val shift = if (decrypt) -1 else 1
-        for (i in 0 until letters.size / 2) {
-            val letter1 = letters[2*i]
-            val letter2 = letters[2*i + 1]
-            val letter1Idx = letterIndexes[letter1]!!
-            val letter2Idx = letterIndexes[letter2]!!
-            if (letter1Idx.first == letter2Idx.first) {
-                result += indexLetters[Pair(letter1Idx.first, (letter1Idx.second + shift + width) % width)]
-                result += indexLetters[Pair(letter2Idx.first, (letter2Idx.second + shift + width) % width)]
-            } else if (letter1Idx.second == letter2Idx.second) {
-                result += indexLetters[Pair((letter1Idx.first + shift + height) % height, letter1Idx.second)]
-                result += indexLetters[Pair((letter2Idx.first + shift + height) % height, letter2Idx.second)]
-            } else {
-                result += indexLetters[Pair(letter1Idx.first, letter2Idx.second)]
-                result += indexLetters[Pair(letter2Idx.first, letter1Idx.second)]
-            }
-        }
-        return result
     }
 
     private fun reloadGrid() {

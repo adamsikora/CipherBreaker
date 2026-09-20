@@ -117,7 +117,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                     .icon(startIcon).anchor(0.5f, 0.5f))
 
             if (!dist.isNaN() && !angle.isNaN()) {
-                val dest = computeLatLng(lat, lon, dist, angle)
+                val (destLat, destLon) = Azimuth.destination(lat, lon, dist, angle)
+                val dest = LatLng(destLat, destLon)
                 mDestination = dest
                 resultTextView.text = Utils.formatLatLng(dest)
 
@@ -175,30 +176,6 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         }
 
     }
-
-    private fun computeLatLng(lat: Double, lon: Double, distance: Double, angle: Double): LatLng {
-        val distRatio = distance / 6371000
-        val radAngle = toRad(angle)
-        val radLat = toRad(lat)
-        val radLon = toRad(lon)
-
-        val newLat = asin(sin(radLat) * cos(distRatio) + cos(radLat) * sin(distRatio) * cos(radAngle))
-
-        val newLon = radLon + atan2(sin(radAngle) * sin(distRatio) * cos(radLat),
-                cos(distRatio) - sin(radLat) * sin(newLat))
-
-        return LatLng(toDeg(newLat), toDeg(newLon))
-    }
-
-    private fun toRad(degrees: Double): Double {
-        return degrees * Math.PI / 180
-    }
-
-
-    private fun toDeg(radians: Double): Double {
-        return radians * 180 / Math.PI
-    }
-
 
     /**
      * Manipulates the map once available.

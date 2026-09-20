@@ -24,15 +24,6 @@ class DeternarizatorActivity : DebaseatorActivity() {
             findViewById(R.id.interpretation5),
             findViewById(R.id.interpretation6)
     ) }
-    internal val mapping = arrayOf(
-            intArrayOf(0, 1, 2),
-            intArrayOf(0, 2, 1),
-            intArrayOf(1, 0, 2),
-            intArrayOf(1, 2, 0),
-            intArrayOf(2, 0, 1),
-            intArrayOf(2, 1, 0)
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deternarizator)
@@ -95,28 +86,16 @@ class DeternarizatorActivity : DebaseatorActivity() {
             val value = layout.findViewById<ImageView>(bits!![k]).tag as Int
             values[k] = value
         }
-        val iterate = if (direction.checkedRadioButtonId == R.id.rbtnRight) intArrayOf(2, 1, 0) else intArrayOf(0, 1, 2)
-
         val offset = if (alphabetStart!!.checkedRadioButtonId == R.id.rbtn0) 1 else 0
 
-        for (i in 0..5) {
-            var value = 0
-            if (mode.checkedRadioButtonId == R.id.rbtnOrder) {
-                for (j in mapping[5 - i]) {
-                    value *= mBase
-                    value += values[j]
-                }
-            } else {
-                for (j in iterate) {
-                    value *= mBase
-                    value += mapping[i][values[j]]
-                }
-            }
-            if (value in 0..mBaseMax) {
-                val text = layout.findViewById<TextView>(results!![i])
-                val letter = if (ch.isChecked) getChLetter(value + offset) else getLetter(value + offset)
-                text.text = letter
-            }
+        val letters = BaseReader.ternaryLetters(
+                values,
+                readOrder = mode.checkedRadioButtonId == R.id.rbtnOrder,
+                significantOnRight = direction.checkedRadioButtonId == R.id.rbtnRight,
+                offset = offset,
+                ch = ch.isChecked)
+        for (i in letters.indices) {
+            layout.findViewById<TextView>(results!![i]).text = letters[i]
         }
     }
 }

@@ -1,13 +1,13 @@
 package cz.civilizacehra.cipherbreaker
 
-import android.content.Context
 import android.location.Location
+import java.io.InputStream
 import java.util.*
 import kotlin.math.min
 
 import kotlin.math.round
 
-internal class MapDictionary(context: Context) : Dictionary(context) {
+internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictionary(openDictionary) {
     private var mLocation: Location? = null
     private val mSortedResults = ArrayList<Point>(2 * mMaxNumberOfResults)
 

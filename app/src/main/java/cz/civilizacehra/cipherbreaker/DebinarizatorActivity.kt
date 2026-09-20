@@ -34,25 +34,11 @@ class DebinarizatorActivity : DebaseatorActivity() {
             values[k] = value
         }
 
-        var down = 0
-        var up = 0
-        for (k in 0 until mBaseLength) {
-            down *= mBase
-            down += values[k]
-        }
-        for (k in mBaseLength - 1 downTo 0) {
-            up *= mBase
-            up += values[k]
-        }
         val offset = if (alphabetStart.checkedRadioButtonId == R.id.rbtn0) 1 else 0
 
-        if (up in 0..mBaseMax) {
-            layout.findViewById<TextView>(results!![0]).text = getLetter(up + offset)
-            layout.findViewById<TextView>(results!![1]).text = getLetter(mBaseMax - up + offset)
-        }
-        if (down in 0..mBaseMax) {
-            layout.findViewById<TextView>(results!![2]).text = getLetter(down + offset)
-            layout.findViewById<TextView>(results!![3]).text = getLetter(mBaseMax - down + offset)
+        val letters = BaseReader.binaryLetters(values, offset)
+        for (i in letters.indices) {
+            layout.findViewById<TextView>(results!![i]).text = letters[i]
         }
     }
 }
