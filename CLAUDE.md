@@ -10,6 +10,8 @@ Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:ap
 
 Don't invoke Gradle. Building, running and testing the app is done by the user in Android Studio — make the code changes and let them verify.
 
+Unit tests are JUnit 4, plain JVM tests (no Robolectric, no mocking library) in `app/src/test/java/cz/civilizacehra/cipherbreaker/`, one `<Class>Test.kt` per tested file. Only code that does not touch the Android framework can be tested this way, so keep logic worth testing out of Activities. There are no instrumented tests.
+
 ## Code style
 
 No formatter or linter config in the repo — match the surrounding file.
