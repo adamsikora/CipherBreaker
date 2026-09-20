@@ -8,20 +8,17 @@ Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:ap
 
 ## Build & test
 
-Don't invoke Gradle. Building, running and testing the app is done by the user in Android Studio — make the code changes and let them verify.
+Verify every change to the app with Gradle and report the result. There is no `java` on PATH, so point `JAVA_HOME` at the JDK bundled with Android Studio, the same one the IDE builds with:
+
+```
+JAVA_HOME="C:/Program Files/Android/Android Studio2/jbr" ./gradlew testDebugUnitTest assembleDebug --console=plain
+```
+
+- Allowed tasks: `testDebugUnitTest`, `assembleDebug`, `assembleRelease`, `lintDebug`. `assembleRelease` only checks that the release variant builds, its APK is not what gets published. Add `--offline` if a dependency download fails, everything already used is cached.
+- Never run `bundleRelease` or anything publishing — release bundles are made and uploaded by the user, see Releasing.
+- Running the app and checking how it looks and behaves is still done by the user in Android Studio. Say what was and was not verified.
 
 Unit tests are JUnit 4, plain JVM tests (no Robolectric, no mocking library) in `app/src/test/java/cz/civilizacehra/cipherbreaker/`, one `<Class>Test.kt` per tested file. Only code that does not touch the Android framework can be tested this way, so keep logic worth testing out of Activities — it lives in `internal` objects/classes next to them (`NumberAnalysis`, `Azimuth`, `Playfair`, `Grille`, `BaseReader`, `Dictionary`). There are no instrumented tests.
-
-Running the tests:
-
-- The user runs them in Android Studio (right-click `app/src/test` → Run Tests) or with `./gradlew testDebugUnitTest`.
-- Claude runs them after every Kotlin change without Gradle, and says so in the summary:
-  1. Compile the needed main sources together with the tests using the Kotlin compiler bundled with Android Studio (`<Android Studio>/plugins/Kotlin/kotlinc/lib`): `java -cp kotlin-preloader.jar org.jetbrains.kotlin.preloading.Preloader -cp kotlin-compiler.jar org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -jvm-target 17 -cp <classpath>;kotlin-stdlib.jar -d <out> <sources>`.
-  2. Classpath comes from `~/.gradle/caches/modules-2/files-2.1` (junit, hamcrest-core, kotlinx-coroutines-core-jvm; `classes.jar` extracted from the play-services-maps, play-services-basement and androidx.core AARs for `Utils.kt`) plus `android.jar` of the compile SDK.
-  3. Run `java -cp <out>;kotlin-stdlib.jar;<classpath> org.junit.runner.JUnitCore cz.civilizacehra.cipherbreaker.<Name>Test ...`.
-  4. Type-check the whole app the same way: generate a stub `R.kt` from the `R.<type>.<name>` references in the sources and put `classes.jar` of every cached androidx/gms AAR on the classpath.
-
-  This validates the Kotlin code only — not resources, the manifest or the Gradle build, which the user still verifies.
 
 ## Code style
 
