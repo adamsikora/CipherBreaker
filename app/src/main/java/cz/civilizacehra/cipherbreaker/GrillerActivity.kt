@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Editable
@@ -17,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 
 import java.util.Locale
+import androidx.core.content.edit
 
 class GrillerActivity : Activity() {
 
@@ -161,7 +161,7 @@ class GrillerActivity : Activity() {
                     fun goToNextCell() {
                         val next = nextCell(i, j)
                         if (next.first == size) {
-                            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                         } else {
                             grille!![next.first][next.second].requestFocus()
@@ -170,7 +170,7 @@ class GrillerActivity : Activity() {
                     fun goToPrevCell() {
                         val prev = prevCell(i, j)
                         if (prev.first == -1) {
-                            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                         } else {
                             grille!![prev.first][prev.second].requestFocus()
@@ -286,40 +286,40 @@ class GrillerActivity : Activity() {
     }
 
     private fun saveState() {
-        val editor = sharedPreferences.edit()
-        var isEmpty = true
-        var letters = ""
-        var holes = ""
-        for (i in 0 until size) {
-            for (j in 0 until size) {
-                val cell = grille!![i][j]
-                var letter = cell.text.toString()
-                if (letter.length > 1) {
-                    letter = letter[0].toString()
+        sharedPreferences.edit {
+            var isEmpty = true
+            var letters = ""
+            var holes = ""
+            for (i in 0 until size) {
+                for (j in 0 until size) {
+                    val cell = grille!![i][j]
+                    var letter = cell.text.toString()
+                    if (letter.length > 1) {
+                        letter = letter[0].toString()
+                    }
+                    if (letter.isEmpty()) {
+                        letter = "_"
+                    } else {
+                        isEmpty = false
+                    }
+                    letters += letter
+                    val tag = cell.tag as Int
+                    if (tag < 4) {
+                        isEmpty = false
+                    }
+                    holes += tag.toString()
                 }
-                if (letter.isEmpty()) {
-                    letter = "_"
-                } else {
-                    isEmpty = false
-                }
-                letters += letter
-                val tag = cell.tag as Int
-                if (tag < 4) {
-                    isEmpty = false
-                }
-                holes += tag.toString()
+            }
+            if (isEmpty) {
+                remove("sizeSpinner")
+                remove("inputLetters")
+                remove("inputHoles")
+            } else {
+                putInt("sizeSpinner", sizeSpinner.selectedItemPosition)
+                putString("inputLetters", letters)
+                putString("inputHoles", holes)
             }
         }
-        if (isEmpty) {
-            editor.remove("sizeSpinner")
-            editor.remove("inputLetters")
-            editor.remove("inputHoles")
-        } else {
-            editor.putInt("sizeSpinner", sizeSpinner.selectedItemPosition)
-            editor.putString("inputLetters", letters)
-            editor.putString("inputHoles", holes)
-        }
-        editor.apply()
     }
 
     private fun loadSavedState() {
@@ -340,7 +340,7 @@ class GrillerActivity : Activity() {
                     cell.setText(inputLetter)
                 }
                 val tag = inputHoles[i*size + j].toString().toInt()
-                if (tag < 0 || tag > 5) {
+                if (tag !in 0..5) {
                     applicationContext.toastIt("Invalid cell state $tag")
                     return
                 }

@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -13,7 +12,7 @@ import androidx.fragment.app.FragmentActivity
 
 abstract class LocationActivity : FragmentActivity(), LocationListener {
 
-    private val mLocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    private val mLocationManager by lazy { getSystemService(LOCATION_SERVICE) as LocationManager }
     internal var mLocation: Location? = null
 
     override fun onPause() {

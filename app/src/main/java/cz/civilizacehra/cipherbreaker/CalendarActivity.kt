@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -87,7 +86,7 @@ class CalendarActivity : Activity() {
         yearLayout.setOnClickListener{
             yearEditText.requestFocus()
             yearEditText.setSelection(yearEditText.text.length)
-            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.showSoftInput(yearEditText, InputMethodManager.SHOW_IMPLICIT)
         }
         dayOfWeekLayout.setOnClickListener{ dayOfWeekSpinner.performClick() }

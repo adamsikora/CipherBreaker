@@ -1,7 +1,6 @@
 package cz.civilizacehra.cipherbreaker
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Editable
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 
 class PlayfairActivity : Activity() {
 
@@ -182,7 +182,7 @@ class PlayfairActivity : Activity() {
                 fun goToNextCell() {
                     val next = nextCell(i, j)
                     if (next.first == width) {
-                        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                         inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                     } else {
                         grid!![next.first][next.second].requestFocus()
@@ -191,7 +191,7 @@ class PlayfairActivity : Activity() {
                 fun goToPrevCell() {
                     val prev = prevCell(i, j)
                     if (prev.first == -1) {
-                        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                         inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                     } else {
                         grid!![prev.first][prev.second].requestFocus()
@@ -265,36 +265,36 @@ class PlayfairActivity : Activity() {
     }
 
     private fun saveState() {
-        val editor = sharedPreferences.edit()
-        var isEmpty = true
-        var letters = ""
-        for (i in 0 until height) {
-            for (j in 0 until width) {
-                val cell = grid!![i][j]
-                var letter = cell.text.toString()
-                if (letter.length > 1) {
-                    letter = letter[0].toString()
+        sharedPreferences.edit {
+            var isEmpty = true
+            var letters = ""
+            for (i in 0 until height) {
+                for (j in 0 until width) {
+                    val cell = grid!![i][j]
+                    var letter = cell.text.toString()
+                    if (letter.length > 1) {
+                        letter = letter[0].toString()
+                    }
+                    if (letter.isEmpty()) {
+                        letter = "_"
+                    } else {
+                        isEmpty = false
+                    }
+                    letters += letter
                 }
-                if (letter.isEmpty()) {
-                    letter = "_"
-                } else {
-                    isEmpty = false
-                }
-                letters += letter
+            }
+            if (isEmpty) {
+                remove("playfairWidthSpinner")
+                remove("playfairHeightSpinner")
+                remove("playfairGrid")
+                remove("playfairText")
+            } else {
+                putInt("playfairWidthSpinner", widthSpinner.selectedItemPosition)
+                putInt("playfairHeightSpinner", heightSpinner.selectedItemPosition)
+                putString("playfairGrid", letters)
+                putString("playfairText", inputEditText.text.toString())
             }
         }
-        if (isEmpty) {
-            editor.remove("playfairWidthSpinner")
-            editor.remove("playfairHeightSpinner")
-            editor.remove("playfairGrid")
-            editor.remove("playfairText")
-        } else {
-            editor.putInt("playfairWidthSpinner", widthSpinner.selectedItemPosition)
-            editor.putInt("playfairHeightSpinner", heightSpinner.selectedItemPosition)
-            editor.putString("playfairGrid", letters)
-            editor.putString("playfairText", inputEditText.text.toString())
-        }
-        editor.apply()
     }
 
     private fun loadSavedState() {

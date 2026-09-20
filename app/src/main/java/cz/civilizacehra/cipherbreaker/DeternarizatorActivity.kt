@@ -3,6 +3,7 @@ package cz.civilizacehra.cipherbreaker
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.view.isGone
 
 class DeternarizatorActivity : DebaseatorActivity() {
     internal val mode by lazy { findViewById<RadioGroup>(R.id.modeRadioGroup) }
@@ -80,7 +81,7 @@ class DeternarizatorActivity : DebaseatorActivity() {
 
         closeIcon.setOnClickListener { settingsLayout.visibility = View.GONE }
         settingsIcon.setOnClickListener {
-            if (settingsLayout.visibility == View.GONE) {
+            if (settingsLayout.isGone) {
                 settingsLayout.visibility = View.VISIBLE
             } else {
                 settingsLayout.visibility = View.GONE

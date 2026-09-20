@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TableLayout
 import android.widget.TextView
-import android.net.Uri
+import androidx.core.net.toUri
 
 
 class MainActivity : Activity() {
@@ -44,7 +44,7 @@ class MainActivity : Activity() {
                 Intent(this@MainActivity, PlayfairActivity::class.java)),
             ActivityInstance(
                 getString(R.string.principtrainer), R.drawable.ic_school,
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://app.civilizacehra.cz"))),
+                Intent(Intent.ACTION_VIEW, "https://app.civilizacehra.cz".toUri())),
             ActivityInstance(
                 getString(R.string.about), R.drawable.ic_info,
                 Intent(this@MainActivity, AboutActivity::class.java))

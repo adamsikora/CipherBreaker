@@ -1,10 +1,8 @@
 package cz.civilizacehra.cipherbreaker
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Point
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -25,6 +23,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 
 import java.util.Objects
 import kotlin.math.*
+import androidx.core.net.toUri
 
 class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
@@ -62,7 +61,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
 
         val onEdit = TextView.OnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = v.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
                 if (mPosition != null) {
                     setLocation()
@@ -97,7 +96,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 val lat = Utils.formatCoord(mDestination!!.latitude)
                 val lon = Utils.formatCoord(mDestination!!.longitude)
                 val url = "https://en.mapy.cz/zakladni?x=$lon&y=$lat&z=17&source=coor&id=$lon%2C$lat"
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
             } else {
                 applicationContext.toastIt("Destination not set")
             }

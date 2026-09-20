@@ -1,7 +1,5 @@
 package cz.civilizacehra.cipherbreaker
 
-import android.app.Activity
-import android.content.Context
 import android.location.Location
 import android.preference.PreferenceManager
 import android.os.Bundle
@@ -14,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 import java.util.*
 import android.content.Intent
+import androidx.core.content.edit
 
 
 class PresmyslovnikActivity : LocationActivity() {
@@ -113,13 +112,13 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     private fun saveState() {
-        val editor = sharedPreferences.edit()
-        editor.putInt("modeSpinner", modeSpinner.selectedItemPosition)
-        editor.putInt("dictionarySpinner", dictionarySpinner.selectedItemPosition)
-        editor.putString("minLength", minLengthBox.text.toString())
-        editor.putString("maxLength", maxLengthBox.text.toString())
-        editor.putString("query", inputBox.text.toString())
-        editor.apply()
+        sharedPreferences.edit {
+            putInt("modeSpinner", modeSpinner.selectedItemPosition)
+            putInt("dictionarySpinner", dictionarySpinner.selectedItemPosition)
+            putString("minLength", minLengthBox.text.toString())
+            putString("maxLength", maxLengthBox.text.toString())
+            putString("query", inputBox.text.toString())
+        }
     }
 
     private fun loadSavedState() {
@@ -137,7 +136,7 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     private fun searchDictionary() {
-        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
         val modeId = modeSpinner.selectedItemPosition
@@ -231,7 +230,7 @@ class PresmyslovnikActivity : LocationActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 val lat = data!!.getDoubleExtra("selectedLatitude", 0.0)
                 val lon = data.getDoubleExtra("selectedLongitude", 0.0)
                 if (lat != 0.0 && lon != 0.0) {

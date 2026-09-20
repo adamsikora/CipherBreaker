@@ -3,13 +3,13 @@ package cz.civilizacehra.cipherbreaker
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.widget.Toast
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
+import androidx.core.graphics.createBitmap
 
 internal object Utils {
     fun parseIntWithDefault(s: String, default: Int = 0): Int {
@@ -29,8 +29,7 @@ internal object Utils {
     fun vectorToBitmapDescriptor(context: Context, drawableId: Int): BitmapDescriptor {
         val drawable = context.getDrawable(drawableId)!!
         drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        val bitmap = Bitmap.createBitmap(
-                drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
         drawable.draw(Canvas(bitmap))
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
