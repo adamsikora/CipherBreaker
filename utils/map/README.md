@@ -1,7 +1,6 @@
-1. Download map from: http://download.geofabrik.de/europe/czech-republic.html
-2. Unpack
-3. Provide path to unpacked file in osm_parser/main.cpp
-4. Run the EXE built from osm_parser/main.cpp
-5. Run postprocess_parsed_map.py
-6. Copy created cbmap files to app assets
-7. Profit
+1. Download map in .osm.pbf format from: http://download.geofabrik.de/europe/czech-republic.html
+2. Put it to data/
+3. Run `uv run parse-osm data/czech-republic-latest.osm.pbf`, it creates in data/:
+   - czech-republic-latest_raw.cbmap - parsed features before postprocessing, `name;lat;lon` lines
+   - czech-republic-latest.cbmap - postprocessed map for the app
+4. Copy czech-republic-latest.cbmap to app assets as Czechia.cbmap

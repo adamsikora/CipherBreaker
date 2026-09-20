@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:app`, plus `utils/map/` — offline Windows tooling that generates the map assets.
+Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:app`, plus `utils/map/` — offline Python tooling that generates the map assets.
 
 ## Build & test
 
@@ -18,7 +18,7 @@ No formatter or linter config in the repo — match the surrounding file.
 - XML layouts with `findViewById`, held as `private val x by lazy { findViewById<T>(R.id.x) }`. No Compose, no view binding, no data binding.
 - Activities extend `android.app.Activity`, not `AppCompatActivity`, even though appcompat is a dependency.
 - Non-Activity helpers are `internal`. Flat package `cz.civilizacehra.cipherbreaker`, no subpackages.
-- C++ (`app/src/main/cpp/`, `utils/map/osm_parser/`) uses tabs; C++14.
+- C++ (`app/src/main/cpp/`) uses tabs; C++14.
 - Custom named styles live in `res/values/styles.xml` and are applied via `style="@style/..."`.
 
 ## Releasing
@@ -27,11 +27,11 @@ Version lives in three places that must stay in sync: `about_version` in `app/sr
 
 ## Map asset pipeline (`utils/map/`)
 
-Regenerating `Czechia.cbmap` / `Prague.cbmap` / `Brno.cbmap` — see @utils/map/README.md for the full flow:
+Regenerating `Czechia.cbmap` / `Prague.cbmap` / `Brno.cbmap` — see @utils/map/README.md for the full flow. `utils/map/` is a uv project (Python 3.14, package `map` in `src/map/`, dependencies in `pyproject.toml`); run everything from that directory:
 
-1. Build `utils/map/osm_parser.sln` (MSVC, toolset v141) and run the EXE. Its input OSM path and `cz.cbmap` output name are hardcoded in `osm_parser/main.cpp`.
-2. Run `postprocess_parsed_map.py` from `utils/map/`. Needs `pip install unidecode haversine` (no requirements file).
-3. Copy the resulting `.cbmap` files into `app/src/main/assets/`.
+1. Download an `.osm.pbf` extract from Geofabrik into `utils/map/data/` (contents are gitignored).
+2. Run `uv run parse-osm data/<extract>.osm.pbf` (`src/map/parse_osm.py`). The input path is the only argument; it writes `data/<extract>_raw.cbmap` (parsed `Display Name;lat;lon` lines before postprocessing) and `data/<extract>.cbmap` (keys added, same-name features within 500 m deduplicated). One input extract gives one map.
+3. Copy the resulting `.cbmap` into `app/src/main/assets/` under its asset name and update its line count in the `DictInfo` list in `PresmyslovnikActivity.kt` (the script prints the number of saved features).
 
 `.cbmap` and `.canon` assets are newline-separated text with no header, one record per line: `cleanedkey:Display Name` for dictionaries, `cleanedkey:Display Name;lat;lon` for maps. The key is `unidecode`d, lowercased, non-alphanumerics stripped.
 
