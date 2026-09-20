@@ -18,7 +18,6 @@ No formatter or linter config in the repo — match the surrounding file.
 - XML layouts with `findViewById`, held as `private val x by lazy { findViewById<T>(R.id.x) }`. No Compose, no view binding, no data binding.
 - Activities extend `android.app.Activity`, not `AppCompatActivity`, even though appcompat is a dependency.
 - Non-Activity helpers are `internal`. Flat package `cz.civilizacehra.cipherbreaker`, no subpackages.
-- C++ (`app/src/main/cpp/`) uses tabs; C++14.
 - Custom named styles live in `res/values/styles.xml` and are applied via `style="@style/..."`.
 
 ## Releasing

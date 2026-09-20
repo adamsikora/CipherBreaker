@@ -15,7 +15,6 @@ android {
         }
     }
     compileSdkVersion 37
-    ndkVersion "29.0.14206865"
     defaultConfig {
         applicationId "cz.civilizacehra.cipherbreaker"
         minSdkVersion 23
@@ -23,11 +22,6 @@ android {
         versionCode 17
         versionName "1.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags ""
-            }
-        }
     }
     buildTypes {
         release {
@@ -37,11 +31,6 @@ android {
         }
         debug {
             signingConfig signingConfigs.release
-        }
-    }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
         }
     }
     namespace 'cz.civilizacehra.cipherbreaker'
