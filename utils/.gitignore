@@ -1,0 +1,4 @@
+data/*/input/*
+data/*/output/*
+!data/*/*/.gitkeep
+__pycache__/

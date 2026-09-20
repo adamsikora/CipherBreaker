@@ -31,6 +31,9 @@ MIN_DISTANCE_METERS = 500
 
 NON_ALPHANUMERIC = re.compile(r'[\W_]+')
 
+# Relative to utils/, where the script is run from
+OUTPUT_DIR = Path('data/map/output')
+
 
 class RawFeature(NamedTuple):
     name: str
@@ -197,10 +200,13 @@ def save_cbmap(features_to_write: list, path: Path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('input', type=Path,
-                        help='.osm.pbf file to parse. Result is saved next to it with .cbmap extension, '
-                             'unprocessed features with _raw suffix')
+                        help='.osm.pbf file to parse. Result is saved to the output directory with .cbmap '
+                             'extension, unprocessed features with _raw suffix')
+    parser.add_argument('-o', '--output-dir', type=Path, default=OUTPUT_DIR,
+                        help='directory to save the results to (default: %(default)s)')
     args = parser.parse_args()
-    output = args.input.with_name(args.input.name.removesuffix('.osm.pbf') + '.cbmap')
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    output = args.output_dir / (args.input.name.removesuffix('.osm.pbf') + '.cbmap')
 
     start = time.perf_counter()
     raw_features = parse_osm(args.input)
