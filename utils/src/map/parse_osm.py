@@ -14,6 +14,7 @@ import argparse
 import re
 import time
 from itertools import groupby
+from math import cos, floor, radians
 from pathlib import Path
 from typing import NamedTuple
 
@@ -28,6 +29,8 @@ NAME_KEYS = ('name', 'ele')
 
 # Features of the same name closer than this are considered to be duplicates
 MIN_DISTANCE_METERS = 500
+# Size of a cell of the grid used to look the duplicates up, a degree of latitude is over 100 km everywhere
+CELL_DEGREES = MIN_DISTANCE_METERS / 100_000
 
 NON_ALPHANUMERIC = re.compile(r'[\W_]+')
 
@@ -176,16 +179,24 @@ def postprocess(raw_features: list[RawFeature]) -> list[Feature]:
             features.append(Feature(cleaned, raw.name, raw.lat, raw.lon))
 
     print(f'Got {len(features)} features. Filtering close features...')
+    # Accepted features are kept in a grid, so that a feature is compared only with the ones around it
+    # instead of with all of them. Cells are at least MIN_DISTANCE_METERS big in both directions,
+    # duplicates are therefore always in the same or in a neighbouring cell. Meridians get closer
+    # towards the poles, width of a cell is taken from the latitude where they are the closest.
+    max_lat = max((abs(feature.lat) for feature in features), default=0)
+    lon_cell_degrees = CELL_DEGREES / cos(radians(min(max_lat + CELL_DEGREES, 89)))
+
     filtered_features = []
     for _, group in groupby(sorted(features), key=lambda x: x.cleaned_name):
-        features_far_apart = []
+        grid: dict[tuple[int, int], list[Feature]] = {}
         for feature in group:
-            for accepted_feature in features_far_apart:
-                if feature.distance(accepted_feature) < MIN_DISTANCE_METERS:
-                    break
-            else:
-                features_far_apart.append(feature)
-        filtered_features.extend(features_far_apart)
+            row, col = floor(feature.lat / CELL_DEGREES), floor(feature.lon / lon_cell_degrees)
+            if not any(feature.distance(accepted_feature) < MIN_DISTANCE_METERS
+                       for r in (row - 1, row, row + 1)
+                       for c in (col - 1, col, col + 1)
+                       for accepted_feature in grid.get((r, c), ())):
+                grid.setdefault((row, col), []).append(feature)
+                filtered_features.append(feature)
 
     print(f'Got {len(filtered_features)} features after filtering')
     return filtered_features
