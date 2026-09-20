@@ -2,6 +2,7 @@ package cz.civilizacehra.cipherbreaker
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -15,9 +16,11 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CustomCap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 
 import java.util.Objects
@@ -28,6 +31,7 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var mPosition: LatLng? = null
     private var mDestination: LatLng? = null
+    private var mArrow: Polyline? = null
 
     private val distEditText by lazy { findViewById<EditText>(R.id.distanceEditText) }
     private val angleEditText by lazy { findViewById<EditText>(R.id.angleEditText) }
@@ -41,6 +45,10 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     private val mapyIcon by lazy { findViewById<RelativeLayout>(R.id.mapyIconLayout) }
 
     private val startIcon by lazy { Utils.vectorToBitmapDescriptor(this, R.drawable.ic_marker_start) }
+    private val arrowHeadIcon by lazy { Utils.vectorToBitmapDescriptor(this, R.drawable.ic_arrow_head) }
+    private val arrowWidth by lazy { 3 * resources.displayMetrics.density }
+    // How far the tip of ic_arrow_head reaches from its center
+    private val arrowTipLength by lazy { 4 * resources.displayMetrics.density }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,8 +112,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         val angle = getDouble(angleEditText)
         if (!lat.isNaN() && !lon.isNaN()) {
             mMap!!.clear()
+            mArrow = null
             val loc = LatLng(lat, lon)
-            // Start is a dot sitting right on the position, so only the destination looks like a pin
             mMap!!.addMarker(MarkerOptions().position(loc).title("Start")
                     .icon(startIcon).anchor(0.5f, 0.5f))
 
@@ -114,8 +122,10 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                 mDestination = dest
                 resultTextView.text = Utils.formatLatLng(dest)
 
-                mMap!!.addMarker(MarkerOptions().position(dest).title("Destination"))
-                mMap!!.addPolyline(PolylineOptions().color(-0x10000).add(loc, dest))
+                // Tip of the arrow marks the destination
+                mArrow = mMap!!.addPolyline(PolylineOptions().color(-0x10000)
+                        .width(arrowWidth).endCap(CustomCap(arrowHeadIcon, arrowWidth)).add(loc, dest))
+                mArrow!!.tag = dest
                 if (move) {
                     val southWest = LatLng(
                             min(loc.latitude, dest.latitude),
@@ -126,10 +136,36 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
                     val bounds = LatLngBounds(southWest, northEast)
                     mMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300))
                 }
+                updateArrow()
             } else if (move) {
                 mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.toFloat()))
             }
         }
+    }
+
+    /**
+     * Blunt end of the line would stick out from under the tip of the arrow head, so the line
+     * ends a bit before the destination and the tip reaches over it. The gap is given in pixels,
+     * so the end of the line depends on zoom.
+     */
+    private fun updateArrow() {
+        val arrow = mArrow ?: return
+        val start = arrow.points.first()
+        val dest = arrow.tag as LatLng
+        val projection = mMap!!.projection
+        val from = projection.toScreenLocation(start)
+        val to = projection.toScreenLocation(dest)
+        val dx = (to.x - from.x).toDouble()
+        val dy = (to.y - from.y).toDouble()
+        val length = hypot(dx, dy)
+        val end = if (length > arrowTipLength) {
+            val ratio = arrowTipLength / length
+            projection.fromScreenLocation(
+                    Point((to.x - dx * ratio).roundToInt(), (to.y - dy * ratio).roundToInt()))
+        } else {
+            dest
+        }
+        arrow.points = listOf(start, end)
     }
 
     private fun getDouble(et: EditText): Double {
@@ -181,6 +217,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
             applicationContext.toastIt("Set new starting location")
         }
         mMap!!.uiSettings.isRotateGesturesEnabled = false
+        mMap!!.setOnCameraMoveListener { updateArrow() }
+        mMap!!.setOnCameraIdleListener { updateArrow() }
     }
 
     override fun onLocationChanged(location: Location) {

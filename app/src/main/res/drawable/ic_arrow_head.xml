@@ -1,0 +1,12 @@
+<!-- Line cap is centered on the end of the line and its top points along the line. The tip
+     reaches 3 units (4dp) over the center, where the head is already wider than the line, so
+     that the blunt end of the line is hidden. AzimutherActivity ends the line that much earlier -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FFFF0000"
+      android:pathData="M12,9L19,20L12,16.5L5,20Z"/>
+</vector>
