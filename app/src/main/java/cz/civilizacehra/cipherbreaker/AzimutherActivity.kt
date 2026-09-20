@@ -15,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
@@ -40,6 +39,8 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
     private val resultLayout by lazy { findViewById<RelativeLayout>(R.id.resultDescriptionLayout) }
     private val clipboardIcon by lazy { findViewById<RelativeLayout>(R.id.clipboardIconLayout) }
     private val mapyIcon by lazy { findViewById<RelativeLayout>(R.id.mapyIconLayout) }
+
+    private val startIcon by lazy { Utils.vectorToBitmapDescriptor(this, R.drawable.ic_marker_start) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,8 +105,9 @@ class AzimutherActivity : LocationActivity(), OnMapReadyCallback {
         if (!lat.isNaN() && !lon.isNaN()) {
             mMap!!.clear()
             val loc = LatLng(lat, lon)
-            mMap!!.addMarker(MarkerOptions().position(loc).title("Start").icon(
-                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+            // Start is a dot sitting right on the position, so only the destination looks like a pin
+            mMap!!.addMarker(MarkerOptions().position(loc).title("Start")
+                    .icon(startIcon).anchor(0.5f, 0.5f))
 
             if (!dist.isNaN() && !angle.isNaN()) {
                 val dest = computeLatLng(lat, lon, dist, angle)
