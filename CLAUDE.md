@@ -27,11 +27,11 @@ Version lives in three places that must stay in sync: `about_version` in `app/sr
 
 ## Map asset pipeline (`utils/map/`)
 
-Regenerating `Czechia.cbmap` / `Prague.cbmap` / `Brno.cbmap` — see @utils/map/README.md for the full flow. `utils/map/` is a uv project (Python 3.14, package `map` in `src/map/`, dependencies in `pyproject.toml`); run everything from that directory:
+Regenerating `Czechia.cbmap`, the only map asset — see @utils/map/README.md for the full flow. `utils/map/` is a uv project (Python 3.14, package `map` in `src/map/`, dependencies in `pyproject.toml`); run everything from that directory:
 
 1. Download an `.osm.pbf` extract from Geofabrik into `utils/map/data/` (contents are gitignored).
-2. Run `uv run parse-osm data/<extract>.osm.pbf` (`src/map/parse_osm.py`). The input path is the only argument; it writes `data/<extract>_raw.cbmap` (parsed `Display Name;lat;lon` lines before postprocessing) and `data/<extract>.cbmap` (keys added, same-name features within 500 m deduplicated). One input extract gives one map.
-3. Copy the resulting `.cbmap` into `app/src/main/assets/` under its asset name and update its line count in the `DictInfo` list in `PresmyslovnikActivity.kt` (the script prints the number of saved features).
+2. Run `uv run parse-osm data/<extract>.osm.pbf` (`src/map/parse_osm.py`). The input path is the only argument; it writes `data/<extract>_raw.cbmap` (parsed `Display Name;lat;lon` lines before postprocessing) and `data/<extract>.cbmap` (keys added, same-name features within 500 m deduplicated).
+3. Copy the resulting `.cbmap` into `app/src/main/assets/` as `Czechia.cbmap` and update its line count in the `DictInfo` list in `PresmyslovnikActivity.kt` (the script prints the number of saved features).
 
 `.cbmap` and `.canon` assets are newline-separated text with no header, one record per line: `cleanedkey:Display Name` for dictionaries, `cleanedkey:Display Name;lat;lon` for maps. The key is `unidecode`d, lowercased, non-alphanumerics stripped.
 

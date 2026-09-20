@@ -51,8 +51,6 @@ class PresmyslovnikActivity : LocationActivity() {
             DictInfo("podst_jm_cz.canon", 23219),
             DictInfo("cs_CZ_openoffice.canon", 166566),
             DictInfo("cs.canon", 4269351),
-            DictInfo("Prague.cbmap", 35874),
-            DictInfo("Brno.cbmap", 12842),
             DictInfo("Czechia.cbmap", 366663)
     )
 
@@ -126,7 +124,8 @@ class PresmyslovnikActivity : LocationActivity() {
 
     private fun loadSavedState() {
         modeSpinner.setSelection(sharedPreferences.getInt("modeSpinner", 0))
-        dictionarySpinner.setSelection(sharedPreferences.getInt("dictionarySpinner", 0))
+        // Saved position may point past the end as there used to be more dictionaries
+        dictionarySpinner.setSelection(sharedPreferences.getInt("dictionarySpinner", 0).coerceAtMost(dictionaries.lastIndex))
         minLengthBox.setText(sharedPreferences.getString("minLength", ""))
         maxLengthBox.setText(sharedPreferences.getString("maxLength", ""))
         inputBox.setText(sharedPreferences.getString("query", ""))
@@ -213,7 +212,7 @@ class PresmyslovnikActivity : LocationActivity() {
     }
 
     private fun isMapDictionaryChosen(): Boolean {
-        return dictionarySpinner.selectedItemPosition in 4..6
+        return dictionaries[dictionarySpinner.selectedItemPosition].name.endsWith(".cbmap")
     }
 
     private fun showPositionLayout() {
