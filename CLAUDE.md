@@ -16,7 +16,7 @@ No formatter or linter config in the repo — match the surrounding file.
 
 - Kotlin only for app code; no Java.
 - XML layouts with `findViewById`, held as `private val x by lazy { findViewById<T>(R.id.x) }`. No Compose, no view binding, no data binding.
-- Activities extend `android.app.Activity`, not `AppCompatActivity`, even though appcompat is a dependency.
+- Activities extend `android.app.Activity` (`FragmentActivity` where a map fragment is needed). appcompat is not a dependency, only `androidx.core` and `androidx.fragment`.
 - Non-Activity helpers are `internal`. Flat package `cz.civilizacehra.cipherbreaker`, no subpackages.
 - Custom named styles live in `res/values/styles.xml` and are applied via `style="@style/..."`.
 

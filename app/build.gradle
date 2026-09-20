@@ -38,7 +38,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.core:core:1.19.0'
+    implementation 'androidx.fragment:fragment:1.9.0'
     implementation 'com.google.android.gms:play-services-maps:20.0.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0"
