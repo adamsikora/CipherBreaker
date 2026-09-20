@@ -23,6 +23,14 @@ class UtilsTest {
     }
 
     @Test
+    fun parseIntWithDefaultFallsBackOnOverflow() {
+        assertEquals(2147483647, Utils.parseIntWithDefault("2147483647", 5))
+        assertEquals(5, Utils.parseIntWithDefault("2147483648", 5))
+        assertEquals(5, Utils.parseIntWithDefault("99999999999", 5))
+        assertEquals(5, Utils.parseIntWithDefault("-99999999999", 5))
+    }
+
+    @Test
     fun formatCoordUsesFiveDecimals() {
         assertEquals("50.12346", Utils.formatCoord(50.123456))
         assertEquals("14.00000", Utils.formatCoord(14.0))

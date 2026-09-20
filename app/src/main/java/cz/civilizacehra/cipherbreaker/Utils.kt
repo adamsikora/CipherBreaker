@@ -13,7 +13,8 @@ import androidx.core.graphics.createBitmap
 
 internal object Utils {
     fun parseIntWithDefault(s: String, default: Int = 0): Int {
-        return if (s.matches("-?\\d+".toRegex())) s.toInt() else default
+        // toIntOrNull alone would also accept "+5"
+        return if (s.matches("-?\\d+".toRegex())) s.toIntOrNull() ?: default else default
     }
 
     fun formatCoord(coord: Double): String {
