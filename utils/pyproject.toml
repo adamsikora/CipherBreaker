@@ -1,7 +1,7 @@
 [project]
-name = "map"
+name = "utils"
 version = "0.1.0"
-description = "Tools for creating map data"
+description = "Tools for creating map and dictionary data"
 readme = "README.md"
 authors = [
     { name = "Adam Sikora", email = "adam.sikora73@gmail.com" }
@@ -15,6 +15,10 @@ dependencies = [
 
 [project.scripts]
 parse-osm = "map.parse_osm:main"
+parse-morfflex = "cz_dict.parse_morfflex:main"
+
+[tool.uv.build-backend]
+module-name = ["map", "cz_dict"]
 
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]

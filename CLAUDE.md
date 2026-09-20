@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:app`, plus `utils/` — offline Python tooling that generates the map assets.
+Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:app`, plus `utils/` — offline Python tooling that generates the map and dictionary assets.
 
 ## Build & test
 
@@ -34,9 +34,16 @@ No formatter or linter config in the repo — match the surrounding file.
 
 Version lives in three places that must stay in sync: `about_version` in `app/src/main/res/values/strings.xml`, and `versionCode` + `versionName` in `app/build.gradle`. Version bumps get their own commit. Release bundles are generated and uploaded to the Play Console manually — see @README.md.
 
-## Map asset pipeline (`utils/`)
+## Asset tooling (`utils/`)
 
-Regenerating `Czechia.cbmap`, the only map asset — see @utils/README.md for the full flow. `utils/` is a uv project (Python 3.14, package `map` in `src/map/`, dependencies in `pyproject.toml`); run everything from that directory. Data lives in `data/map/input/` and `data/map/output/`, contents of both are gitignored:
+`utils/` is a uv project (Python 3.14, dependencies in `pyproject.toml`) with one package per kind of asset in `src/<package>/`, each listed in `module-name` under `[tool.uv.build-backend]`. Run everything from that directory. Data of a package lives in `data/<package>/input/` and `data/<package>/output/`, contents of both are gitignored.
+
+- `map` — map assets, see below.
+- `cz_dict` — Czech word lists. `uv run parse-morfflex data/cz_dict/input/czech-morfflex-2.1.tsv` (`src/cz_dict/parse_morfflex.py`) takes base forms of words from the [MorfFlex CZ](https://hdl.handle.net/11234/1-5833) dictionary (CC BY-NC-SA) and writes `<input>_all` (all the words) and `<input>_nouns` (common nouns only — no abbreviations, proper names or style-marked words) lists to `data/cz_dict/output/`, sorted regardless of case, each as `.cbdict` (one word per line) and `.cbfcdict` (front coded words with case kept in the leading letter, format is described in the script's docstring), both with the word count on the first line. The app does not read either of them yet.
+
+### Map asset pipeline
+
+Regenerating `Czechia.cbmap`, the only map asset — see @utils/README.md for the full flow:
 
 1. Download an `.osm.pbf` extract from Geofabrik into `utils/data/map/input/`.
 2. Run `uv run parse-osm data/map/input/<extract>.osm.pbf` (`src/map/parse_osm.py`). It writes `data/map/output/<extract>_raw.cbmap` (parsed `Display Name;lat;lon` lines before postprocessing) and `data/map/output/<extract>.cbmap` (keys added, same-name features within 500 m deduplicated); `-o` changes the output directory.
