@@ -18,7 +18,7 @@ parse-osm = "map.parse_osm:main"
 parse-morfflex = "cz_dict.parse_morfflex:main"
 
 [tool.uv.build-backend]
-module-name = ["map", "cz_dict"]
+module-name = ["map", "cz_dict", "common"]
 
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]
