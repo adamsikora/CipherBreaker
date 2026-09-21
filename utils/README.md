@@ -9,8 +9,7 @@
      coordinates have 5 decimal places
    - czech-republic-latest.cbfcmap - the same lines front coded, the same way as .cbfcdict below
 
-The app does not read these yet, Czechia.cbmap in its assets is in the older format of
-`cleanedkey:name;lat;lon` lines without the number of them.
+4. Copy czech-republic-latest.cbmap to app assets as Czechia.cbmap
 
 ## Czech dictionary
 
@@ -28,7 +27,10 @@ The app does not read these yet, Czechia.cbmap in its assets is in the older for
 
 ### Dictionaries of the app
 
-1. Copy .canon files from app assets to data/cz_dict/input/
+.cbdict dictionaries in app assets were made from .canon files of `cleanedkey:word` lines, which the app
+used to read:
+
+1. Put .canon files to data/cz_dict/input/
 2. Run `uv run parse-canon data/cz_dict/input/cs.canon data/cz_dict/input/en.canon ...`, for every file it creates
    in data/cz_dict/output/ a list of its words without the keys and without duplicates, sorted regardless
    of case, as .cbdict and .cbfcdict described above

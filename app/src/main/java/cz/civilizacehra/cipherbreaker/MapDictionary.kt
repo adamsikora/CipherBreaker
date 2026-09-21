@@ -49,6 +49,11 @@ internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictiona
         uiHandlers.updateProgress(100, resultsSize(), computationTime(), conclude())
     }
 
+    // Lines are name;lat;lon, names are without semicolons
+    override fun name(line: String): String {
+        return line.substringBefore(';')
+    }
+
     override fun prepare() {
         mSortedResults.clear()
         mStartTime = System.currentTimeMillis()

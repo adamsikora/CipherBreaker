@@ -6,19 +6,21 @@ import org.junit.Test
 
 class DictionaryTest {
     private val words = listOf(
-            "en:en",
-            "kos:kos",
-            "osa:osa",
-            "pes:pes",
-            "sep:šep",
-            "ta:ta",
-            "at:at",
-            "kosa:kosa",
-            "sako:sako",
-            "pesek:pešek",
-            "kost:kost",
-            "kosti:kosti"
+            "en",
+            "kos",
+            "osa",
+            "pes",
+            "šep",
+            "ta",
+            "at",
+            "kosa",
+            "sako",
+            "pešek",
+            "kost",
+            "kosti"
     )
+    // Number of the words is on the first line of a dictionary
+    private val dictionaryLines = listOf(words.size.toString()) + words
 
     private val regex = 0
     private val subset = 1
@@ -31,8 +33,9 @@ class DictionaryTest {
 
     private class SearchResult(val matches: List<String>, val count: Int, val toasts: List<String>)
 
-    private fun search(input: String, modeId: Int, minLength: Int = 0, maxLength: Int = Int.MAX_VALUE): SearchResult {
-        val dictionary = Dictionary { words.joinToString("\n").byteInputStream(Charsets.UTF_8) }
+    private fun search(input: String, modeId: Int, minLength: Int = 0, maxLength: Int = Int.MAX_VALUE,
+                       lines: List<String> = dictionaryLines): SearchResult {
+        val dictionary = Dictionary { lines.joinToString("\n").byteInputStream(Charsets.UTF_8) }
         val toasts = ArrayList<String>()
         var lastResult = ""
         var lastCount = -1
@@ -46,7 +49,7 @@ class DictionaryTest {
                 })
         runBlocking {
             dictionary.findResults(input, QueryParams(modeId, minLength, maxLength),
-                    DictInfo("test.canon", words.size), uiHandlers)
+                    DictInfo("test.cbdict"), uiHandlers)
         }
         assertEquals(100, lastProgress)
         return SearchResult(lastResult.split("\n").filter { it.isNotEmpty() }, lastCount, toasts)
@@ -70,6 +73,20 @@ class DictionaryTest {
     fun keyIsSearchedAndNameIsShown() {
         assertEquals(listOf("pešek"), search("pesek", regex).matches)
         assertEquals(emptyList<String>(), search("pešek", regex).matches)
+    }
+
+    @Test
+    fun keyIsMadeOfLettersAndDigitsInLowerCase() {
+        val lines = listOf("2", "Karel IV.", "iPhone 4S")
+        assertEquals(listOf("Karel IV."), search("kareliv", regex, lines = lines).matches)
+        assertEquals(listOf("iPhone 4S"), search("iphone4s", regex, lines = lines).matches)
+    }
+
+    @Test
+    fun fileWithoutNumberOfWordsIsReported() {
+        val result = search("kos", regex, lines = words)
+        assertEquals(emptyList<String>(), result.matches)
+        assertEquals(listOf("Invalid dictionary file"), result.toasts)
     }
 
     @Test

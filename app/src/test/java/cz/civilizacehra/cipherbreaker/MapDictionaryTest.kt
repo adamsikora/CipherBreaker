@@ -10,10 +10,11 @@ import org.junit.Test
  */
 class MapDictionaryTest {
     private val places = listOf(
-            "petrin:Petřín;50.0833514;14.3950931",
-            "petrin:Petřín;49.4681442;17.9707594",
-            "vitkov:Vítkov;50.0888094;14.4500442",
-            "bus741:Bus 741: Gmünd;48.7611194;14.9725226"
+            "4",
+            "Bus 741: Gmünd;48.76112;14.97252",
+            "Petřín;49.46814;17.97076",
+            "Petřín;50.08335;14.39509",
+            "Vítkov;50.08881;14.45004"
     )
     private val regex = 0
     private val exact = 2
@@ -25,7 +26,7 @@ class MapDictionaryTest {
         val uiHandlers = UiHandlers({ }, { _, _, _, result -> lastResult = result })
         runBlocking {
             dictionary.findResults(input, QueryParams(modeId, 0, Int.MAX_VALUE),
-                    DictInfo("test.cbmap", places.size), uiHandlers)
+                    DictInfo("test.cbmap"), uiHandlers)
         }
         return lastResult.split("\n").filter { it.isNotEmpty() }
     }
@@ -48,6 +49,12 @@ class MapDictionaryTest {
     @Test
     fun colonInNameIsKept() {
         assertEquals(listOf("Bus 741: Gmünd (0m)"), search("bus.*", regex))
+    }
+
+    @Test
+    fun coordinatesAreNotPartOfKey() {
+        assertEquals(listOf("Bus 741: Gmünd (0m)"), search("bus741gmund", regex))
+        assertEquals(emptyList<String>(), search(".*50.*", regex))
     }
 
     @Test

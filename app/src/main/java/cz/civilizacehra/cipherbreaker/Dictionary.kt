@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 import kotlin.math.min
 
-data class DictInfo(val name: String, val size: Int)
+data class DictInfo(val name: String)
 data class QueryParams(val modeId: Int, val minLength: Int, val maxLength: Int)
 
 typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double, result: String) -> Unit
@@ -141,9 +141,13 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
             val `in` = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
             var line: String?
             var lineCounter = 0
-            val totalSize = dictInfo.size
+            // Number of the entries is on the first line
+            val totalSize = `in`.readLine()?.toIntOrNull()
+            if (totalSize == null) {
+                uiHandlers.toastIt("Invalid dictionary file")
+                return
+            }
             var lastUpdate = System.currentTimeMillis()
-            var assertInvalidLetters = true
 
             while (true) {
                 ++lineCounter
@@ -151,7 +155,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                     val time = System.currentTimeMillis()
                     if (time - lastUpdate > 100) {
                         lastUpdate = time
-                        val progress = (100 * lineCounter / totalSize)
+                        val progress = (100 * lineCounter / totalSize.coerceAtLeast(1))
                         uiHandlers.updateProgress(progress, resultsSize(), computationTime(), conclude())
                     }
                 }
@@ -160,30 +164,30 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                 if (line == null) {
                     break
                 }
-                val word = StringPair.fromString(line)
-                val first = word.first
+                // Entries are searched by their keys, entries themselves are shown
+                val first = DictionaryKey.fromName(name(line))
 
-                if (subset && first!!.length > input.length
-                        || superset && first!!.length < input.length
-                        || exact && first!!.length != input.length
-                        || hamming && first!!.length != input.length
-                        || countMode && first!!.length != input.length
-                        || first!!.length < minLength || first.length > maxLength) {
+                if (subset && first.length > input.length
+                        || superset && first.length < input.length
+                        || exact && first.length != input.length
+                        || hamming && first.length != input.length
+                        || countMode && first.length != input.length
+                        || first.length < minLength || first.length > maxLength) {
                     continue
                 }
                 if (regex) {
                     if (pattern.matcher(first).matches()) {
-                        matched(word.second!!)
+                        matched(line)
                     }
                 } else if (hamming) {
                     val d = hammingDistance(first, input)
                     if (d < 6) {
-                        matched("($d) ${word.second}")
+                        matched("($d) $line")
                     }
                 } else if (levenshtein) {
                     val d = levenshteinDistance(first, input)
                     if (d < 6) {
-                        matched("($d) ${word.second}")
+                        matched("($d) $line")
                     }
                 } else if (countMode) {
                     var allSatisfy = true
@@ -194,19 +198,15 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                         }
                     }
                     if (allSatisfy) {
-                        matched(word.second!!)
+                        matched(line)
                     }
                 } else {
                     val chars = IntArray(26)
                     for (c in first) {
+                        // Digits of a key are not counted
                         val position = c - 'a'
                         if (position in 0..25) {
                             ++chars[position]
-                        } else {
-                            if (assertInvalidLetters && c != ' ' && (c !in '0'..'9')) {
-                                uiHandlers.toastIt("Invalid letter in dictionary \"$c\" in $word")
-                                assertInvalidLetters = false
-                            }
                         }
                     }
                     for (i in 0..25) {
@@ -220,7 +220,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                             break
                         }
                         if (i == 26 - 1) {
-                            matched(word.second!!)
+                            matched(line)
                         }
                     }
                 }
@@ -229,6 +229,11 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
             uiHandlers.toastIt("Error loading dictionary file")
         }
 
+    }
+
+    // The part of a dictionary line the key is made of
+    protected open fun name(line: String): String {
+        return line
     }
 
     protected open fun prepare() {

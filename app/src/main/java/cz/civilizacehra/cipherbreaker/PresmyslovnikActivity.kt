@@ -46,11 +46,11 @@ class PresmyslovnikActivity : LocationActivity() {
     private val mapDict: MapDictionary by lazy { MapDictionary { assets.open(it) } }
 
     private val dictionaries = arrayOf(
-            DictInfo("en.canon", 88955),
-            DictInfo("podst_jm_cz.canon", 23219),
-            DictInfo("cs_CZ_openoffice.canon", 166566),
-            DictInfo("cs.canon", 4269351),
-            DictInfo("Czechia.cbmap", 592505)
+            DictInfo("en.cbdict"),
+            DictInfo("podst_jm_cz.cbdict"),
+            DictInfo("cs_CZ_openoffice.cbdict"),
+            DictInfo("cs.cbdict"),
+            DictInfo("Czechia.cbmap")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
