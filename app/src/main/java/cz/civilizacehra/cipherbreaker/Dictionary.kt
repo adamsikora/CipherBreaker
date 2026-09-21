@@ -107,6 +107,8 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
             uiHandlers.toastIt("Invalid regex syntax")
             return
         }
+        // One matcher is reused for all the keys, making a new one for every key is slow on Android
+        val matcher = pattern.matcher("")
 
         val charCount = IntArray(26)
         if (countMode) {
@@ -179,7 +181,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                     continue
                 }
                 if (regex) {
-                    if (pattern.matcher(first).matches()) {
+                    if (matcher.reset(first).matches()) {
                         matched(line)
                     }
                 } else if (hamming) {
