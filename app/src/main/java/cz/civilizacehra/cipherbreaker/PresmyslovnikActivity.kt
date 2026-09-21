@@ -47,9 +47,11 @@ class PresmyslovnikActivity : LocationActivity() {
 
     private val dictionaries = arrayOf(
             DictInfo("en.cbdict"),
-            DictInfo("podst_jm_cz.cbdict"),
-            DictInfo("cs_CZ_openoffice.cbdict"),
-            DictInfo("cs.cbdict"),
+            DictInfo("cs_morfflex_nouns.cbdict"),
+            DictInfo("cs_morfflex_all.cbdict"),
+            DictInfo("podst_jm_cz_old.cbdict"),
+            DictInfo("cs_CZ_openoffice_old.cbdict"),
+            DictInfo("cs_old.cbdict"),
             DictInfo("Czechia.cbmap")
     )
 
