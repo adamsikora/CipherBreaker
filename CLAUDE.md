@@ -8,11 +8,13 @@ Android app (Kotlin) of helper tools for Puzzle Hunts. Single Gradle module `:ap
 
 ## Build & test
 
-Verify every change to the app with Gradle and report the result. There is no `java` on PATH, so point `JAVA_HOME` at the JDK bundled with Android Studio, the same one the IDE builds with:
+Verify every change to the app with Gradle and report the result:
 
 ```
 ./gradlew testDebugUnitTest assembleDebug --console=plain
 ```
+
+- There is no `java` on PATH. `JAVA_HOME` is set under `env` in `.claude/settings.local.json` (not in the repo) to the JDK bundled with Android Studio, the same one the IDE builds with: `C:/Program Files/Android/Android Studio2/jbr`. Run the command as it is, alone and without a `JAVA_HOME=...` prefix, pipes or other commands, so that it matches the `Bash(./gradlew:*)` permission rule.
 
 - Allowed tasks: `testDebugUnitTest`, `assembleDebug`, `assembleRelease`, `lintDebug`. `assembleRelease` only checks that the release variant builds, its APK is not what gets published. Add `--offline` if a dependency download fails, everything already used is cached.
 - Never run `bundleRelease` or anything publishing — release bundles are made and uploaded by the user, see Releasing.
