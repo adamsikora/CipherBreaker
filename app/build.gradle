@@ -17,8 +17,8 @@ android {
         applicationId "cz.civilizacehra.cipherbreaker"
         minSdk 23
         targetSdk 37
-        versionCode 17
-        versionName "1.5.0"
+        versionCode 18
+        versionName "1.6.0"
     }
     buildTypes {
         release {
