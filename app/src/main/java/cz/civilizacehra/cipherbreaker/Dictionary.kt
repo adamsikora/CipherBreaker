@@ -9,7 +9,8 @@ import java.util.regex.PatternSyntaxException
 import kotlin.math.min
 
 data class DictInfo(val name: String)
-data class QueryParams(val modeId: Int, val minLength: Int, val maxLength: Int)
+data class QueryParams(val modeId: Int, val minLength: Int, val maxLength: Int,
+                       val diacritics: Boolean = false)
 
 typealias UpdateProgress = suspend (progress: Int, nMatches: Int, time: Double, result: String) -> Unit
 typealias ToastIt = suspend (text: String) -> Unit
@@ -93,6 +94,8 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
         val countMode = modeId >= 6
         val counts = if (countMode) mCountsLists[modeId - 6] else null
         val countValues = if (countMode) ArrayList<Int>() else null
+        // Letters of anagram and count modes are without diacritics
+        val diacritics = queryParams.diacritics && (regex || hamming || levenshtein)
         if (!(subset xor exact xor superset xor regex xor hamming xor levenshtein xor countMode)) {
             uiHandlers.toastIt("No mode selected")
             return
@@ -130,7 +133,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                 val position = c - 'a'
                 if (position in 0..25) {
                     ++charCount[position]
-                } else {
+                } else if (!(diacritics && c.isLetter())) {
                     uiHandlers.toastIt("Invalid input letter \"$c\"")
                 }
             }
@@ -165,7 +168,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                     break
                 }
                 // Entries are searched by their keys, entries themselves are shown
-                val first = DictionaryKey.fromName(name(line))
+                val first = if (diacritics) DictionaryKey.withDiacritics(name(line)) else DictionaryKey.fromName(name(line))
 
                 if (subset && first.length > input.length
                         || superset && first.length < input.length

@@ -2,7 +2,6 @@ package cz.civilizacehra.cipherbreaker
 
 import android.location.Location
 import java.io.InputStream
-import java.util.*
 import kotlin.math.min
 
 import kotlin.math.round
@@ -10,10 +9,6 @@ import kotlin.math.round
 internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictionary(openDictionary) {
     private var mLocation: Location? = null
     private val mSortedResults = ArrayList<Point>(2 * mMaxNumberOfResults)
-
-    private var mSuffix: String? = null
-    private val mWorldSides = arrayOf("s", "sv", "sz", "v", "z", "j", "jv", "jz")
-    private var mSvjz: Boolean = false
 
     internal inner class Point(var distance: Float, var name: String) : Comparable<Point> {
 
@@ -26,27 +21,8 @@ internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictiona
         }
     }
 
-    fun setSvjz(svjz: Boolean) {
-        mSvjz = svjz
-    }
-
     fun setLocation(location: Location) {
         mLocation = location
-    }
-
-    override suspend fun findResults(
-            input: String, queryParams: QueryParams, dictInfo: DictInfo, uiHandlers: UiHandlers) {
-        prepare()
-
-        setSuffix("")
-        findResultsInternal(input, queryParams, dictInfo, uiHandlers)
-        if (mSvjz) {
-            for (s in mWorldSides) {
-                processWithWorldSide(input, s, queryParams, dictInfo, uiHandlers)
-            }
-        }
-
-        uiHandlers.updateProgress(100, resultsSize(), computationTime(), conclude())
     }
 
     // Lines are name;lat;lon, names are without semicolons
@@ -64,7 +40,7 @@ internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictiona
         val split = match.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         var lat = .0
         var lon = .0
-        val name = split[0] + mSuffix!!
+        val name = split[0]
         if (split.size >= 3) {
             lat = split[split.size - 2].toDouble()
             lon = split[split.size - 1].toDouble()
@@ -100,30 +76,6 @@ internal class MapDictionary(openDictionary: (String) -> InputStream) : Dictiona
             }
         }
         return resultStr.toString()
-    }
-
-    private fun setSuffix(s: String) {
-        mSuffix = if (s.isNotEmpty()) " (${s.uppercase(Locale.ENGLISH)})"  else  ""
-    }
-
-    private suspend fun processWithWorldSide(
-            input: String, s: String, queryParams: QueryParams, dictInfo: DictInfo,
-            uiHandlers: UiHandlers) {
-        val arr = s.split("".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        var contains = true
-        for (c in arr) {
-            if (!input.contains(c)) {
-                contains = false
-            }
-        }
-        if (contains) {
-            var modified = input
-            for (c in arr) {
-                modified = modified.replaceFirst(c.toRegex(), "")
-            }
-            setSuffix(s)
-            findResultsInternal(modified, queryParams, dictInfo, uiHandlers)
-        }
     }
 
     override fun resultsSize(): Int {

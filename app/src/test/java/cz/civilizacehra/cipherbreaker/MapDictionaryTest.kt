@@ -17,15 +17,13 @@ class MapDictionaryTest {
             "Vítkov;50.08881;14.45004"
     )
     private val regex = 0
-    private val exact = 2
 
-    private fun search(input: String, modeId: Int, svjz: Boolean = false): List<String> {
+    private fun search(input: String, modeId: Int, diacritics: Boolean = false): List<String> {
         val dictionary = MapDictionary { places.joinToString("\n").byteInputStream(Charsets.UTF_8) }
-        dictionary.setSvjz(svjz)
         var lastResult = ""
         val uiHandlers = UiHandlers({ }, { _, _, _, result -> lastResult = result })
         runBlocking {
-            dictionary.findResults(input, QueryParams(modeId, 0, Int.MAX_VALUE),
+            dictionary.findResults(input, QueryParams(modeId, 0, Int.MAX_VALUE, diacritics),
                     DictInfo("test.cbmap"), uiHandlers)
         }
         return lastResult.split("\n").filter { it.isNotEmpty() }
@@ -58,18 +56,9 @@ class MapDictionaryTest {
     }
 
     @Test
-    fun worldSideIsNotRemovedFromInputByDefault() {
-        assertEquals(emptyList<String>(), search("petrinsv", exact))
-    }
-
-    @Test
-    fun worldSideCanBeRemovedFromInput() {
-        assertEquals(listOf("Petřín (SV) (0m)", "Petřín (SV) (0m)"), search("petrinsv", exact, svjz = true))
-        assertEquals(listOf("Vítkov (J) (0m)"), search("jvitkov", exact, svjz = true))
-    }
-
-    @Test
-    fun inputWithoutWorldSideStillMatches() {
-        assertEquals(listOf("Vítkov (0m)"), search("vitkov", exact, svjz = true))
+    fun diacriticsCanBeRequired() {
+        assertEquals(listOf("Vítkov (0m)"), search("vítkov", regex, diacritics = true))
+        assertEquals(listOf("Bus 741: Gmünd (0m)"), search("bus741gmünd", regex, diacritics = true))
+        assertEquals(emptyList<String>(), search("vitkov", regex, diacritics = true))
     }
 }

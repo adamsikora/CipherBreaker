@@ -52,7 +52,7 @@ Version lives in three places that must stay in sync: `about_version` in `app/sr
 
 ### Dictionary and map assets
 
-The app reads `.cbdict` dictionaries and the `.cbmap` map from `app/src/main/assets/` (Git LFS), they are listed in `PresmyslovnikActivity.kt`. Both are newline-separated text: number of the entries on the first line (used for the progress bar), then one entry per line, a word for dictionaries and `Display Name;lat;lon` for maps. Entries are searched by a key that is not stored, `DictionaryKey` makes it of every entry during the search: diacritics removed, lowercased, everything but a-z and digits stripped. `parse_osm.py` deduplicates by an `unidecode` based key that differs only for a few names with characters out of Latin script. Front coded `.cbfcdict` and `.cbfcmap` are not read by the app yet.
+The app reads `.cbdict` dictionaries and the `.cbmap` map from `app/src/main/assets/` (Git LFS), they are listed in `PresmyslovnikActivity.kt`. Both are newline-separated text: number of the entries on the first line (used for the progress bar), then one entry per line, a word for dictionaries and `Display Name;lat;lon` for maps. Entries are searched by a key that is not stored, `DictionaryKey` makes it of every entry during the search: diacritics removed, lowercased, everything but a-z and digits stripped. With the Diacritics checkbox, which only Regex, Hamming and Levenshtein modes have, the key keeps letters with their diacritics, still lowercased and without anything but letters and digits. `parse_osm.py` deduplicates by an `unidecode` based key that differs only for a few names with characters out of Latin script. Front coded `.cbfcdict` and `.cbfcmap` are not read by the app yet.
 
 ## Commits
 

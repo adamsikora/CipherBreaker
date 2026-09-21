@@ -27,7 +27,7 @@ class PresmyslovnikActivity : LocationActivity() {
     private val dictionarySpinner by lazy { findViewById<Spinner>(R.id.dictionarySpinner) }
     private val modeLayout by lazy { findViewById<RelativeLayout>(R.id.modeLayout) }
     private val dictionaryLayout by lazy { findViewById<RelativeLayout>(R.id.dictionaryLayout) }
-    private val svjz by lazy { findViewById<CheckBox>(R.id.svjzCheckBox) }
+    private val diacritics by lazy { findViewById<CheckBox>(R.id.diacriticsCheckBox) }
 
     private val positionLayout by lazy { findViewById<RelativeLayout>(R.id.positionLayout) }
     private val positionTextView by lazy { findViewById<TextView>(R.id.positionCoordinatesView) }
@@ -65,7 +65,6 @@ class PresmyslovnikActivity : LocationActivity() {
                 if (isMapDictionaryChosen() && mLocation == null) {
                     acquireLocation()
                 }
-                refreshSvjz()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -73,7 +72,7 @@ class PresmyslovnikActivity : LocationActivity() {
 
         modeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                refreshSvjz()
+                refreshDiacritics()
                 findViewById<EditText>(R.id.inputEditText).inputType = if (position >= 6) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
             }
 
@@ -85,7 +84,7 @@ class PresmyslovnikActivity : LocationActivity() {
 
         loadSavedState()
         showPositionLayout()
-        refreshSvjz()
+        refreshDiacritics()
 
         inputBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             // If the event is a key-down event on the "enter" button
@@ -119,6 +118,7 @@ class PresmyslovnikActivity : LocationActivity() {
             putInt("dictionarySpinner", dictionarySpinner.selectedItemPosition)
             putString("minLength", minLengthBox.text.toString())
             putString("maxLength", maxLengthBox.text.toString())
+            putBoolean("diacritics", diacritics.isChecked)
             putString("query", inputBox.text.toString())
         }
     }
@@ -129,12 +129,14 @@ class PresmyslovnikActivity : LocationActivity() {
         dictionarySpinner.setSelection(sharedPreferences.getInt("dictionarySpinner", 0).coerceAtMost(dictionaries.lastIndex))
         minLengthBox.setText(sharedPreferences.getString("minLength", ""))
         maxLengthBox.setText(sharedPreferences.getString("maxLength", ""))
+        diacritics.isChecked = sharedPreferences.getBoolean("diacritics", false)
         inputBox.setText(sharedPreferences.getString("query", ""))
     }
 
-    private fun refreshSvjz() {
+    private fun refreshDiacritics() {
         val modePosition = modeSpinner.selectedItemPosition
-        svjz.isEnabled = isMapDictionaryChosen() && modePosition in 2..3
+        // Only Regex, Hamming and Levenshtein can be sensitive to diacritics
+        diacritics.isEnabled = modePosition == 0 || modePosition in 4..5
     }
 
     private fun searchDictionary() {
@@ -149,7 +151,7 @@ class PresmyslovnikActivity : LocationActivity() {
             applicationContext.toastIt(msg)
             return
         }
-        val queryParams = QueryParams(modeId, minLength, maxLength)
+        val queryParams = QueryParams(modeId, minLength, maxLength, diacritics.isEnabled && diacritics.isChecked)
 
         val input = inputBox.text.toString().lowercase(Locale.ENGLISH)
         val dictInfo = dictionaries[dictionarySpinner.selectedItemPosition]
@@ -160,7 +162,6 @@ class PresmyslovnikActivity : LocationActivity() {
             } else {
                 mapDict.setLocation(mLocation!!)
             }
-            mapDict.setSvjz(svjz.isEnabled && svjz.isChecked)
         }
         val currentDict = if (isMapDictionaryChosen()) mapDict else dict
 

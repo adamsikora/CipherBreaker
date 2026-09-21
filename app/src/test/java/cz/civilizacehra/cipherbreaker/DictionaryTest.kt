@@ -34,7 +34,7 @@ class DictionaryTest {
     private class SearchResult(val matches: List<String>, val count: Int, val toasts: List<String>)
 
     private fun search(input: String, modeId: Int, minLength: Int = 0, maxLength: Int = Int.MAX_VALUE,
-                       lines: List<String> = dictionaryLines): SearchResult {
+                       lines: List<String> = dictionaryLines, diacritics: Boolean = false): SearchResult {
         val dictionary = Dictionary { lines.joinToString("\n").byteInputStream(Charsets.UTF_8) }
         val toasts = ArrayList<String>()
         var lastResult = ""
@@ -48,7 +48,7 @@ class DictionaryTest {
                     lastResult = result
                 })
         runBlocking {
-            dictionary.findResults(input, QueryParams(modeId, minLength, maxLength),
+            dictionary.findResults(input, QueryParams(modeId, minLength, maxLength, diacritics),
                     DictInfo("test.cbdict"), uiHandlers)
         }
         assertEquals(100, lastProgress)
@@ -162,5 +162,46 @@ class DictionaryTest {
         // O and A have one hole, the rest of the letters in the dictionary none
         assertEquals(listOf("kos"), search("010", holes).matches)
         assertEquals(listOf("osa"), search("101", holes).matches)
+    }
+
+    @Test
+    fun diacriticsAreMatchedWhenAskedFor() {
+        assertEquals(listOf("pešek"), search("pešek", regex, diacritics = true).matches)
+        assertEquals(emptyList<String>(), search("pesek", regex, diacritics = true).matches)
+        assertEquals(listOf("pes"), search("[ps]e[ps]", regex, diacritics = true).matches)
+        assertEquals(listOf("pes", "šep"), search("[pš]e[ps]", regex, diacritics = true).matches)
+    }
+
+    @Test
+    fun diacriticsAreMatchedRegardlessOfCase() {
+        val lines = listOf("2", "Šárka", "ŠÍP")
+        assertEquals(listOf("Šárka"), search("šárka", regex, lines = lines, diacritics = true).matches)
+        assertEquals(listOf("(0) ŠÍP"), search("šíp", hamming, lines = lines, diacritics = true).matches)
+    }
+
+    @Test
+    fun distancesAreSensitiveToDiacriticsWhenAskedFor() {
+        assertEquals(listOf("(0) šep"), search("sep", hamming, lines = listOf("1", "šep")).matches)
+        assertEquals(listOf("(0) šep"), search("šep", hamming, lines = listOf("1", "šep"), diacritics = true).matches)
+        assertEquals(listOf("(1) šep"), search("sep", hamming, lines = listOf("1", "šep"), diacritics = true).matches)
+
+        val levenshteinResult = search("šepy", levenshtein, lines = listOf("1", "šep"), diacritics = true)
+        assertEquals(listOf("(1) šep"), levenshteinResult.matches)
+        assertEquals(emptyList<String>(), levenshteinResult.toasts)
+        assertEquals(listOf("(2) šep"), search("sepy", levenshtein, lines = listOf("1", "šep"), diacritics = true).matches)
+    }
+
+    @Test
+    fun anagramModesIgnoreDiacritics() {
+        assertEquals(listOf("pes", "šep"), search("eps", exact, diacritics = true).matches)
+        assertEquals(listOf("kos", "osa", "kosa", "sako"), search("kosa", subset, diacritics = true).matches)
+        assertEquals(listOf("kosti"), search("it", superset, diacritics = true).matches)
+        assertEquals(listOf("Invalid input letter \"š\""), search("pše", exact, diacritics = true).toasts)
+    }
+
+    @Test
+    fun countModesIgnoreDiacritics() {
+        // S has three symbols, E one and P four
+        assertEquals(listOf("šep"), search("314", morse, lines = listOf("1", "šep"), diacritics = true).matches)
     }
 }

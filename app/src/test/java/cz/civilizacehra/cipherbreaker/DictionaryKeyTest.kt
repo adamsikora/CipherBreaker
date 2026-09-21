@@ -42,4 +42,13 @@ class DictionaryKeyTest {
         // Other scripts are left out
         assertEquals("30", DictionaryKey.fromName("30 ОСТРАВА"))
     }
+
+    @Test
+    fun diacriticsCanBeKept() {
+        assertEquals("přílišžluťoučkýkůň", DictionaryKey.withDiacritics("Příliš žluťoučký kůň"))
+        assertEquals("úpělďábelskéódy", DictionaryKey.withDiacritics("ÚPĚL ĎÁBELSKÉ ÓDY"))
+        assertEquals("bus741gmünd", DictionaryKey.withDiacritics("Bus 741: Gmünd"))
+        assertEquals("łódź", DictionaryKey.withDiacritics("Łódź"))
+        assertEquals("", DictionaryKey.withDiacritics("?! - _"))
+    }
 }

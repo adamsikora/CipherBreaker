@@ -114,11 +114,11 @@
                     android:selectAllOnFocus="true" />
 
                 <CheckBox
-                    android:id="@+id/svjzCheckBox"
+                    android:id="@+id/diacriticsCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="SVJZ" />
+                    android:text="Diacritics" />
 
             </RelativeLayout>
 
