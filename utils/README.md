@@ -25,3 +25,10 @@ The app does not read these yet, Czechia.cbmap in its assets is in the older for
      (a = 0, b = 1, ...) and the rest of the word in lower case. The letter is in upper case when the first
      letter of the word is. Words with other upper case letters start with = and are in their original
      case, see src/common/front_coding.py for details
+
+### Dictionaries of the app
+
+1. Copy .canon files from app assets to data/cz_dict/input/
+2. Run `uv run parse-canon data/cz_dict/input/cs.canon data/cz_dict/input/en.canon ...`, for every file it creates
+   in data/cz_dict/output/ a list of its words without the keys and without duplicates, sorted regardless
+   of case, as .cbdict and .cbfcdict described above

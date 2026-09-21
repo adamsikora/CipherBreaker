@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 parse-osm = "map.parse_osm:main"
 parse-morfflex = "cz_dict.parse_morfflex:main"
+parse-canon = "cz_dict.parse_canon:main"
 
 [tool.uv.build-backend]
 module-name = ["map", "cz_dict", "common"]
