@@ -109,6 +109,7 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
         }
         // One matcher is reused for all the keys, making a new one for every key is slow on Android
         val matcher = pattern.matcher("")
+        val levenshteinCosts = IntArray(input.length + 1)
 
         val charCount = IntArray(26)
         if (countMode) {
@@ -190,7 +191,8 @@ internal open class Dictionary(private val openDictionary: (String) -> InputStre
                         matched("($d) $line")
                     }
                 } else if (levenshtein) {
-                    val d = levenshteinDistance(first, input)
+                    // Keys and the input are in lower case already
+                    val d = levenshteinDistance(first, input, 6, levenshteinCosts)
                     if (d < 6) {
                         matched("($d) $line")
                     }
