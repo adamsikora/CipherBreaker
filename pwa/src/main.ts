@@ -7,6 +7,7 @@ import { azimuthTool } from './tools/azimuth';
 import { calendarTool } from './tools/calendar';
 import { dictionaryTool } from './tools/dictionary';
 import { grilleTool } from './tools/grille';
+import { linksTool } from './tools/links';
 import { menuTool } from './tools/menu';
 import { numberAnalyzerTool } from './tools/number-analyzer';
 import { playfairTool } from './tools/playfair';
@@ -22,6 +23,7 @@ const tools: Tool[] = [
   calendarTool,
   numberAnalyzerTool,
   playfairTool,
+  linksTool,
   { path: 'princip', title: 'Princip Trainer', icon: 'school', external: 'https://app.civilizacehra.cz' },
   aboutTool,
 ];

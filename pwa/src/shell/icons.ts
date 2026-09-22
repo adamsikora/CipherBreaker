@@ -2,6 +2,8 @@
 // scratchpad/convert_icons.py. Fill and stroke follow the text colour.
 
 export const icons: Record<string, string> = {
+  // Material "link" icon, for the Useful Links
+  'link': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>',
   // Drawn for the PWA: a magnifying glass with a letter in it, for the Dictionary Search
   'dictionary': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z"/><path fill="currentColor" d="M15.3 16.7l1.4-1.4 5.3 5.3-1.4 1.4z"/><text x="10" y="13.8" font-size="10.5" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle" fill="currentColor" transform="rotate(-20 10 10)">a</text></svg>',
   // Drawn for the PWA: two rows of five bits as ones and zeros, for the Binary Decoder
