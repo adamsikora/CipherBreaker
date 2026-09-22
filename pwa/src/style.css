@@ -55,6 +55,8 @@ body {
 .row.nowrap > label:not(.fixed) > select { width: 100%; min-width: 0; font-size: 14px; }
 .row.nowrap > label.fixed > select { width: auto; }
 .row.nowrap > label.centered { align-items: center; }
+/* Accent marks standing for "diacritics", drawn large enough to be recognised */
+.accents { font-size: 20px; line-height: 13px; color: var(--fg); }
 .row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
 select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
