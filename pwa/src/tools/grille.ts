@@ -11,9 +11,8 @@ import { toast } from '../shell/toast';
 
 const SIZES = [4, 5, 6, 7, 8, 9, 10];
 
-// Cell states: 0 is a hole, 1-3 the cells it turns onto, 4 a free cell, 5 the unusable center
-const STATE_COLORS = ['#4f71e5', '#e8f3db', '#fffbd8', '#ffdad3', '#d9d9d9', '#808080'];
-const RESULT_COLORS = ['#4f71e5', '#8bc34a', '#ffeb3b', '#ff4722'];
+// Cell states: 0 is a hole, 1-3 the cells it turns onto, 4 a free cell, 5 the unusable center.
+// States 0-3 are coloured by the cell-grid `state` classes, the other two are the plain look
 const HOLE = 0;
 const FREE = 4;
 const CENTER = 5;
@@ -35,7 +34,7 @@ export const grilleTool: Tool = {
     const state = loadState(STATE_KEY, DEFAULT_STATE);
     const sizeSelect = h('select', null, ...SIZES.map(size => h('option', null, `${size}x${size}`)));
     const gridHolder = h('div', { class: 'grid-holder' });
-    const resultViews = RESULT_COLORS.map(color => h('div', { class: 'grille-result', style: `color: ${color}` }));
+    const resultViews = [0, 1, 2, 3].map(rot => h('div', { class: `grille-result read-${rot}` }));
     const warningView = h('div', { class: 'muted' });
 
     let size = 0;
@@ -58,7 +57,7 @@ export const grilleTool: Tool = {
 
     function setCellState(i: number, j: number, cellState: number) {
       states[i][j] = cellState;
-      grid!.setColor(i, j, STATE_COLORS[cellState]);
+      grid!.setState(i, j, cellState < FREE ? cellState : null);
     }
 
     // A long press on a hole frees it and the cells it turns onto, on any other cell makes a hole
@@ -86,9 +85,6 @@ export const grilleTool: Tool = {
         onChange: () => { computeGrid(); save(); },
         onLongPress: toggleHole,
       });
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) grid.setColor(i, j, STATE_COLORS[states[i][j]]);
-      }
       gridHolder.replaceChildren(grid.element);
       computeGrid();
     }

@@ -11,9 +11,35 @@
   --row-hover: rgba(0, 0, 0, .06);
   /* Faint tint of the primary colour behind the settings of the tools */
   --panel: #e8eaf6;
+  /* Cells of the Grille and Playfair helpers: a free cell, and the hole with the three cells it
+     turns onto (blue, green, yellow, red), the unusable centre, and the text of the readouts */
+  --cell-fg: #000;
+  --cell-free: #d9d9d9;
+  --cell-center: #808080;
+  --cell-0: #4f71e5;
+  --cell-1: #e8f3db;
+  --cell-2: #fffbd8;
+  --cell-3: #ffdad3;
+  --read-0: #3f51b5;
+  --read-1: #689f38;
+  --read-2: #c9a400;
+  --read-3: #e53935;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #121212; --fg: #eeeeee; --muted: #9e9e9e; --border: #444; --row-hover: rgba(255, 255, 255, .08); --panel: #1c2140; }
+  :root {
+    --bg: #121212; --fg: #eeeeee; --muted: #9e9e9e; --border: #444; --row-hover: rgba(255, 255, 255, .08); --panel: #1c2140;
+    --cell-fg: #eee;
+    --cell-free: #2c2c2c;
+    --cell-center: #1a1a1a;
+    --cell-0: #3f51b5;
+    --cell-1: #2f5222;
+    --cell-2: #6b5a10;
+    --cell-3: #6e2a20;
+    --read-0: #7986cb;
+    --read-1: #8bc34a;
+    --read-2: #ffeb3b;
+    --read-3: #ff7043;
+  }
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -134,11 +160,19 @@ progress.visible { visibility: visible; }
 }
 .cell {
   width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 0;
-  background: #d9d9d9; color: #000; text-align: center; font-size: calc(var(--cell) / 2);
+  background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 2);
   -webkit-touch-callout: none; user-select: none;
 }
-.cell:focus { outline: 2px solid var(--primary); }
-.cell:disabled { background: #808080; }
+.cell:focus { outline: 2px solid var(--accent); }
+.cell:disabled { background: var(--cell-center); }
+.cell.state-0 { background: var(--cell-0); color: #fff; }
+.cell.state-1 { background: var(--cell-1); }
+.cell.state-2 { background: var(--cell-2); }
+.cell.state-3 { background: var(--cell-3); }
+.grille-result.read-0 { color: var(--read-0); }
+.grille-result.read-1 { color: var(--read-1); }
+.grille-result.read-2 { color: var(--read-2); }
+.grille-result.read-3 { color: var(--read-3); }
 .grille-result { font-size: 32px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
 .playfair-result { font-size: 20px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; min-height: 1.4em; }
 

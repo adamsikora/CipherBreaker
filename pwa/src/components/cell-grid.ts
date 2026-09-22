@@ -25,7 +25,8 @@ export interface CellGrid {
   cells: HTMLInputElement[][];
   letters(): string[][];
   setLetter(i: number, j: number, letter: string): void;
-  setColor(i: number, j: number, color: string): void;
+  /** Marks the cell with a state, styled by the `state-<n>` classes; null clears it */
+  setState(i: number, j: number, state: number | null): void;
 }
 
 const LONG_PRESS_MS = 500;
@@ -93,6 +94,8 @@ export function cellGrid(options: CellGridOptions): CellGrid {
     cells,
     letters: () => cells.map(row => row.map(cell => cell.value)),
     setLetter: (i, j, letter) => { cells[i][j].value = letter; },
-    setColor: (i, j, color) => { cells[i][j].style.background = color; },
+    setState: (i, j, state) => {
+      cells[i][j].className = state === null ? 'cell' : `cell state-${state}`;
+    },
   };
 }
