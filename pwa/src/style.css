@@ -70,7 +70,7 @@ body {
 /* Controls */
 .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 10px; }
 .row > label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); flex: 1; min-width: 120px; }
-.row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 8px; font-size: 16px; color: var(--fg); flex: 0 0 auto; }
+.row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 8px; font-size: 16px; color: var(--fg); flex: 0 0 auto; min-width: 0; }
 .row > label.fixed { flex: 0 0 auto; }
 /* Label text on the same line as its control, for compact panels */
 .row > label.inline { flex-direction: row; align-items: center; gap: 6px; }
