@@ -45,9 +45,9 @@ export const dictionaryTool: Tool = {
 
     const modeSelect = h('select', null, ...MODES.map(mode => h('option', null, mode)));
     const dictionarySelect = h('select', null, ...DICTIONARIES.map(([value, label]) => h('option', { value }, label)));
-    const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0 });
-    const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0 });
-    const diacriticsBox = h('input', { type: 'checkbox' });
+    const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0, style: 'width: 3.2em' });
+    const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0, style: 'width: 3.2em' });
+    const diacriticsBox = h('input', { type: 'checkbox', style: 'width: 20px; height: 20px; margin: 9px auto' });
     const positionText = h('span', { class: 'muted' }, 'Position: unknown');
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
     const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
@@ -67,10 +67,13 @@ export const dictionaryTool: Tool = {
 
     const form = h('form', { class: 'row compact' }, queryBox, goButton);
     const unmountLayout = fixedTopLayout(container, [
-      h('div', { class: 'row compact' }, h('label', { class: 'inline' }, 'Mode:', modeSelect), h('label', { class: 'inline' }, 'Dictionary:', dictionarySelect)),
-      h('div', { class: 'row compact' },
-        h('label', { class: 'inline fixed' }, 'Length:', minLengthBox, '-', maxLengthBox),
-        h('label', { class: 'check' }, diacriticsBox, 'Diacritics')),
+      // All the settings in one line like the pickers of the Name Day Searcher: the selects share
+      // the width that the length boxes and the checkbox leave
+      h('div', { class: 'row nowrap' },
+        h('label', null, 'Mode:', modeSelect),
+        h('label', null, 'Dictionary:', dictionarySelect),
+        h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox)),
+        h('label', { class: 'fixed centered' }, 'Diacritics:', diacriticsBox)),
       positionRow,
       form,
       statsRow,

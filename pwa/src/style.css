@@ -51,7 +51,10 @@ body {
 /* Controls that share one row whatever the width, like the four pickers of the Name Day Searcher */
 .row.nowrap { flex-wrap: nowrap; gap: 8px; }
 .row.nowrap > label { min-width: 0; white-space: nowrap; }
+.row.nowrap > label:not(.fixed) { flex: 1 1 0; }
+.row.nowrap > label:not(.fixed) > select { width: 100%; min-width: 0; font-size: 14px; }
 .row.nowrap > label.fixed > select { width: auto; }
+.row.nowrap > label.centered { align-items: center; }
 .row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
 select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
@@ -61,7 +64,8 @@ select, input[type=text], input[type=number], button, textarea {
    it sits, the page or the settings panel */
 select, option { background: var(--bg); }
 .panel select, .panel option { background: var(--panel); }
-input[type=number].short { width: 70px; }
+input[type=number].short { width: 70px; appearance: textfield; -moz-appearance: textfield; }
+input.short::-webkit-outer-spin-button, input.short::-webkit-inner-spin-button { appearance: none; margin: 0; }
 button.primary {
   background: var(--primary); color: #fff; border: none; padding: 9px 20px; cursor: pointer;
   text-transform: uppercase; font-weight: 500; letter-spacing: .5px;
