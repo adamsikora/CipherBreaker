@@ -43,7 +43,7 @@ body {
 .row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 8px; font-size: 16px; color: var(--fg); flex: 0 0 auto; }
 .row > label.fixed { flex: 0 0 auto; }
 /* Label text on the same line as its control, for compact panels */
-.row > label.inline { flex-direction: row; align-items: center; gap: 6px; font-size: 16px; color: var(--fg); }
+.row > label.inline { flex-direction: row; align-items: center; gap: 6px; }
 .row > label.inline > select { flex: 1; width: auto; }
 /* Selects get an explicit width: Safari would otherwise size them by the selected option */
 .row > label > select { width: 100%; min-width: 0; }
