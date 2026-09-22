@@ -143,7 +143,7 @@ export const ternaryReaderTool: Tool = {
     const start = radioGroup('ternaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const chBox = h('input', { type: 'checkbox', onchange: () => rows.updateAll() });
     const direction = radioGroup('ternaryDirection', 'Reading Direction', [['right', '->'], ['left', '<-']], 'right', () => rows.updateAll());
-    const mode = radioGroup('ternaryMode', 'Permutate', [['values', 'Values'], ['order', 'Order']], 'values', () => {
+    const mode = radioGroup('ternaryMode', 'Permutate', [['order', 'Order'], ['values', 'Values']], 'values', () => {
       const readOrder = mode.value === 'order';
       direction.setEnabled(!readOrder);
       // Result i uses the assignment i of the values, or the order 5 - i of the positions
