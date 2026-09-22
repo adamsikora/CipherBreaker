@@ -97,7 +97,7 @@ progress.visible { visibility: visible; }
 
 /* Readers */
 .legend-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-.legend-tile { display: block; width: 37px; }
+.legend-tile { display: block; width: 37px; color: var(--fg); }
 .binary-legend div { display: flex; gap: 1px; }
 .binary-legend .legend-tile { height: 18px; }
 .ternary-legend { display: flex; gap: 1px; }

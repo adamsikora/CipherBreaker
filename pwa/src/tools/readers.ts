@@ -70,15 +70,23 @@ function radioGroup(name: string, label: string, options: [string, string][], ch
   };
 }
 
-// Legends are drawn as SVG in the colours of the digit cells, so that they read the same in both
-// themes: a digit is shown in the colour of the cell that stands for it
+// Legends are drawn as SVG on the panel itself: a digit that stands for a cell value is filled
+// with the colour of that cell and outlined like the cell, so that it shows in both themes;
+// other digits and the arrows are in the text colour
 const CELL_COLORS = ['#fff', '#9e9e9e', '#212121'];
-const LEGEND_BG = '#3f51b5';
+const CELL_BORDER = '#9e9e9e';
 const TILE_WIDTH = 37;
 
 function legendTile(height: number, content: string): SVGElement {
-  return svg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TILE_WIDTH} ${height}" class="legend-tile">`
-    + `<rect width="${TILE_WIDTH}" height="${height}" fill="${LEGEND_BG}"/>${content}</svg>`);
+  return svg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TILE_WIDTH} ${height}" class="legend-tile">${content}</svg>`);
+}
+
+/** A digit at given position, filled like a cell when a cell colour is given */
+function digit(text: string | number, x: number, y: number, size: number, cellColor?: string): string {
+  const paint = cellColor
+    ? `fill="${cellColor}" stroke="${CELL_BORDER}" stroke-width="1" paint-order="stroke"`
+    : 'fill="currentColor"';
+  return `<text x="${x}" y="${y}" font-size="${size}" font-weight="bold" text-anchor="middle" ${paint}>${text}</text>`;
 }
 
 const ARROW_RIGHT = 'M6,9h18l-5,-5l2,-2l8,7l-8,7l-2,-2l5,-5h-18z';
@@ -86,32 +94,28 @@ const ARROW_RIGHT = 'M6,9h18l-5,-5l2,-2l8,7l-8,7l-2,-2l5,-5h-18z';
 /** Arrow of the reading direction, over the binary results */
 function arrowTile(right: boolean): SVGElement {
   const transform = right ? '' : ` transform="translate(${TILE_WIDTH},0) scale(-1,1)"`;
-  return legendTile(18, `<path d="${ARROW_RIGHT}" fill="#fff"${transform}/>`);
+  return legendTile(18, `<path d="${ARROW_RIGHT}" fill="currentColor"${transform}/>`);
 }
 
 /** "1 0" with the digits in the colours of the cells they are read from */
 function binaryTile(oneIsDark: boolean): SVGElement {
   const [one, zero] = oneIsDark ? [CELL_COLORS[2], CELL_COLORS[0]] : [CELL_COLORS[0], CELL_COLORS[2]];
-  return legendTile(18, `<text x="10" y="14" font-size="14" font-weight="bold" text-anchor="middle" fill="${one}">1</text>`
-    + `<text x="27" y="14" font-size="14" font-weight="bold" text-anchor="middle" fill="${zero}">0</text>`);
+  return legendTile(18, digit(1, 10, 14, 14, one) + digit(0, 27, 14, 14, zero));
 }
 
-/** Three digits stacked: given digits in given colours, top to bottom */
-function ternaryTile(digits: number[], colors: string[]): SVGElement {
-  const content = digits.map((digit, k) =>
-    `<text x="${TILE_WIDTH / 2}" y="${20 + k * 22}" font-size="18" font-weight="bold" text-anchor="middle" fill="${colors[k]}">${digit}</text>`).join('');
-  return legendTile(70, content);
+/** Three digits stacked top to bottom, in the colours of cells when given */
+function ternaryTile(digits: number[], colors?: string[]): SVGElement {
+  return legendTile(70, digits.map((d, k) => digit(d, TILE_WIDTH / 2, 20 + k * 22, 18, colors?.[k])).join(''));
 }
 
 /** Values mode: digits 0, 1, 2 each in the colour of the cell value the assignment turns into it */
 function valuesTile(mapping: number[]): SVGElement {
-  const colors = [0, 1, 2].map(digit => CELL_COLORS[mapping.indexOf(digit)]);
-  return ternaryTile([0, 1, 2], colors);
+  return ternaryTile([0, 1, 2], [0, 1, 2].map(d => CELL_COLORS[mapping.indexOf(d)]));
 }
 
 /** Order mode: the positions of the cells in the order they are read */
 function orderTile(order: number[]): SVGElement {
-  return ternaryTile(order, [CELL_COLORS[0], CELL_COLORS[0], CELL_COLORS[0]]);
+  return ternaryTile(order);
 }
 
 export const binaryReaderTool: Tool = {
