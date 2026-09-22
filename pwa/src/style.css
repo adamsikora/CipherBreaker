@@ -158,7 +158,8 @@ progress.visible { visibility: visible; }
   --cell: min(44px, calc((100vw - 48px) / 10));
   display: inline-grid; gap: 2px; padding: 2px; background: #808080; border-radius: 3px;
 }
-.cell {
+/* input.cell outweighs the generic input[type=text] rule, which would keep the font size */
+input.cell {
   width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 0;
   background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 1.7);
   -webkit-touch-callout: none; user-select: none; touch-action: manipulation; text-transform: uppercase;
