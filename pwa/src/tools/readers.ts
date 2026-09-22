@@ -141,7 +141,8 @@ export const ternaryReaderTool: Tool = {
   icon: 'three',
   mount(container) {
     const start = radioGroup('ternaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
-    const chBox = h('input', { type: 'checkbox', onchange: () => rows.updateAll() });
+    // 27 letters is the Czech alphabet with CH after H
+    const alphabet = radioGroup('ternaryAlphabet', 'Alphabet Length', [['26', '26'], ['27', '27']], '26', () => rows.updateAll());
     const direction = radioGroup('ternaryDirection', 'Reading Direction', [['right', '->'], ['left', '<-']], 'right', () => rows.updateAll());
     // The direction only matters when values are permutated, the legend shows what is permutated
     const applyMode = () => {
@@ -154,13 +155,13 @@ export const ternaryReaderTool: Tool = {
     const mode = radioGroup('ternaryMode', 'Permutate', [['order', 'Order'], ['values', 'Values']], 'order', applyMode);
     const legend = h('div', { class: 'legend ternary-legend' });
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
-      values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, chBox.checked));
+      values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, alphabet.value === '27'));
     applyMode();
 
     const settings = h('div', { class: 'settings hidden' },
       h('button', { type: 'button', class: 'icon close', 'aria-label': 'Close settings', onclick: () => settings.classList.add('hidden') }, svg(icons.close)),
       start.element,
-      h('div', { class: 'row' }, h('label', { class: 'check' }, chBox, 'Include CH')),
+      alphabet.element,
       direction.element,
       mode.element);
     const unmountLayout = fixedTopLayout(container, [
