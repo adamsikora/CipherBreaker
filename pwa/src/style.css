@@ -40,6 +40,9 @@ body {
 .row > label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); flex: 1; min-width: 120px; }
 .row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 8px; font-size: 16px; color: var(--fg); flex: 0 0 auto; }
 .row > label.fixed { flex: 0 0 auto; }
+/* Selects get an explicit width: Safari would otherwise size them by the selected option */
+.row > label > select { width: 100%; min-width: 0; }
+.row > label.fixed > select { width: 7em; }
 /* Controls that share one row whatever the width, like the four pickers of the Name Day Searcher */
 .row.nowrap { flex-wrap: nowrap; gap: 8px; }
 .row.nowrap > label { flex: 1 1 0; min-width: 0; white-space: nowrap; }
