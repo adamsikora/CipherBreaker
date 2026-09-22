@@ -62,7 +62,7 @@ export const calendarTool: Tool = {
     });
 
     container.append(
-      h('div', { class: 'row' },
+      h('div', { class: 'row nowrap' },
         h('label', null, 'Day:', daySelect),
         h('label', null, 'Month:', monthSelect),
         h('label', null, 'Year:', yearBox),

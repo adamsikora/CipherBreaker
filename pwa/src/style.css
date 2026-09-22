@@ -40,6 +40,10 @@ body {
 .row > label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); flex: 1; min-width: 120px; }
 .row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 8px; font-size: 16px; color: var(--fg); flex: 0 0 auto; }
 .row > label.fixed { flex: 0 0 auto; }
+/* Controls that share one row whatever the width, like the four pickers of the Name Day Searcher */
+.row.nowrap { flex-wrap: nowrap; gap: 8px; }
+.row.nowrap > label { flex: 1 1 0; min-width: 0; white-space: nowrap; }
+.row.nowrap > label > select, .row.nowrap > label > input { width: 100%; min-width: 0; }
 select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
   border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
