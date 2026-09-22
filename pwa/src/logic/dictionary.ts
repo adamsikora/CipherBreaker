@@ -1,0 +1,262 @@
+// Searching of word dictionaries and maps of places. Port of Dictionary.kt and MapDictionary.kt:
+// entries are searched by keys made of their names, entries themselves are shown. Unlike the app,
+// which makes the keys during every search, they are made once per dictionary and kept.
+
+import { keyFromName, keyWithDiacritics } from './dictionary-key';
+import { decodeFile } from './front-coding';
+import { hammingDistance, levenshteinDistance } from './string-utils';
+
+export const MAX_RESULTS = 1000;
+const DISTANCE_LIMIT = 6;
+const CHUNK = 20000;
+
+export const MODES = ['Regex', 'Subanagram', 'Anagram', 'Superanagram', 'Hamming', 'Levenshtein',
+  '# Morse', '# Braille', '# Segments', '# Moves', '# Holes', '# Ends'];
+
+const COUNTS_LISTS = [
+  ['', 'et', 'aimn', 'dgkorsuw', 'bcfhjlpqvxyz'], // Morse
+  ['', 'a', 'bceik', 'dfhjlmosu', 'gnprtvxz', 'qwy'], // Braille
+  ['', '', 'ir', 'clnu', 'fhjoty', 'bdegkmpqsvxz', 'aw'], // Segments
+  ['', 'i', 'cjltvx', 'acdfhjknpsuyz', 'egmorw', 'bqs'], // Moves
+  ['cefghijklmnstuvwxyz', 'adopqr', 'b'], // Holes
+  ['bdo', 'p', 'acgijlmnqrsuvwz', 'efty', 'hkx'], // Ends
+];
+
+const LETTER = /\p{L}/u;
+
+export interface Dictionary {
+  /** Entries as shown, names of places for a map */
+  names: string[];
+  /** Coordinates of the places, only for a map */
+  lat?: Float64Array;
+  lon?: Float64Array;
+  /** Keys made on the first search that needs them */
+  keys?: string[];
+  keysWithDiacritics?: string[];
+}
+
+export interface QueryParams {
+  modeId: number;
+  minLength: number;
+  maxLength: number;
+  diacritics: boolean;
+}
+
+export interface Location {
+  lat: number;
+  lon: number;
+}
+
+export interface SearchCallbacks {
+  toast(text: string): void;
+  /** Called at most every 100 ms while searching and once more when done */
+  progress(progress: number, count: number, time: number, result: string, done: boolean): void;
+}
+
+/** Makes a dictionary of the content of a front coded file, a map when the name ends with .cbfcmap */
+export function loadDictionary(text: string, isMap: boolean): Dictionary {
+  const entries = decodeFile(text);
+  if (!isMap) return { names: entries };
+  // Lines are name;lat;lon, names are without semicolons
+  const count = entries.length;
+  const names = new Array<string>(count);
+  const lat = new Float64Array(count);
+  const lon = new Float64Array(count);
+  for (let i = 0; i < count; i++) {
+    const parts = entries[i].split(';');
+    names[i] = parts[0];
+    lat[i] = parseFloat(parts[parts.length - 2]);
+    lon[i] = parseFloat(parts[parts.length - 1]);
+  }
+  return { names, lat, lon };
+}
+
+export function isMap(dictionary: Dictionary): boolean {
+  return dictionary.lat !== undefined;
+}
+
+const noYield = () => Promise.resolve();
+
+async function getKeys(dictionary: Dictionary, diacritics: boolean, yieldNow: () => Promise<void>,
+                       shouldStop: () => boolean): Promise<string[] | null> {
+  const existing = diacritics ? dictionary.keysWithDiacritics : dictionary.keys;
+  if (existing) return existing;
+  const names = dictionary.names;
+  const keys = new Array<string>(names.length);
+  const make = diacritics ? keyWithDiacritics : keyFromName;
+  for (let i = 0; i < names.length; i++) {
+    keys[i] = make(names[i]);
+    if (i % CHUNK === CHUNK - 1) {
+      await yieldNow();
+      if (shouldStop()) return null;
+    }
+  }
+  if (diacritics) dictionary.keysWithDiacritics = keys;
+  else dictionary.keys = keys;
+  return keys;
+}
+
+export function distanceMetres(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const r = 6371000;
+  const toRad = Math.PI / 180;
+  const dLat = (lat2 - lat1) * toRad;
+  const dLon = (lon2 - lon1) * toRad;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLon / 2) ** 2;
+  return 2 * r * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+interface Place {
+  distance: number;
+  name: string;
+}
+
+/**
+ * Searches the dictionary. Input is expected in lower case. The search yields between chunks of
+ * entries through yieldNow, and stops without a final progress call when shouldStop says so.
+ */
+export async function search(dictionary: Dictionary, input: string, params: QueryParams,
+                             location: Location | null, callbacks: SearchCallbacks,
+                             yieldNow: () => Promise<void> = noYield,
+                             shouldStop: () => boolean = () => false): Promise<void> {
+  const { modeId, minLength, maxLength } = params;
+  const started = performance.now();
+  const time = () => (performance.now() - started) / 1000;
+
+  const regex = modeId === 0;
+  const subset = modeId === 1;
+  const exact = modeId === 2;
+  const superset = modeId === 3;
+  const hamming = modeId === 4;
+  const levenshtein = modeId === 5;
+  const countMode = modeId >= 6;
+  const counts = countMode ? COUNTS_LISTS[modeId - 6] : null;
+  const countValues: number[] = [];
+  // Letters of anagram and count modes are without diacritics
+  const diacritics = params.diacritics && (regex || hamming || levenshtein);
+  const map = isMap(dictionary);
+  const shouldSort = hamming || levenshtein;
+
+  const fail = (text: string) => {
+    callbacks.toast(text);
+    callbacks.progress(100, 0, time(), '', true);
+  };
+
+  if (!counts && !(regex || subset || exact || superset || hamming || levenshtein)) {
+    return fail('No mode selected');
+  }
+
+  let pattern: RegExp | null = null;
+  if (regex) {
+    try {
+      pattern = new RegExp('^(?:' + input + ')$', 'u');
+    } catch (e) {
+      return fail('Invalid regex syntax');
+    }
+  }
+
+  const charCount = new Int32Array(26);
+  if (counts) {
+    for (const c of input) {
+      const position = c.charCodeAt(0) - 48;
+      if (position < 0 || position > 9) return fail(`Invalid input letter "${c}". Aborting calculation`);
+      if (position >= counts.length) return fail(`Only numbers up to ${counts.length} are usable in this mode. Aborting calculation`);
+      if (counts[position] === '') return fail(`${position} has no assigned letters in this mode. Aborting calculation`);
+      countValues.push(position);
+    }
+  } else if (!regex && !hamming) {
+    for (const c of input) {
+      const position = c.charCodeAt(0) - 97;
+      if (position >= 0 && position <= 25) charCount[position]++;
+      else if (!(diacritics && LETTER.test(c))) callbacks.toast(`Invalid input letter "${c}"`);
+    }
+  }
+
+  const keys = await getKeys(dictionary, diacritics, yieldNow, shouldStop);
+  if (keys === null) return;
+  const names = dictionary.names;
+  const total = names.length;
+  const costs = new Int32Array(input.length + 1);
+
+  // Matches are strings for a word dictionary and places for a map
+  let words: string[] = [];
+  let places: Place[] = [];
+  const trim = () => {
+    if (map) {
+      places.sort((a, b) => a.distance - b.distance || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+      places = places.slice(0, MAX_RESULTS);
+    } else {
+      if (shouldSort) words.sort();
+      words = words.slice(0, MAX_RESULTS);
+    }
+  };
+  const matched = (i: number, prefix: string) => {
+    if (map) {
+      const distance = location ? distanceMetres(location.lat, location.lon, dictionary.lat![i], dictionary.lon![i]) : 0;
+      places.push({ distance, name: prefix + names[i] });
+      if (places.length >= 2 * MAX_RESULTS) trim();
+    } else {
+      words.push(prefix + names[i]);
+      if (words.length >= 2 * MAX_RESULTS) trim();
+    }
+  };
+  const conclude = () => {
+    trim();
+    if (map) return places.map(p => `${p.name} (${Math.round(p.distance)}m)`).join('\n');
+    return words.join('\n');
+  };
+  const resultsSize = () => Math.min(map ? places.length : words.length, MAX_RESULTS);
+
+  let lastUpdate = performance.now();
+  for (let i = 0; i < total; i++) {
+    if (i % CHUNK === CHUNK - 1) {
+      await yieldNow();
+      if (shouldStop()) return;
+      const now = performance.now();
+      if (now - lastUpdate > 100) {
+        lastUpdate = now;
+        callbacks.progress(Math.floor(100 * i / total), resultsSize(), time(), conclude(), false);
+      }
+    }
+    const first = keys[i];
+    const len = first.length;
+    if (subset && len > input.length
+        || superset && len < input.length
+        || exact && len !== input.length
+        || hamming && len !== input.length
+        || counts && len !== input.length
+        || len < minLength || len > maxLength) {
+      continue;
+    }
+    if (pattern) {
+      if (pattern.test(first)) matched(i, '');
+    } else if (hamming) {
+      const d = hammingDistance(first, input);
+      if (d < DISTANCE_LIMIT) matched(i, `(${d}) `);
+    } else if (levenshtein) {
+      const d = levenshteinDistance(first, input, DISTANCE_LIMIT, costs);
+      if (d < DISTANCE_LIMIT) matched(i, `(${d}) `);
+    } else if (counts) {
+      let allSatisfy = true;
+      for (let j = 0; j < len; j++) {
+        if (!counts[countValues[j]].includes(first[j])) { allSatisfy = false; break; }
+      }
+      if (allSatisfy) matched(i, '');
+    } else {
+      const chars = new Int32Array(26);
+      for (let j = 0; j < len; j++) {
+        // Digits of a key are not counted
+        const position = first.charCodeAt(j) - 97;
+        if (position >= 0 && position <= 25) chars[position]++;
+      }
+      let ok = true;
+      for (let k = 0; k < 26; k++) {
+        if (subset && charCount[k] < chars[k] || exact && charCount[k] !== chars[k] || superset && charCount[k] > chars[k]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) matched(i, '');
+    }
+  }
+  callbacks.progress(100, resultsSize(), time(), conclude(), true);
+}
