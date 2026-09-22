@@ -3,7 +3,7 @@
 // messages out: { type: 'loading', text }, { type: 'toast', id, text } and
 // { type: 'progress', id, progress, count, time, result, done }
 
-import { Dictionary, Location, loadDictionary, QueryParams, search } from '../logic/dictionary';
+import { Dictionary, Location, loadDictionary, prepareKeys, QueryParams, search } from '../logic/dictionary';
 
 export interface LoadMessage { type: 'load'; name: string; url: string }
 export interface SearchMessage {
@@ -36,6 +36,8 @@ async function load(name: string, url: string): Promise<Dictionary> {
     // Only the dictionary searched last is kept, the others would take too much memory
     dictionaries.clear();
     dictionaries.set(name, dictionary);
+    // The keys are made now rather than by the first search, which would be slow otherwise
+    await prepareKeys(dictionary, false, yieldToMessages);
     const seconds = ((performance.now() - started) / 1000).toFixed(2);
     post({ type: 'loading', text: `${dictionary.names.length} entries loaded in ${seconds} s` });
     return dictionary;

@@ -30,9 +30,9 @@ export interface Dictionary {
   /** Coordinates of the places, only for a map */
   lat?: Float64Array;
   lon?: Float64Array;
-  /** Keys made on the first search that needs them */
-  keys?: string[];
-  keysWithDiacritics?: string[];
+  /** Keys of the entries, made by prepareKeys once and kept; see it for when */
+  keys?: Promise<string[]>;
+  keysWithDiacritics?: Promise<string[]>;
 }
 
 export interface QueryParams {
@@ -77,23 +77,28 @@ export function isMap(dictionary: Dictionary): boolean {
 
 const noYield = () => Promise.resolve();
 
-async function getKeys(dictionary: Dictionary, diacritics: boolean, yieldNow: () => Promise<void>,
-                       shouldStop: () => boolean): Promise<string[] | null> {
+/**
+ * Keys of all the entries, computed the first time they are asked for and kept. Making them takes
+ * about as long as a search, so the worker asks for the plain ones right after loading, while the
+ * user is still typing; a search that comes meanwhile waits for the same computation.
+ */
+export function prepareKeys(dictionary: Dictionary, diacritics: boolean,
+                            yieldNow: () => Promise<void> = noYield): Promise<string[]> {
   const existing = diacritics ? dictionary.keysWithDiacritics : dictionary.keys;
   if (existing) return existing;
   const names = dictionary.names;
-  const keys = new Array<string>(names.length);
   const make = diacritics ? keyWithDiacritics : keyFromName;
-  for (let i = 0; i < names.length; i++) {
-    keys[i] = make(names[i]);
-    if (i % CHUNK === CHUNK - 1) {
-      await yieldNow();
-      if (shouldStop()) return null;
+  const promise = (async () => {
+    const keys = new Array<string>(names.length);
+    for (let i = 0; i < names.length; i++) {
+      keys[i] = make(names[i]);
+      if (i % CHUNK === CHUNK - 1) await yieldNow();
     }
-  }
-  if (diacritics) dictionary.keysWithDiacritics = keys;
-  else dictionary.keys = keys;
-  return keys;
+    return keys;
+  })();
+  if (diacritics) dictionary.keysWithDiacritics = promise;
+  else dictionary.keys = promise;
+  return promise;
 }
 
 export function distanceMetres(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -171,8 +176,8 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
     }
   }
 
-  const keys = await getKeys(dictionary, diacritics, yieldNow, shouldStop);
-  if (keys === null) return;
+  const keys = await prepareKeys(dictionary, diacritics, yieldNow);
+  if (shouldStop()) return;
   const names = dictionary.names;
   const total = names.length;
   const costs = new Int32Array(input.length + 1);
