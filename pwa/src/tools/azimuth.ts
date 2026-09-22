@@ -6,6 +6,7 @@ import { destination } from '../logic/azimuth';
 import { formatCoord, formatLatLng } from '../logic/format';
 import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
+import { settingsPanel } from '../shell/layout';
 import { acquireLocation, LatLon } from '../shell/location';
 import { Tool } from '../shell/router';
 import { copyToClipboard, toast } from '../shell/toast';
@@ -84,7 +85,7 @@ export const azimuthTool: Tool = {
     };
 
     container.classList.add('fill');
-    container.append(
+    container.append(...settingsPanel(
       h('div', { class: 'row compact' },
         h('label', { class: 'check' }, 'Distance:', distanceBox),
         h('label', { class: 'check' }, 'Angle:', angleBox)),
@@ -101,8 +102,7 @@ export const azimuthTool: Tool = {
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Copy to clipboard', onclick: copyDestination }, svg(icons.clipboard)),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Open in mapy.cz', onclick: openInMapy },
           h('img', { src: 'mapy_cz.png', alt: '' }))),
-      view.element,
-    );
+    ), view.element);
     view.ready();
 
     return () => {

@@ -4,6 +4,7 @@
 import { cellGrid, CellGrid } from '../components/cell-grid';
 import { Grille } from '../logic/grille';
 import { h } from '../shell/dom';
+import { settingsPanel } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
@@ -132,7 +133,7 @@ export const grilleTool: Tool = {
 
     sizeSelect.addEventListener('change', () => { reloadGrille(); save(); });
     container.append(
-      h('div', { class: 'row' }, h('label', { class: 'fixed' }, 'Size:', sizeSelect)),
+      ...settingsPanel(h('div', { class: 'row' }, h('label', { class: 'fixed' }, 'Size:', sizeSelect))),
       gridHolder,
       ...resultViews,
       warningView,

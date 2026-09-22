@@ -4,6 +4,7 @@
 import { cellGrid, CellGrid } from '../components/cell-grid';
 import { crypt, findProblem } from '../logic/playfair';
 import { h } from '../shell/dom';
+import { settingsPanel } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
@@ -106,7 +107,7 @@ export const playfairTool: Tool = {
     heightSelect.addEventListener('change', () => { reloadGrid(); save(); });
     inputBox.addEventListener('input', () => { computeGrid(); save(); });
     container.append(
-      h('div', { class: 'row' }, h('label', { class: 'fixed' }, 'Width:', widthSelect), h('label', { class: 'fixed' }, 'Height:', heightSelect)),
+      ...settingsPanel(h('div', { class: 'row' }, h('label', { class: 'fixed' }, 'Width:', widthSelect), h('label', { class: 'fixed' }, 'Height:', heightSelect))),
       gridHolder,
       inputBox,
       h('div', { class: 'muted', style: 'margin-top: 8px' }, 'Decrypted text:'),
