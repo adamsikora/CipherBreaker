@@ -122,4 +122,8 @@ one dependency that may need tuning.
 ## 6. Status
 
 - 2026-09-22: plan written. Prototype of the Dictionary Searcher (plain JS, no build) committed.
-  Phase 0 started; blocked on tooling until Node 18+ is installed (the machine has Node 10).
+- 2026-09-22: Phase 0 done — Vite + TypeScript + Vitest set up (Node 24), all logic modules ported
+  with 110 tests, app shell (menu with the app's icons, router, toast, storage, service worker
+  precaching the dictionaries). Phase 1 mostly done: the Dictionary Searcher tool is ported;
+  picking the position from a map is still missing (needs the Leaflet map of phase 5). About is
+  done ahead of phase 2.

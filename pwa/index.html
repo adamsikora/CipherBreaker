@@ -2,126 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#3f51b5">
-  <title>Dictionary Searcher</title>
-  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Cipher Breaker</title>
   <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <style>
-    :root {
-      --primary: #3f51b5;
-      --primary-dark: #303f9f;
-      --accent: #8bc34a;
-      --bg: #fafafa;
-      --fg: #212121;
-      --muted: #757575;
-      --border: #cfcfcf;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #121212; --fg: #eeeeee; --muted: #9e9e9e; --border: #444; }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: var(--bg); color: var(--fg);
-      font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    }
-    header {
-      background: var(--primary); color: #fff; padding: 12px 16px;
-      font-size: 20px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,.3);
-    }
-    main { padding: 12px 16px; max-width: 720px; margin: 0 auto; }
-    .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 10px; }
-    .row > label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); flex: 1; min-width: 120px; }
-    select, input[type=text], input[type=number], button {
-      font: inherit; color: var(--fg); background: transparent;
-      border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
-    }
-    input[type=number] { width: 70px; }
-    .length { flex: 0 0 auto; }
-    .length span { align-self: center; padding: 0 4px; }
-    .check { display: flex; align-items: center; gap: 6px; padding-bottom: 8px; }
-    button.go {
-      background: var(--primary); color: #fff; border: none; padding: 9px 20px; cursor: pointer;
-      text-transform: uppercase; font-weight: 500; letter-spacing: .5px;
-    }
-    button.go:hover { background: var(--primary-dark); }
-    button.small { padding: 6px 10px; cursor: pointer; }
-    #query { flex: 1; min-width: 200px; }
-    #position { display: none; }
-    #position.visible { display: flex; }
-    #positionText { align-self: center; color: var(--muted); font-size: 14px; }
-    hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
-    .stats { display: flex; gap: 24px; color: var(--muted); font-size: 14px; margin-bottom: 6px; }
-    .stats b { color: var(--fg); font-weight: 500; }
-    progress { width: 100%; height: 6px; visibility: hidden; }
-    progress.visible { visibility: visible; }
-    #result { white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size: 14px; margin-top: 8px; }
-    #toast {
-      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
-      background: #323232; color: #fff; padding: 10px 18px; border-radius: 4px;
-      opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw;
-    }
-    #toast.visible { opacity: 1; }
-  </style>
 </head>
 <body>
-  <header>Dictionary Searcher</header>
-  <main>
-    <div class="row">
-      <label>Mode:
-        <select id="mode">
-          <option>Regex</option>
-          <option>Subanagram</option>
-          <option>Anagram</option>
-          <option>Superanagram</option>
-          <option>Hamming</option>
-          <option>Levenshtein</option>
-          <option># Morse</option>
-          <option># Braille</option>
-          <option># Segments</option>
-          <option># Moves</option>
-          <option># Holes</option>
-          <option># Ends</option>
-        </select>
-      </label>
-      <label>Dictionary:
-        <select id="dictionary">
-          <option value="en.cbfcdict">EN</option>
-          <option value="cs_nouns.cbfcdict">CZ nouns</option>
-          <option value="cs.cbfcdict">CZ</option>
-          <option value="Czechia.cbfcmap">Czechia</option>
-        </select>
-      </label>
-    </div>
-    <div class="row">
-      <label class="length">Length:
-        <span style="display:flex">
-          <input type="number" id="minLength" placeholder="Min" min="0">
-          <span>-</span>
-          <input type="number" id="maxLength" placeholder="Max" min="0">
-        </span>
-      </label>
-      <label class="check"><input type="checkbox" id="diacritics"> Diacritics</label>
-    </div>
-    <div class="row" id="position">
-      <span id="positionText">Position: unknown</span>
-      <button class="small" id="locate" type="button">Current location</button>
-    </div>
-    <form class="row" id="form">
-      <input type="text" id="query" placeholder="Query" autocomplete="off" autocapitalize="off" spellcheck="false">
-      <button class="go" type="submit">Go</button>
-    </form>
-    <hr>
-    <div class="stats">
-      <span>Count: <b id="count">0</b></span>
-      <span>Time: <b id="time">0.000</b> s</span>
-      <span id="loading"></span>
-    </div>
-    <progress id="progress" max="100" value="0"></progress>
-    <div id="result"></div>
-  </main>
-  <div id="toast"></div>
-  <script src="app.js"></script>
+  <header id="header">
+    <button id="back" type="button" aria-label="Back" hidden>&#8592;</button>
+    <h1 id="title">Cipher Breaker</h1>
+  </header>
+  <main id="main"></main>
+  <div id="toast" role="status"></div>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
