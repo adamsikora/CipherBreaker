@@ -45,8 +45,9 @@ body {
 .row > label.fixed > select { width: 7em; }
 /* Controls that share one row whatever the width, like the four pickers of the Name Day Searcher */
 .row.nowrap { flex-wrap: nowrap; gap: 8px; }
-.row.nowrap > label { flex: 1 1 0; min-width: 0; white-space: nowrap; }
-.row.nowrap > label > select, .row.nowrap > label > input { width: 100%; min-width: 0; }
+.row.nowrap > label { min-width: 0; white-space: nowrap; }
+.row.nowrap > label.fixed > select { width: auto; }
+.row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
 select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
   border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
