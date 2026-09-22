@@ -70,11 +70,9 @@ export const dictionaryTool: Tool = {
         h('label', { class: 'check' }, diacriticsBox, 'Diacritics')),
       positionRow,
       form,
-    ], [
       h('div', { class: 'stats' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'), loadingView),
       progressBar,
-      resultView,
-    ]);
+    ], [resultView]);
 
     modeSelect.selectedIndex = state.modeSpinner;
     if (DICTIONARIES.some(([value]) => value === state.dictionarySpinner)) dictionarySelect.value = state.dictionarySpinner;
