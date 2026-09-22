@@ -34,12 +34,19 @@ export function cellGrid(options: CellGridOptions): CellGrid {
   const { rows, cols } = options;
   const cells: HTMLInputElement[][] = [];
 
+  // A cell asks for no keyboard (inputmode none) until something deliberately focuses it for
+  // typing: a long press on a phone focuses the input through the text selection gesture
+  // whatever the pointer events say, and a focused input would otherwise pull the keyboard up
   const focusCell = ([i, j]: CellIndex) => {
     if (i < 0 || i >= rows) {
       (document.activeElement as HTMLElement | null)?.blur();
     } else {
-      cells[i][j].focus();
-      cells[i][j].select();
+      const cell = cells[i][j];
+      // Focused again from scratch, so that a keyboard change is noticed
+      if (document.activeElement === cell) cell.blur();
+      cell.inputMode = 'text';
+      cell.focus();
+      cell.select();
     }
   };
 
@@ -50,10 +57,11 @@ export function cellGrid(options: CellGridOptions): CellGrid {
       const disabled = options.isDisabled?.(i, j) ?? false;
       const cell = h('input', {
         type: 'text', class: 'cell', maxlength: 1, autocomplete: 'off', spellcheck: false,
-        autocapitalize: 'characters', disabled,
+        autocapitalize: 'characters', inputmode: 'none', disabled,
       });
       if (!disabled) {
         cell.addEventListener('focus', () => cell.select());
+        cell.addEventListener('blur', () => { cell.inputMode = 'none'; });
         cell.addEventListener('input', () => {
           // Letters are always upper case, whatever the keyboard gives
           cell.value = cell.value.toUpperCase();
@@ -69,7 +77,10 @@ export function cellGrid(options: CellGridOptions): CellGrid {
             focusCell(options.prev(i, j));
           }
         });
-        if (options.onLongPress) {
+        if (!options.onLongPress) {
+          // A tap focuses the cell natively, so it asks for the keyboard just before that
+          cell.addEventListener('pointerdown', () => { cell.inputMode = 'text'; });
+        } else {
           // The press decides first: a long one marks the cell without focusing it (so no keyboard
           // pops up), a short one focuses it on release. A right click marks it as well
           let timer: number | undefined;
@@ -83,6 +94,8 @@ export function cellGrid(options: CellGridOptions): CellGrid {
             timer = window.setTimeout(() => {
               longPressed = true;
               options.onLongPress!(i, j);
+              // The browser may have focused the cell by its own long press handling
+              if (document.activeElement === cell) cell.blur();
             }, LONG_PRESS_MS);
           });
           cell.addEventListener('pointerup', event => {
