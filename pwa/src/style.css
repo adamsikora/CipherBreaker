@@ -158,7 +158,8 @@ progress.visible { visibility: visible; }
 .digit.d-high { background: #212121; border-color: #616161; }
 
 /* Cell grids of the Grille and Playfair helpers */
-.grid-holder { display: flex; justify-content: center; margin: 12px 0 8px; }
+/* The grid starts at the left like the settings above and the readouts below it */
+.grid-holder { display: flex; justify-content: flex-start; margin: 12px 0 8px; }
 .cell-grid {
   --cell: min(44px, calc((100vw - 48px) / 10));
   display: inline-grid; gap: 2px; padding: 2px; background: #808080; border-radius: 3px;
