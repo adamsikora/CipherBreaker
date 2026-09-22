@@ -26,10 +26,10 @@ export const calendarTool: Tool = {
   icon: 'date-range',
   mount(container) {
     // Fixed widths, so that the pickers stay put whatever is selected, in every browser
-    const daySelect = h('select', { style: 'width: 4.5em' }, ...numberOptions(31));
-    const monthSelect = h('select', { style: 'width: 4.5em' }, ...numberOptions(12));
-    const yearBox = h('input', { type: 'number', placeholder: 'Year', value: String(new Date().getFullYear()), style: 'width: 5.5em' });
-    const dayOfWeekSelect = h('select', { style: 'width: 5em' }, ...DAYS_OF_WEEK.map(day => h('option', null, day)));
+    const daySelect = h('select', { style: 'width: 5em' }, ...numberOptions(31));
+    const monthSelect = h('select', { style: 'width: 5em' }, ...numberOptions(12));
+    const yearBox = h('input', { type: 'number', placeholder: 'Year', value: String(new Date().getFullYear()), style: 'width: 6em' });
+    const dayOfWeekSelect = h('select', { style: 'width: 5.5em' }, ...DAYS_OF_WEEK.map(day => h('option', null, day)));
     const queryBox = h('input', { type: 'text', placeholder: 'Regex', autocomplete: 'off', spellcheck: false, style: 'flex: 1; min-width: 160px' });
     const sortByNameBox = h('input', { type: 'checkbox' });
     const resultView = h('div', { class: 'mono' });
