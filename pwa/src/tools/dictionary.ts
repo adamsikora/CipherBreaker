@@ -73,7 +73,7 @@ export const dictionaryTool: Tool = {
         h('label', null, 'Mode:', modeSelect),
         h('label', null, 'Dictionary:', dictionarySelect),
         h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox)),
-        h('label', { class: 'fixed centered' }, 'Diacritics:', diacriticsBox)),
+        h('label', { class: 'fixed centered', title: 'Diacritics' }, '´ˇ:', diacriticsBox)),
       positionRow,
       form,
       statsRow,
