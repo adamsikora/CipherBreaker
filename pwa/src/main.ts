@@ -5,8 +5,10 @@ import { toast } from './shell/toast';
 import { aboutTool } from './tools/about';
 import { calendarTool } from './tools/calendar';
 import { dictionaryTool } from './tools/dictionary';
+import { grilleTool } from './tools/grille';
 import { menuTool } from './tools/menu';
 import { numberAnalyzerTool } from './tools/number-analyzer';
+import { playfairTool } from './tools/playfair';
 import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
 
 // Tools in the order of the app's menu; the ones not ported yet are listed without mount
@@ -14,11 +16,11 @@ const tools: Tool[] = [
   dictionaryTool,
   binaryReaderTool,
   ternaryReaderTool,
-  { path: 'grille', title: 'Grille Helper', icon: 'grille' },
+  grilleTool,
   { path: 'azimuth', title: 'Azimuth Finder', icon: 'explore' },
   calendarTool,
   numberAnalyzerTool,
-  { path: 'playfair', title: 'Playfair Helper', icon: 'playfair' },
+  playfairTool,
   { path: 'princip', title: 'Princip Trainer', icon: 'school', external: 'https://app.civilizacehra.cz' },
   aboutTool,
 ];

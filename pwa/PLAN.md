@@ -131,3 +131,6 @@ one dependency that may need tuning.
 - 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`), legend
   images copied to `public/legend/`. The ternary legend uses the order 1, 3, 2, 4, 5, 6 of the
   app's layout XML, which matches the images; the app's mode listener sets 1–6, which does not.
+- 2026-09-22: Phase 4 done — `cell-grid` component (typing advances, Enter/Backspace navigate,
+  long press or right click marks holes), Grille Helper and Playfair Helper ported with the app's
+  default states and saved-state keys. Keyboard behaviour on phones is untested.
