@@ -121,7 +121,7 @@ function orderTile(order: number[]): SVGElement {
 export const binaryReaderTool: Tool = {
   path: 'binary',
   title: 'Binary Decoder',
-  icon: 'two',
+  icon: 'binary',
   mount(container) {
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const rows = readerRows(2, 5, 4, values => binaryLetters(values, start.value === '0' ? 1 : 0));
@@ -142,7 +142,7 @@ export const binaryReaderTool: Tool = {
 export const ternaryReaderTool: Tool = {
   path: 'ternary',
   title: 'Ternary Decoder',
-  icon: 'three',
+  icon: 'ternary',
   mount(container) {
     const start = radioGroup('ternaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     // 27 letters is the Czech alphabet with CH after H

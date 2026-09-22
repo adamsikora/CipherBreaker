@@ -35,7 +35,7 @@ const DEFAULT_STATE: State = {
 export const dictionaryTool: Tool = {
   path: 'dictionary',
   title: 'Dictionary Search',
-  icon: 'find-replace',
+  icon: 'dictionary',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);
     const worker = new Worker(new URL('../workers/search-worker.ts', import.meta.url), { type: 'module' });
