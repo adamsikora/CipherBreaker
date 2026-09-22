@@ -5,6 +5,7 @@ import { formatLatLng, parseIntWithDefault } from '../logic/format';
 import { pickFromMap } from '../components/map-picker';
 import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
+import { fixedTopLayout } from '../shell/layout';
 import { acquireLocation as locate, LatLon } from '../shell/location';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
@@ -62,18 +63,18 @@ export const dictionaryTool: Tool = {
     const resultView = h('div', { class: 'mono' });
 
     const form = h('form', { class: 'row' }, queryBox, goButton);
-    container.append(
+    const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'row' }, h('label', null, 'Mode:', modeSelect), h('label', null, 'Dictionary:', dictionarySelect)),
       h('div', { class: 'row' },
         h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox)),
         h('label', { class: 'check' }, diacriticsBox, 'Diacritics')),
       positionRow,
       form,
-      h('hr'),
+    ], [
       h('div', { class: 'stats' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'), loadingView),
       progressBar,
       resultView,
-    );
+    ]);
 
     modeSelect.selectedIndex = state.modeSpinner;
     if (DICTIONARIES.some(([value]) => value === state.dictionarySpinner)) dictionarySelect.value = state.dictionarySpinner;
@@ -176,6 +177,7 @@ export const dictionaryTool: Tool = {
     return () => {
       save();
       worker.terminate();
+      unmountLayout();
     };
   },
 };

@@ -4,6 +4,7 @@ import holidaysText from '../assets/holidays.txt?raw';
 import { parseIntWithDefault } from '../logic/format';
 import { DAYS_OF_WEEK, Holiday, parseHolidays } from '../logic/holiday';
 import { h } from '../shell/dom';
+import { fixedTopLayout } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { toast } from '../shell/toast';
 
@@ -62,16 +63,16 @@ export const calendarTool: Tool = {
       if (isValidRegex(queryBox.value)) updateHolidays();
     });
 
-    container.append(
+    const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'row nowrap' },
         h('label', { class: 'fixed' }, 'Day:', daySelect),
         h('label', { class: 'fixed' }, 'Month:', monthSelect),
         h('label', { class: 'fixed' }, 'Year:', yearBox),
         h('label', { class: 'fixed' }, 'Day of Week:', dayOfWeekSelect)),
       h('div', { class: 'row' }, queryBox, h('label', { class: 'check' }, sortByNameBox, 'Sort by name')),
-      resultView,
-    );
+    ], [resultView]);
     updateHolidays();
     queryBox.focus();
+    return unmountLayout;
   },
 };

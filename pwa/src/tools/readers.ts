@@ -6,6 +6,7 @@ import { endlessRows } from '../components/endless-rows';
 import { binaryLetters, TERNARY_MAPPING, ternaryLetters } from '../logic/base-reader';
 import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
+import { fixedTopLayout } from '../shell/layout';
 import { Tool } from '../shell/router';
 
 interface Row {
@@ -120,15 +121,17 @@ export const binaryReaderTool: Tool = {
   mount(container) {
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const rows = readerRows(2, 5, 4, values => binaryLetters(values, start.value === '0' ? 1 : 0));
-    container.append(
+    const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'legend-bar' },
         h('div', { class: 'legend binary-legend' },
           h('div', null, arrowTile(true), arrowTile(true), arrowTile(false), arrowTile(false)),
           h('div', null, binaryTile(true), binaryTile(false), binaryTile(true), binaryTile(false))),
         start.element),
-      rows.list.element,
-    );
-    return () => rows.list.dispose();
+    ], [rows.list.element]);
+    return () => {
+      rows.list.dispose();
+      unmountLayout();
+    };
   },
 };
 
@@ -157,13 +160,15 @@ export const ternaryReaderTool: Tool = {
       h('div', { class: 'row' }, h('label', { class: 'check' }, chBox, 'Include CH')),
       direction.element,
       mode.element);
-    container.append(
+    const unmountLayout = fixedTopLayout(container, [
       settings,
       h('div', { class: 'legend-bar' },
         legend,
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Settings', onclick: () => settings.classList.toggle('hidden') }, svg(icons.settings))),
-      rows.list.element,
-    );
-    return () => rows.list.dispose();
+    ], [rows.list.element]);
+    return () => {
+      rows.list.dispose();
+      unmountLayout();
+    };
   },
 };

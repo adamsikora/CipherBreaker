@@ -5,6 +5,7 @@ import {
 } from '../logic/number-analysis';
 import { endlessRows } from '../components/endless-rows';
 import { h } from '../shell/dom';
+import { fixedTopLayout } from '../shell/layout';
 import { Tool } from '../shell/router';
 
 const INPUT_TYPES = ['base-2', 'base-3', 'base-5', 'base-7', 'base-10', 'base-16', ROMAN_NUMERALS];
@@ -84,12 +85,14 @@ export const numberAnalyzerTool: Tool = {
     });
     outputTypeSelect.addEventListener('change', analyzeAllRows);
 
-    container.append(
+    const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'row' }, h('label', null, 'input:', inputTypeSelect), h('label', null, 'output:', outputTypeSelect)),
-      list.element,
-    );
+    ], [list.element]);
     list.rows[0].input.focus();
 
-    return () => list.dispose();
+    return () => {
+      list.dispose();
+      unmountLayout();
+    };
   },
 };

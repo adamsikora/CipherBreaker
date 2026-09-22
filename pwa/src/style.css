@@ -127,8 +127,12 @@ progress.visible { visibility: visible; }
 .grille-result { font-size: 32px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
 .playfair-result { font-size: 20px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; min-height: 1.4em; }
 
+/* Tools that fill the screen: only their scrolling part or map scrolls, the settings stay put */
+#main.fill { display: flex; flex-direction: column; padding-bottom: 0; min-height: 0; }
+#main.fill > hr { flex: none; margin: 8px 0 0; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; margin: 0 -16px; padding: 8px 16px 12px; }
+
 /* Maps */
-#main.fill { display: flex; flex-direction: column; padding-bottom: 0; }
 .row.compact { margin-bottom: 4px; align-items: center; }
 .row.compact > label.check { padding: 0; gap: 8px; }
 .map { flex: 1; min-height: 300px; width: 100%; background: #ddd; margin: 8px -16px 0; width: calc(100% + 32px); }
