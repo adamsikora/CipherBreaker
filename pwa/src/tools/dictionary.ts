@@ -62,11 +62,11 @@ export const dictionaryTool: Tool = {
     const progressBar = h('progress', { max: 100, value: 0 });
     const resultView = h('div', { class: 'mono' });
 
-    const form = h('form', { class: 'row' }, queryBox, goButton);
+    const form = h('form', { class: 'row compact' }, queryBox, goButton);
     const unmountLayout = fixedTopLayout(container, [
-      h('div', { class: 'row' }, h('label', null, 'Mode:', modeSelect), h('label', null, 'Dictionary:', dictionarySelect)),
-      h('div', { class: 'row' },
-        h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox)),
+      h('div', { class: 'row compact' }, h('label', { class: 'inline' }, 'Mode:', modeSelect), h('label', { class: 'inline' }, 'Dictionary:', dictionarySelect)),
+      h('div', { class: 'row compact' },
+        h('label', { class: 'inline fixed' }, 'Length:', minLengthBox, '-', maxLengthBox),
         h('label', { class: 'check' }, diacriticsBox, 'Diacritics')),
       positionRow,
       form,
