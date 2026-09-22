@@ -40,10 +40,9 @@ function route(): void {
 export function startRouter(menuTool: Tool, toolList: Tool[]): void {
   menu = menuTool;
   tools = toolList;
+  // The arrow always leads to the menu, whatever the history
   document.getElementById('back')!.addEventListener('click', () => {
-    // Back in history when the menu is there, otherwise straight to the menu
-    if (history.length > 1) history.back();
-    else location.hash = '#/';
+    location.hash = '#/';
   });
   window.addEventListener('hashchange', route);
   route();
