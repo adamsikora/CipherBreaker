@@ -58,7 +58,10 @@ export const dictionaryTool: Tool = {
     const goButton = h('button', { type: 'submit', class: 'primary' }, 'Go');
     const countView = h('b', null, '0');
     const timeView = h('b', null, '0.000');
+    // The stats row shows either the counts of the last search or the loading of a dictionary
     const loadingView = h('span');
+    const countsView = h('span', { style: 'display: contents' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'));
+    const statsRow = h('div', { class: 'stats' }, countsView);
     const progressBar = h('progress', { max: 100, value: 0 });
     const resultView = h('div', { class: 'mono' });
 
@@ -70,7 +73,7 @@ export const dictionaryTool: Tool = {
         h('label', { class: 'check' }, diacriticsBox, 'Diacritics')),
       positionRow,
       form,
-      h('div', { class: 'stats' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'), loadingView),
+      statsRow,
       progressBar,
     ], [resultView]);
 
@@ -140,6 +143,7 @@ export const dictionaryTool: Tool = {
       const msg = event.data;
       if (msg.type === 'loading') {
         loadingView.textContent = msg.text;
+        statsRow.replaceChildren(loadingView);
       } else if (msg.type === 'toast') {
         if (msg.id === searchId) toast(msg.text);
       } else if (msg.type === 'progress' && msg.id === searchId) {
@@ -147,10 +151,8 @@ export const dictionaryTool: Tool = {
         countView.textContent = String(msg.count);
         timeView.textContent = msg.time.toFixed(3);
         resultView.textContent = msg.result;
-        if (msg.done) {
-          progressBar.classList.remove('visible');
-          loadingView.textContent = '';
-        }
+        statsRow.replaceChildren(countsView);
+        if (msg.done) progressBar.classList.remove('visible');
       }
     };
 
