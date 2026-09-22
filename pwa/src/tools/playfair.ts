@@ -33,7 +33,7 @@ export const playfairTool: Tool = {
     const widthSelect = h('select', null, ...sizeOptions());
     const heightSelect = h('select', null, ...sizeOptions());
     const gridHolder = h('div', { class: 'grid-holder' });
-    const inputBox = h('textarea', { placeholder: 'Text to decipher', rows: 2, autocomplete: 'off', spellcheck: false, style: 'width: 100%' });
+    const inputBox = h('textarea', { placeholder: 'Text to decipher', rows: 2, autocomplete: 'off', spellcheck: false, autocapitalize: 'characters', style: 'width: 100%' });
     const decryptedView = h('div', { class: 'playfair-result' });
     const encryptedView = h('div', { class: 'playfair-result' });
 
@@ -105,7 +105,14 @@ export const playfairTool: Tool = {
 
     widthSelect.addEventListener('change', () => { reloadGrid(); save(); });
     heightSelect.addEventListener('change', () => { reloadGrid(); save(); });
-    inputBox.addEventListener('input', () => { computeGrid(); save(); });
+    inputBox.addEventListener('input', () => {
+      // Upper case like the grid, so that the letters match; the caret is kept where it was
+      const caret = inputBox.selectionEnd;
+      inputBox.value = inputBox.value.toUpperCase();
+      inputBox.setSelectionRange(caret, caret);
+      computeGrid();
+      save();
+    });
     container.append(
       ...settingsPanel(h('div', { class: 'row' }, h('label', { class: 'fixed' }, 'Width:', widthSelect), h('label', { class: 'fixed' }, 'Height:', heightSelect))),
       gridHolder,

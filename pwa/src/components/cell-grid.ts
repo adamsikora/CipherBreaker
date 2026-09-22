@@ -15,7 +15,6 @@ export interface CellGridOptions {
   next(i: number, j: number): CellIndex;
   /** Previous cell to move to, a row of -1 means there is none */
   prev(i: number, j: number): CellIndex;
-  uppercase?: boolean;
   onChange(): void;
   onLongPress?(i: number, j: number): void;
 }
@@ -51,11 +50,13 @@ export function cellGrid(options: CellGridOptions): CellGrid {
       const disabled = options.isDisabled?.(i, j) ?? false;
       const cell = h('input', {
         type: 'text', class: 'cell', maxlength: 1, autocomplete: 'off', spellcheck: false,
-        autocapitalize: options.uppercase ? 'characters' : 'off', disabled,
+        autocapitalize: 'characters', disabled,
       });
       if (!disabled) {
         cell.addEventListener('focus', () => cell.select());
         cell.addEventListener('input', () => {
+          // Letters are always upper case, whatever the keyboard gives
+          cell.value = cell.value.toUpperCase();
           options.onChange();
           if (cell.value.length === 1) focusCell(options.next(i, j));
         });
@@ -69,17 +70,31 @@ export function cellGrid(options: CellGridOptions): CellGrid {
           }
         });
         if (options.onLongPress) {
+          // The press decides first: a long one marks the cell without focusing it (so no keyboard
+          // pops up), a short one focuses it on release. A right click marks it as well
           let timer: number | undefined;
+          let longPressed = false;
           const cancel = () => clearTimeout(timer);
-          cell.addEventListener('pointerdown', () => {
+          cell.addEventListener('pointerdown', event => {
+            if (event.button !== 0) return;
+            event.preventDefault();
+            longPressed = false;
             cancel();
-            timer = window.setTimeout(() => options.onLongPress!(i, j), LONG_PRESS_MS);
+            timer = window.setTimeout(() => {
+              longPressed = true;
+              options.onLongPress!(i, j);
+            }, LONG_PRESS_MS);
           });
-          for (const type of ['pointerup', 'pointercancel', 'pointerleave']) cell.addEventListener(type, cancel);
+          cell.addEventListener('pointerup', event => {
+            if (event.button !== 0) return;
+            cancel();
+            if (!longPressed) focusCell([i, j]);
+          });
+          for (const type of ['pointercancel', 'pointerleave']) cell.addEventListener(type, cancel);
           cell.addEventListener('contextmenu', event => {
             event.preventDefault();
             cancel();
-            options.onLongPress!(i, j);
+            if (!longPressed) options.onLongPress!(i, j);
           });
         }
       }

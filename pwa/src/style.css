@@ -161,7 +161,7 @@ progress.visible { visibility: visible; }
 .cell {
   width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 0;
   background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 2);
-  -webkit-touch-callout: none; user-select: none;
+  -webkit-touch-callout: none; user-select: none; touch-action: manipulation; text-transform: uppercase;
 }
 .cell:focus { outline: 2px solid var(--accent); }
 .cell:disabled { background: var(--cell-center); }

@@ -78,7 +78,7 @@ export const grilleTool: Tool = {
       geometry = new Grille(size);
       states = Array.from({ length: size }, (_, i) => Array.from({ length: size }, (_, j) => geometry.isCenterCell(i, j) ? CENTER : FREE));
       grid = cellGrid({
-        rows: size, cols: size, uppercase: true,
+        rows: size, cols: size,
         isDisabled: (i, j) => geometry.isCenterCell(i, j),
         next: (i, j) => geometry.nextCell(i, j),
         prev: (i, j) => geometry.prevCell(i, j),
