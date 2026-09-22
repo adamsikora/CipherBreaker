@@ -7,12 +7,13 @@ import { calendarTool } from './tools/calendar';
 import { dictionaryTool } from './tools/dictionary';
 import { menuTool } from './tools/menu';
 import { numberAnalyzerTool } from './tools/number-analyzer';
+import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
 
 // Tools in the order of the app's menu; the ones not ported yet are listed without mount
 const tools: Tool[] = [
   dictionaryTool,
-  { path: 'binary', title: 'Binary Reader', icon: 'two' },
-  { path: 'ternary', title: 'Ternary Reader', icon: 'three' },
+  binaryReaderTool,
+  ternaryReaderTool,
   { path: 'grille', title: 'Grille Helper', icon: 'grille' },
   { path: 'azimuth', title: 'Azimuth Finder', icon: 'explore' },
   calendarTool,

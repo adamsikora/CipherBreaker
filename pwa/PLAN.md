@@ -128,3 +128,6 @@ one dependency that may need tuning.
   picking the position from a map is still missing (needs the Leaflet map of phase 5).
 - 2026-09-22: Phase 2 done — About, Number Analyzer (with the `endless-rows` component) and
   Name Day Searcher ported and checked in Chrome.
+- 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`), legend
+  images copied to `public/legend/`. The ternary legend uses the order 1, 3, 2, 4, 5, 6 of the
+  app's layout XML, which matches the images; the app's mode listener sets 1–6, which does not.
