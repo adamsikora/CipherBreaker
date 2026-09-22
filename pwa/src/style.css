@@ -160,12 +160,12 @@ progress.visible { visibility: visible; }
 }
 .cell {
   width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 0;
-  background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 2);
+  background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 1.7);
   -webkit-touch-callout: none; user-select: none; touch-action: manipulation; text-transform: uppercase;
 }
 .cell:focus { outline: 2px solid var(--accent); }
 .cell:disabled { background: var(--cell-center); }
-.cell.state-0 { background: var(--cell-0); color: #fff; }
+.cell.state-0 { background: var(--cell-0); color: #fff; font-weight: bold; }
 .cell.state-1 { background: var(--cell-1); }
 .cell.state-2 { background: var(--cell-2); }
 .cell.state-3 { background: var(--cell-3); }
