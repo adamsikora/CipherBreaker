@@ -56,6 +56,10 @@ Version lives in three places that must stay in sync: `about_version` in `app/sr
 
 The app reads `.cbdict` dictionaries and the `.cbmap` map from `app/src/main/assets/` (Git LFS), they are listed in `PresmyslovnikActivity.kt`. Both are newline-separated text: number of the entries on the first line (used for the progress bar), then one entry per line, a word for dictionaries and `Display Name;lat;lon` for maps. Entries are searched by a key that is not stored, `DictionaryKey` makes it of every entry during the search: diacritics removed, lowercased, everything but a-z and digits stripped. With the Diacritics checkbox, which only Regex, Hamming and Levenshtein modes have, the key keeps letters with their diacritics, still lowercased and without anything but letters and digits. `parse_osm.py` deduplicates by an `unidecode` based key that differs only for a few names with characters out of Latin script. Front coded `.cbfcdict` and `.cbfcmap` are not read by the app yet.
 
+## PWA prototype (`pwa/`)
+
+A prototype of the Dictionary Searcher as a progressive web app, plain HTML/JS with no build step: `index.html` + `app.js` (the screen), `search-worker.js` (a port of `Dictionary`, `MapDictionary`, `DictionaryKey` and the distances, running in a web worker), `sw.js` (service worker that downloads all the dictionaries on install so the app works offline), `manifest.json` and placeholder icons. `pwa/assets/` (Git LFS) holds the front coded `.cbfcdict`/`.cbfcmap` files made by `utils/`, which the worker decodes. Serve it with `python -m http.server 8000 --directory pwa` from the repo root and open http://127.0.0.1:8000/. The Android app does not use anything from here.
+
 ## Commits
 
 Short imperative subject, capitalized, no trailing period, no type/scope prefix and no issue references — e.g. `Target API 37`, `Implement Playfair`, `Fix crash during factorization of large numbers`.
