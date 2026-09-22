@@ -63,6 +63,12 @@ progress.visible { visibility: visible; }
 .muted { color: var(--muted); font-size: 14px; }
 .hidden { display: none !important; }
 
+/* Rows of the Number Analyzer and the readers */
+.number-row { display: flex; gap: 16px; align-items: center; margin-bottom: 6px; }
+.number-row input { flex: 1; min-width: 0; }
+.number-row .row-result { flex: 1; min-width: 0; word-break: break-all; }
+.rows-end { height: 1px; }
+
 /* Menu */
 .menu { list-style: none; margin: 0; padding: 0; }
 .menu a {
