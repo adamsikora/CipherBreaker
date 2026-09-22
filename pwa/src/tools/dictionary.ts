@@ -73,10 +73,10 @@ export const dictionaryTool: Tool = {
       h('label', { class: 'check', title: 'Diacritics' }, diacriticsBox, h('span', { class: 'accents' }, '´ˇ')));
     const unmountLayout = fixedTopLayout(container, [
       // All the settings in one line like the pickers of the Name Day Searcher: the selects share
-      // the width that the length boxes leave
+      // the width that the length boxes leave, the modes have longer names than the dictionaries
       h('div', { class: 'row nowrap' },
-        h('label', null, 'Mode:', modeSelect),
-        h('label', null, 'Dictionary:', dictionarySelect),
+        h('label', { style: 'flex-grow: 5' }, 'Mode:', modeSelect),
+        h('label', { style: 'flex-grow: 4' }, 'Dictionary:', dictionarySelect),
         h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox))),
       positionRow,
       form,
