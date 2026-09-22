@@ -1,4 +1,4 @@
-// Binary Reader and Ternary Reader, ports of DebaseatorActivity.kt with DebinarizatorActivity.kt
+// Binary Decoder and Ternary Decoder, ports of DebaseatorActivity.kt with DebinarizatorActivity.kt
 // and DeternarizatorActivity.kt: endless rows of digit cells that cycle through their values on
 // tap, each row read as letters in all the ways the digits can be taken
 
@@ -120,7 +120,7 @@ function orderTile(order: number[]): SVGElement {
 
 export const binaryReaderTool: Tool = {
   path: 'binary',
-  title: 'Binary Reader',
+  title: 'Binary Decoder',
   icon: 'two',
   mount(container) {
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
@@ -141,7 +141,7 @@ export const binaryReaderTool: Tool = {
 
 export const ternaryReaderTool: Tool = {
   path: 'ternary',
-  title: 'Ternary Reader',
+  title: 'Ternary Decoder',
   icon: 'three',
   mount(container) {
     const start = radioGroup('ternaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());

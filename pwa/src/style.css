@@ -79,7 +79,7 @@ body {
 /* Selects get an explicit width: Safari would otherwise size them by the selected option */
 .row > label > select { width: 100%; min-width: 0; }
 .row > label.fixed > select { width: 7em; }
-/* Controls that share one row whatever the width, like the four pickers of the Name Day Searcher */
+/* Controls that share one row whatever the width, like the four pickers of Name Days */
 .row.nowrap { flex-wrap: nowrap; gap: 8px; }
 .row.nowrap > label { min-width: 0; white-space: nowrap; }
 .row.nowrap > label:not(.fixed) { flex: 1 1 0; }

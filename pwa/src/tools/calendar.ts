@@ -1,4 +1,4 @@
-// Name Day Searcher, port of CalendarActivity.kt
+// Name Days, port of CalendarActivity.kt
 
 import holidaysText from '../assets/holidays.txt?raw';
 import { parseIntWithDefault } from '../logic/format';
@@ -23,7 +23,7 @@ function isValidRegex(query: string): boolean {
 
 export const calendarTool: Tool = {
   path: 'calendar',
-  title: 'Name Day Searcher',
+  title: 'Name Days',
   icon: 'date-range',
   mount(container) {
     // Fixed widths, so that the pickers stay put whatever is selected, in every browser

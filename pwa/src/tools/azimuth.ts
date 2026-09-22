@@ -1,4 +1,4 @@
-// Azimuth Finder, port of AzimutherActivity.kt: the point reached from a start position after
+// Azimuth Calculator, port of AzimutherActivity.kt: the point reached from a start position after
 // given distance under given azimuth, drawn on the map as an arrow
 
 import { mapView } from '../components/map-view';
@@ -13,7 +13,7 @@ import { copyToClipboard, toast } from '../shell/toast';
 
 export const azimuthTool: Tool = {
   path: 'azimuth',
-  title: 'Azimuth Finder',
+  title: 'Azimuth Calculator',
   icon: 'explore',
   mount(container) {
     let position: LatLon | null = null;

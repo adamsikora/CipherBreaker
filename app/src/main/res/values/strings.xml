@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Cipher Breaker</string>
 
-    <string name="presmyslovnik">Dictionary Searcher</string>
-    <string name="debinarizator">Binary Reader</string>
-    <string name="deternarizator">Ternary Reader</string>
-    <string name="griller">Grille Helper</string>
-    <string name="azimuther">Azimuth Finder</string>
-    <string name="calendar">Name Day Searcher</string>
+    <string name="presmyslovnik">Dictionary Search</string>
+    <string name="debinarizator">Binary Decoder</string>
+    <string name="deternarizator">Ternary Decoder</string>
+    <string name="griller">Turning Grille</string>
+    <string name="azimuther">Azimuth Calculator</string>
+    <string name="calendar">Name Days</string>
     <string name="number_analyzer">Number Analyzer</string>
-    <string name="playfair">Playfair Helper</string>
+    <string name="playfair">Playfair Cipher</string>
     <string name="principtrainer">Princip Trainer</string>
     <string name="about">About</string>
 

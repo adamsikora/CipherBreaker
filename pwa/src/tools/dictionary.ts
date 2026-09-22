@@ -1,4 +1,4 @@
-// Dictionary Searcher, port of PresmyslovnikActivity.kt. The search runs in search-worker.ts
+// Dictionary Search, port of PresmyslovnikActivity.kt. The search runs in search-worker.ts
 
 import { MODES } from '../logic/dictionary';
 import { formatLatLng, parseIntWithDefault } from '../logic/format';
@@ -34,7 +34,7 @@ const DEFAULT_STATE: State = {
 
 export const dictionaryTool: Tool = {
   path: 'dictionary',
-  title: 'Dictionary Searcher',
+  title: 'Dictionary Search',
   icon: 'find-replace',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);
@@ -72,7 +72,7 @@ export const dictionaryTool: Tool = {
     const form = h('form', { class: 'row compact' }, queryBox,
       h('label', { class: 'check', title: 'Diacritics' }, diacriticsBox, h('span', { class: 'accents' }, '´ˇ')));
     const unmountLayout = fixedTopLayout(container, [
-      // All the settings in one line like the pickers of the Name Day Searcher: the selects share
+      // All the settings in one line like the pickers of Name Days: the selects share
       // the width that the length boxes leave, the modes have longer names than the dictionaries
       h('div', { class: 'row nowrap' },
         h('label', { style: 'flex-grow: 5' }, 'Mode:', modeSelect),
