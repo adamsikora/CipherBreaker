@@ -24,6 +24,7 @@
   --read-1: #689f38;
   --read-2: #c9a400;
   --read-3: #e53935;
+  --error: #d32f2f;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -39,6 +40,7 @@
     --read-1: #8bc34a;
     --read-2: #ffeb3b;
     --read-3: #ff7043;
+    --error: #ff5252;
   }
 }
 * { box-sizing: border-box; }
@@ -84,7 +86,7 @@ body {
 .row.nowrap > label.fixed > select { width: auto; }
 .row.nowrap > label.centered { align-items: center; }
 /* Accent marks standing for "diacritics", drawn large enough to be recognised */
-.accents { font-size: 20px; line-height: 13px; color: var(--fg); }
+.accents { font-size: 20px; line-height: 16px; color: var(--fg); }
 .row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
 select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
@@ -111,7 +113,7 @@ button.icon svg, button.icon img { width: 100%; height: 100%; display: block; }
 hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
 .stats { display: flex; gap: 24px; color: var(--muted); font-size: 14px; margin-bottom: 6px; flex-wrap: wrap; }
 .stats b { color: var(--fg); font-weight: 500; }
-.stats .message { color: var(--accent); }
+.stats .message { color: var(--error); }
 .stats .message:empty { display: none; }
 progress { width: 100%; height: 6px; visibility: hidden; display: block; margin-bottom: 6px; }
 progress.visible { visibility: visible; }

@@ -46,7 +46,7 @@ export const dictionaryTool: Tool = {
     const dictionarySelect = h('select', null, ...DICTIONARIES.map(([value, label]) => h('option', { value }, label)));
     const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0, style: 'width: 3em' });
     const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0, style: 'width: 3em' });
-    const diacriticsBox = h('input', { type: 'checkbox', style: 'width: 20px; height: 20px; margin: 9px auto' });
+    const diacriticsBox = h('input', { type: 'checkbox', style: 'width: 20px; height: 20px; margin: 0' });
     const positionText = h('span', { class: 'muted' }, 'Position: unknown');
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
     const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
@@ -69,15 +69,15 @@ export const dictionaryTool: Tool = {
     // The search runs as the query is typed, after a short pause; Enter runs it at once
     const SEARCH_DELAY_MS = 300;
     let searchTimer: number | undefined;
-    const form = h('form', { class: 'row compact' }, queryBox);
+    const form = h('form', { class: 'row compact' }, queryBox,
+      h('label', { class: 'check', title: 'Diacritics' }, diacriticsBox, h('span', { class: 'accents' }, '´ˇ')));
     const unmountLayout = fixedTopLayout(container, [
       // All the settings in one line like the pickers of the Name Day Searcher: the selects share
-      // the width that the length boxes and the checkbox leave
+      // the width that the length boxes leave
       h('div', { class: 'row nowrap' },
         h('label', null, 'Mode:', modeSelect),
         h('label', null, 'Dictionary:', dictionarySelect),
-        h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox)),
-        h('label', { class: 'fixed centered', title: 'Diacritics' }, h('span', { class: 'accents' }, '´ˇ'), diacriticsBox)),
+        h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox))),
       positionRow,
       form,
       statsRow,
@@ -137,12 +137,13 @@ export const dictionaryTool: Tool = {
       messageView.textContent = '';
       const minLength = parseIntWithDefault(minLengthBox.value, 0);
       const maxLength = parseIntWithDefault(maxLengthBox.value, Number.MAX_SAFE_INTEGER);
-      // Nothing to search for: the results are cleared, a full scan for nothing is not worth it
-      if (queryBox.value === '' || minLength > maxLength) {
+      // Nothing to search for, the last results stay
+      if (queryBox.value === '') return;
+      if (minLength > maxLength) {
         ++searchId;
         progressBar.classList.remove('visible');
         showResult(0, 0, '');
-        if (minLength > maxLength) messageView.textContent = `Min length (${minLength}) is greater than max length (${maxLength})`;
+        messageView.textContent = `Min length (${minLength}) is greater than max length (${maxLength})`;
         return;
       }
       if (isMapChosen() && userLocation === null) acquireLocation();
