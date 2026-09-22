@@ -3,7 +3,7 @@
 // tap, each row read as letters in all the ways the digits can be taken
 
 import { endlessRows } from '../components/endless-rows';
-import { binaryLetters, ternaryLetters } from '../logic/base-reader';
+import { binaryLetters, TERNARY_MAPPING, ternaryLetters } from '../logic/base-reader';
 import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
 import { Tool } from '../shell/router';
@@ -69,11 +69,49 @@ function radioGroup(name: string, label: string, options: [string, string][], ch
   };
 }
 
-const legendImage = (name: string) => h('img', { src: `legend/${name}.png`, alt: '' });
+// Legends are drawn as SVG in the colours of the digit cells, so that they read the same in both
+// themes: a digit is shown in the colour of the cell that stands for it
+const CELL_COLORS = ['#fff', '#9e9e9e', '#212121'];
+const LEGEND_BG = '#3f51b5';
+const TILE_WIDTH = 37;
 
-// Legend images of the six value assignments in the order of the results: the images show which
-// colour stands for which digit, ternary2 belongs to the third assignment and ternary3 to the second
-const VALUES_LEGEND = [1, 3, 2, 4, 5, 6];
+function legendTile(height: number, content: string): SVGElement {
+  return svg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TILE_WIDTH} ${height}" class="legend-tile">`
+    + `<rect width="${TILE_WIDTH}" height="${height}" fill="${LEGEND_BG}"/>${content}</svg>`);
+}
+
+const ARROW_RIGHT = 'M6,9h18l-5,-5l2,-2l8,7l-8,7l-2,-2l5,-5h-18z';
+
+/** Arrow of the reading direction, over the binary results */
+function arrowTile(right: boolean): SVGElement {
+  const transform = right ? '' : ` transform="translate(${TILE_WIDTH},0) scale(-1,1)"`;
+  return legendTile(18, `<path d="${ARROW_RIGHT}" fill="#fff"${transform}/>`);
+}
+
+/** "1 0" with the digits in the colours of the cells they are read from */
+function binaryTile(oneIsDark: boolean): SVGElement {
+  const [one, zero] = oneIsDark ? [CELL_COLORS[2], CELL_COLORS[0]] : [CELL_COLORS[0], CELL_COLORS[2]];
+  return legendTile(18, `<text x="10" y="14" font-size="14" font-weight="bold" text-anchor="middle" fill="${one}">1</text>`
+    + `<text x="27" y="14" font-size="14" font-weight="bold" text-anchor="middle" fill="${zero}">0</text>`);
+}
+
+/** Three digits stacked: given digits in given colours, top to bottom */
+function ternaryTile(digits: number[], colors: string[]): SVGElement {
+  const content = digits.map((digit, k) =>
+    `<text x="${TILE_WIDTH / 2}" y="${20 + k * 22}" font-size="18" font-weight="bold" text-anchor="middle" fill="${colors[k]}">${digit}</text>`).join('');
+  return legendTile(70, content);
+}
+
+/** Values mode: digits 0, 1, 2 each in the colour of the cell value the assignment turns into it */
+function valuesTile(mapping: number[]): SVGElement {
+  const colors = [0, 1, 2].map(digit => CELL_COLORS[mapping.indexOf(digit)]);
+  return ternaryTile([0, 1, 2], colors);
+}
+
+/** Order mode: the positions of the cells in the order they are read */
+function orderTile(order: number[]): SVGElement {
+  return ternaryTile(order, [CELL_COLORS[0], CELL_COLORS[0], CELL_COLORS[0]]);
+}
 
 export const binaryReaderTool: Tool = {
   path: 'binary',
@@ -85,8 +123,8 @@ export const binaryReaderTool: Tool = {
     container.append(
       h('div', { class: 'legend-bar' },
         h('div', { class: 'legend binary-legend' },
-          h('div', null, legendImage('right'), legendImage('right'), legendImage('left'), legendImage('left')),
-          h('div', null, legendImage('black_horizontal'), legendImage('white_horizontal'), legendImage('black_horizontal'), legendImage('white_horizontal'))),
+          h('div', null, arrowTile(true), arrowTile(true), arrowTile(false), arrowTile(false)),
+          h('div', null, binaryTile(true), binaryTile(false), binaryTile(true), binaryTile(false))),
         start.element),
       rows.list.element,
     );
@@ -105,12 +143,11 @@ export const ternaryReaderTool: Tool = {
     const mode = radioGroup('ternaryMode', 'Permutate', [['values', 'Values'], ['order', 'Order']], 'values', () => {
       const readOrder = mode.value === 'order';
       direction.setEnabled(!readOrder);
-      legendImages.forEach((image, i) => {
-        image.src = readOrder ? `legend/ternaryorder${6 - i}.png` : `legend/ternary${VALUES_LEGEND[i]}.png`;
-      });
+      // Result i uses the assignment i of the values, or the order 5 - i of the positions
+      legend.replaceChildren(...TERNARY_MAPPING.map((mapping, i) => readOrder ? orderTile(TERNARY_MAPPING[5 - i]) : valuesTile(mapping)));
       rows.updateAll();
     });
-    const legendImages = VALUES_LEGEND.map(n => legendImage(`ternary${n}`));
+    const legend = h('div', { class: 'legend ternary-legend' }, ...TERNARY_MAPPING.map(mapping => valuesTile(mapping)));
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
       values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, chBox.checked));
 
@@ -123,7 +160,7 @@ export const ternaryReaderTool: Tool = {
     container.append(
       settings,
       h('div', { class: 'legend-bar' },
-        h('div', { class: 'legend ternary-legend' }, ...legendImages),
+        legend,
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Settings', onclick: () => settings.classList.toggle('hidden') }, svg(icons.settings))),
       rows.list.element,
     );

@@ -128,9 +128,9 @@ one dependency that may need tuning.
   picking the position from a map is still missing (needs the Leaflet map of phase 5).
 - 2026-09-22: Phase 2 done — About, Number Analyzer (with the `endless-rows` component) and
   Name Day Searcher ported and checked in Chrome.
-- 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`), legend
-  images copied to `public/legend/`. The ternary legend uses the order 1, 3, 2, 4, 5, 6 of the
-  app's layout XML, which matches the images; the app's mode listener sets 1–6, which does not.
+- 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`). The legends
+  are drawn as SVG from the digit assignments, in the colours of the digit cells, instead of the
+  app's PNGs (which the app's mode listener shows in the wrong order after toggling Values).
 - 2026-09-22: Phase 4 done — `cell-grid` component (typing advances, Enter/Backspace navigate,
   long press or right click marks holes), Grille Helper and Playfair Helper ported with the app's
   default states and saved-state keys. Keyboard behaviour on phones is untested.

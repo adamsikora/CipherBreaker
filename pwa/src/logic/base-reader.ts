@@ -8,7 +8,7 @@ const CH_ALPHABET = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'CH', 'I', 'J'
 
 // Every assignment of ternary digits 0, 1, 2 (when reading values)
 // and every order of reading three digits (when reading order)
-const TERNARY_MAPPING = [
+export const TERNARY_MAPPING = [
   [0, 1, 2],
   [0, 2, 1],
   [1, 0, 2],
