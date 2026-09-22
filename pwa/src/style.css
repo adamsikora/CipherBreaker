@@ -64,7 +64,7 @@ select, input[type=text], input[type=number], button, textarea {
    it sits, the page or the settings panel */
 select, option { background: var(--bg); }
 .panel select, .panel option { background: var(--panel); }
-input[type=number].short { width: 70px; appearance: textfield; -moz-appearance: textfield; }
+input[type=number].short { width: 70px; padding: 8px 4px; text-align: center; appearance: textfield; -moz-appearance: textfield; }
 input.short::-webkit-outer-spin-button, input.short::-webkit-inner-spin-button { appearance: none; margin: 0; }
 button.primary {
   background: var(--primary); color: #fff; border: none; padding: 9px 20px; cursor: pointer;

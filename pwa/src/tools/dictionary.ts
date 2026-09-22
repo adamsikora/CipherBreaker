@@ -45,8 +45,8 @@ export const dictionaryTool: Tool = {
 
     const modeSelect = h('select', null, ...MODES.map(mode => h('option', null, mode)));
     const dictionarySelect = h('select', null, ...DICTIONARIES.map(([value, label]) => h('option', { value }, label)));
-    const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0, style: 'width: 3.2em' });
-    const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0, style: 'width: 3.2em' });
+    const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0, style: 'width: 3em' });
+    const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0, style: 'width: 3em' });
     const diacriticsBox = h('input', { type: 'checkbox', style: 'width: 20px; height: 20px; margin: 9px auto' });
     const positionText = h('span', { class: 'muted' }, 'Position: unknown');
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
