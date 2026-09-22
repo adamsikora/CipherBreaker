@@ -126,12 +126,13 @@ export const binaryReaderTool: Tool = {
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const rows = readerRows(2, 5, 4, values => binaryLetters(values, start.value === '0' ? 1 : 0));
     container.classList.add('reader', 'binary');
+    // The setting has its own line above the legend, next to it they would not fit on a phone
     const unmountLayout = fixedTopLayout(container, [
+      start.element,
       h('div', { class: 'legend-bar' },
         h('div', { class: 'legend binary-legend' },
           h('div', null, arrowTile(true), arrowTile(true), arrowTile(false), arrowTile(false)),
-          h('div', null, binaryTile(true), binaryTile(false), binaryTile(true), binaryTile(false))),
-        start.element),
+          h('div', null, binaryTile(true), binaryTile(false), binaryTile(true), binaryTile(false)))),
     ], [rows.list.element]);
     return () => {
       rows.list.dispose();
@@ -175,7 +176,7 @@ export const ternaryReaderTool: Tool = {
       settings,
       h('div', { class: 'legend-bar' },
         legend,
-        h('button', { type: 'button', class: 'icon', 'aria-label': 'Settings', onclick: () => settings.classList.toggle('hidden') }, svg(icons.settings))),
+        h('button', { type: 'button', class: 'icon large', 'aria-label': 'Settings', onclick: () => settings.classList.toggle('hidden') }, svg(icons.settings))),
     ], [rows.list.element]);
     return () => {
       rows.list.dispose();

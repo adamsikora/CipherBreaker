@@ -111,6 +111,8 @@ button.icon {
   border: none; background: none; width: 36px; height: 36px; padding: 7px; cursor: pointer; color: var(--fg);
   border-radius: 18px;
 }
+/* A bigger icon button next to a tall element, like the settings of the ternary legend */
+button.icon.large { width: 48px; height: 48px; padding: 8px; border-radius: 24px; }
 button.icon:hover { background: var(--row-hover); }
 button.icon svg, button.icon img { width: 100%; height: 100%; display: block; }
 hr { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
