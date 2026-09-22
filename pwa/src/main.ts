@@ -35,3 +35,7 @@ registerSW({
     toast('Dictionaries downloaded, the app works offline now');
   },
 });
+
+// Asks the browser not to evict the downloaded dictionaries when it runs low on space, which
+// Safari does for sites that are not installed to the home screen
+navigator.storage?.persist?.().catch(() => { /* not available, nothing to do */ });

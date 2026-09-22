@@ -4,6 +4,20 @@ Android app developed in Android Studio. This app purpose is to be helpful durin
 
 Suggestions and contributions welcome.
 
+# Web app #
+
+The same tools as a progressive web app live in `pwa/` (TypeScript, Vite, Leaflet). It works
+offline once opened and can be installed to the home screen on Android, iOS and desktop.
+Every push to `master` that touches `pwa/` deploys it to GitHub Pages through
+`.github/workflows/pages.yml` — Pages has to be set to "GitHub Actions" as the source in the
+repository settings. Locally, with Node 18+:
+
+    cd pwa
+    npm install
+    npm test          # unit tests
+    npm run build     # to pwa/dist/
+    npm run preview   # serves the build
+
 # Making a release #
 
 1. Bump `about_version` in `strings.xml`

@@ -138,3 +138,8 @@ one dependency that may need tuning.
   the app's start marker, the arrow with its head kept over the destination), `map-picker`
   overlay used by the Dictionary Searcher, Azimuth Finder with clipboard and mapy.cz link,
   shared `shell/location`. Long press on touch screens and geolocation are untested here.
+- 2026-09-22: Phase 6 — icons made from the app's `icon.png` (plus a maskable one), persistent
+  storage requested, GitHub Pages workflow added (`.github/workflows/pages.yml`, Pages source has
+  to be set to GitHub Actions once), README and CLAUDE.md updated. Still open: testing on
+  phones (offline, installed to the home screen, keyboards in the grids, long press on maps),
+  a Lighthouse audit, and the optional TWA wrapper for Play.
