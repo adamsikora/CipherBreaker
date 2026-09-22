@@ -3,6 +3,7 @@
 import { MODES } from '../logic/dictionary';
 import { formatLatLng, parseIntWithDefault } from '../logic/format';
 import { pickFromMap } from '../components/map-picker';
+import { queryBox as makeQueryBox } from '../components/query-box';
 import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
 import { fixedTopLayout } from '../shell/layout';
@@ -51,9 +52,7 @@ export const dictionaryTool: Tool = {
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
     const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
     const positionRow = h('div', { class: 'row compact hidden' }, positionText, h('span', { style: 'flex: 1' }), pickButton, locateButton);
-    const queryBox = h('input', {
-      type: 'text', placeholder: 'Query', autocomplete: 'off', autocapitalize: 'off', spellcheck: false, style: 'flex: 1; min-width: 200px',
-    });
+    const queryBox = makeQueryBox('Query', 'flex: 1; min-width: 200px', () => searchDictionary());
     const countView = h('b', null, '0');
     const timeView = h('b', null, '0.000');
     // The stats row shows either the counts of the last search, with what was wrong with its input
@@ -69,7 +68,7 @@ export const dictionaryTool: Tool = {
     // The search runs as the query is typed, after a short pause; Enter runs it at once
     const SEARCH_DELAY_MS = 300;
     let searchTimer: number | undefined;
-    const form = h('form', { class: 'row compact' }, queryBox,
+    const form = h('div', { class: 'row compact' }, queryBox,
       h('label', { class: 'check', title: 'Diacritics' }, diacriticsBox, h('span', { class: 'accents' }, '´ˇ')));
     const unmountLayout = fixedTopLayout(container, [
       // All the settings in one line like the pickers of Name Days: the selects share
@@ -200,11 +199,6 @@ export const dictionaryTool: Tool = {
       setLocation(await pickFromMap(userLocation));
       scheduleSearch();
     });
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      searchDictionary();
-    });
-
     refreshControls();
     send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
     queryBox.focus();

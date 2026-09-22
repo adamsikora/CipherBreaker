@@ -3,6 +3,7 @@
 import holidaysText from '../assets/holidays.txt?raw';
 import { parseIntWithDefault } from '../logic/format';
 import { DAYS_OF_WEEK, Holiday, parseHolidays } from '../logic/holiday';
+import { queryBox as makeQueryBox } from '../components/query-box';
 import { h } from '../shell/dom';
 import { fixedTopLayout } from '../shell/layout';
 import { Tool } from '../shell/router';
@@ -31,7 +32,7 @@ export const calendarTool: Tool = {
     const monthSelect = h('select', { style: 'width: 5em' }, ...numberOptions(12));
     const yearBox = h('input', { type: 'number', placeholder: 'Year', value: String(new Date().getFullYear()), style: 'width: 6em' });
     const dayOfWeekSelect = h('select', { style: 'width: 5.5em' }, ...DAYS_OF_WEEK.map(day => h('option', null, day)));
-    const queryBox = h('input', { type: 'text', placeholder: 'Regex', autocomplete: 'off', spellcheck: false, style: 'flex: 1; min-width: 160px' });
+    const queryBox = makeQueryBox('Regex', 'flex: 1; min-width: 160px', () => updateHolidays());
     const sortByNameBox = h('input', { type: 'checkbox' });
     const resultView = h('div', { class: 'mono' });
 
