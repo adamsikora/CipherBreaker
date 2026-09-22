@@ -213,7 +213,7 @@ input.cell {
   border-radius: 4px; font-size: 18px;
 }
 .menu a:hover { background: var(--row-hover); }
-.menu svg { width: 32px; height: 32px; flex: none; color: var(--primary); }
+.menu svg { width: 48px; height: 48px; flex: none; color: var(--primary); }
 @media (prefers-color-scheme: dark) { .menu svg { color: #9fa8da; } }
 
 /* About */
