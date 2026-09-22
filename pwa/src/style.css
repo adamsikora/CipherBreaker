@@ -1,4 +1,6 @@
 :root {
+  /* Native controls, their dropdown lists included, follow the theme */
+  color-scheme: light dark;
   --primary: #3f51b5;
   --primary-dark: #303f9f;
   --accent: #8bc34a;
@@ -42,6 +44,8 @@ select, input[type=text], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
   border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px;
 }
+/* A transparent select gets a white dropdown list in Chrome, so it has the page background */
+select, option { background: var(--bg); }
 input[type=number].short { width: 70px; }
 button.primary {
   background: var(--primary); color: #fff; border: none; padding: 9px 20px; cursor: pointer;
