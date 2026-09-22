@@ -9,7 +9,6 @@ import { fixedTopLayout } from '../shell/layout';
 import { acquireLocation as locate, LatLon } from '../shell/location';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
-import { toast } from '../shell/toast';
 import type { WorkerRequest, WorkerResponse } from '../workers/search-worker';
 
 const DICTIONARIES: [string, string][] = [
@@ -55,17 +54,22 @@ export const dictionaryTool: Tool = {
     const queryBox = h('input', {
       type: 'text', placeholder: 'Query', autocomplete: 'off', autocapitalize: 'off', spellcheck: false, style: 'flex: 1; min-width: 200px',
     });
-    const goButton = h('button', { type: 'submit', class: 'primary' }, 'Go');
     const countView = h('b', null, '0');
     const timeView = h('b', null, '0.000');
-    // The stats row shows either the counts of the last search or the loading of a dictionary
+    // The stats row shows either the counts of the last search, with what was wrong with its input
+    // when something was, or the loading of a dictionary. Problems are shown here and not toasted,
+    // because searches run while typing and a half-typed query is often invalid
     const loadingView = h('span');
-    const countsView = h('span', { style: 'display: contents' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'));
+    const messageView = h('span', { class: 'message' });
+    const countsView = h('span', { style: 'display: contents' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'), messageView);
     const statsRow = h('div', { class: 'stats' }, countsView);
     const progressBar = h('progress', { max: 100, value: 0 });
     const resultView = h('div', { class: 'mono' });
 
-    const form = h('form', { class: 'row compact' }, queryBox, goButton);
+    // The search runs as the query is typed, after a short pause; Enter runs it at once
+    const SEARCH_DELAY_MS = 300;
+    let searchTimer: number | undefined;
+    const form = h('form', { class: 'row compact' }, queryBox);
     const unmountLayout = fixedTopLayout(container, [
       // All the settings in one line like the pickers of the Name Day Searcher: the selects share
       // the width that the length boxes and the checkbox leave
@@ -120,15 +124,28 @@ export const dictionaryTool: Tool = {
       setLocation(await locate());
     }
 
+    function showResult(count: number, time: number, result: string) {
+      countView.textContent = String(count);
+      timeView.textContent = time.toFixed(3);
+      resultView.textContent = result;
+      statsRow.replaceChildren(countsView);
+    }
+
     function searchDictionary() {
+      clearTimeout(searchTimer);
+      save();
+      messageView.textContent = '';
       const minLength = parseIntWithDefault(minLengthBox.value, 0);
       const maxLength = parseIntWithDefault(maxLengthBox.value, Number.MAX_SAFE_INTEGER);
-      if (minLength > maxLength) {
-        toast(`Min length (${minLength}) is greater than max length (${maxLength}). Aborting calculation`);
+      // Nothing to search for: the results are cleared, a full scan for nothing is not worth it
+      if (queryBox.value === '' || minLength > maxLength) {
+        ++searchId;
+        progressBar.classList.remove('visible');
+        showResult(0, 0, '');
+        if (minLength > maxLength) messageView.textContent = `Min length (${minLength}) is greater than max length (${maxLength})`;
         return;
       }
       if (isMapChosen() && userLocation === null) acquireLocation();
-      save();
       progressBar.value = 0;
       progressBar.classList.add('visible');
       send({
@@ -142,32 +159,46 @@ export const dictionaryTool: Tool = {
       });
     }
 
+    function scheduleSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(searchDictionary, SEARCH_DELAY_MS);
+    }
+
     worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
       const msg = event.data;
       if (msg.type === 'loading') {
         loadingView.textContent = msg.text;
         statsRow.replaceChildren(loadingView);
       } else if (msg.type === 'toast') {
-        if (msg.id === searchId) toast(msg.text);
+        if (msg.id === searchId) messageView.textContent = msg.text;
       } else if (msg.type === 'progress' && msg.id === searchId) {
         progressBar.value = msg.progress;
-        countView.textContent = String(msg.count);
-        timeView.textContent = msg.time.toFixed(3);
-        resultView.textContent = msg.result;
-        statsRow.replaceChildren(countsView);
+        showResult(msg.count, msg.time, msg.result);
         if (msg.done) progressBar.classList.remove('visible');
       }
     };
 
-    modeSelect.addEventListener('change', refreshControls);
+    modeSelect.addEventListener('change', () => {
+      refreshControls();
+      scheduleSearch();
+    });
     dictionarySelect.addEventListener('change', () => {
       refreshControls();
       if (isMapChosen() && userLocation === null) acquireLocation();
       // Loading a dictionary takes a while, it starts as soon as it is chosen
       send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
+      scheduleSearch();
     });
-    locateButton.addEventListener('click', acquireLocation);
-    pickButton.addEventListener('click', async () => setLocation(await pickFromMap(userLocation)));
+    for (const box of [queryBox, minLengthBox, maxLengthBox]) box.addEventListener('input', scheduleSearch);
+    diacriticsBox.addEventListener('change', scheduleSearch);
+    locateButton.addEventListener('click', async () => {
+      await acquireLocation();
+      scheduleSearch();
+    });
+    pickButton.addEventListener('click', async () => {
+      setLocation(await pickFromMap(userLocation));
+      scheduleSearch();
+    });
     form.addEventListener('submit', event => {
       event.preventDefault();
       searchDictionary();
@@ -176,8 +207,11 @@ export const dictionaryTool: Tool = {
     refreshControls();
     send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
     queryBox.focus();
+    // The saved query is searched right away, the loading is awaited by the worker
+    if (queryBox.value !== '') scheduleSearch();
 
     return () => {
+      clearTimeout(searchTimer);
       save();
       worker.terminate();
       unmountLayout();

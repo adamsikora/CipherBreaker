@@ -111,6 +111,8 @@ button.icon svg, button.icon img { width: 100%; height: 100%; display: block; }
 hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
 .stats { display: flex; gap: 24px; color: var(--muted); font-size: 14px; margin-bottom: 6px; flex-wrap: wrap; }
 .stats b { color: var(--fg); font-weight: 500; }
+.stats .message { color: var(--accent); }
+.stats .message:empty { display: none; }
 progress { width: 100%; height: 6px; visibility: hidden; display: block; margin-bottom: 6px; }
 progress.visible { visibility: visible; }
 .mono { white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size: 14px; margin-top: 8px; }
