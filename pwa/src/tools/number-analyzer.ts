@@ -75,6 +75,16 @@ export const numberAnalyzerTool: Tool = {
       const result = h('span', { class: 'row-result' });
       const row: Row = { element: h('div', { class: 'number-row' }, input, result), input, result };
       input.addEventListener('input', () => analyzeRow(row));
+      // Enter moves on to the next row, like in a list of numbers
+      input.addEventListener('keydown', event => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        const next = list.rows[list.rows.indexOf(row) + 1];
+        if (next) {
+          next.input.focus();
+          next.input.select();
+        }
+      });
       return row;
     });
 
