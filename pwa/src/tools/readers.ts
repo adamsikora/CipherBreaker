@@ -143,16 +143,19 @@ export const ternaryReaderTool: Tool = {
     const start = radioGroup('ternaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const chBox = h('input', { type: 'checkbox', onchange: () => rows.updateAll() });
     const direction = radioGroup('ternaryDirection', 'Reading Direction', [['right', '->'], ['left', '<-']], 'right', () => rows.updateAll());
-    const mode = radioGroup('ternaryMode', 'Permutate', [['order', 'Order'], ['values', 'Values']], 'values', () => {
+    // The direction only matters when values are permutated, the legend shows what is permutated
+    const applyMode = () => {
       const readOrder = mode.value === 'order';
       direction.setEnabled(!readOrder);
       // Result i uses the assignment i of the values, or the order 5 - i of the positions
       legend.replaceChildren(...TERNARY_MAPPING.map((mapping, i) => readOrder ? orderTile(TERNARY_MAPPING[5 - i]) : valuesTile(mapping)));
       rows.updateAll();
-    });
-    const legend = h('div', { class: 'legend ternary-legend' }, ...TERNARY_MAPPING.map(mapping => valuesTile(mapping)));
+    };
+    const mode = radioGroup('ternaryMode', 'Permutate', [['order', 'Order'], ['values', 'Values']], 'order', applyMode);
+    const legend = h('div', { class: 'legend ternary-legend' });
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
       values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, chBox.checked));
+    applyMode();
 
     const settings = h('div', { class: 'settings hidden' },
       h('button', { type: 'button', class: 'icon close', 'aria-label': 'Close settings', onclick: () => settings.classList.add('hidden') }, svg(icons.close)),
