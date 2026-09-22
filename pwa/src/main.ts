@@ -3,6 +3,7 @@ import './style.css';
 import { startRouter, Tool } from './shell/router';
 import { toast } from './shell/toast';
 import { aboutTool } from './tools/about';
+import { azimuthTool } from './tools/azimuth';
 import { calendarTool } from './tools/calendar';
 import { dictionaryTool } from './tools/dictionary';
 import { grilleTool } from './tools/grille';
@@ -17,7 +18,7 @@ const tools: Tool[] = [
   binaryReaderTool,
   ternaryReaderTool,
   grilleTool,
-  { path: 'azimuth', title: 'Azimuth Finder', icon: 'explore' },
+  azimuthTool,
   calendarTool,
   numberAnalyzerTool,
   playfairTool,

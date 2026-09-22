@@ -108,6 +108,20 @@ progress.visible { visibility: visible; }
 .grille-result { font-size: 32px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
 .playfair-result { font-size: 20px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; min-height: 1.4em; }
 
+/* Maps */
+#main.fill { display: flex; flex-direction: column; padding-bottom: 0; }
+.row.compact { margin-bottom: 4px; align-items: center; }
+.row.compact > label.check { padding: 0; gap: 8px; }
+.map { flex: 1; min-height: 300px; width: 100%; background: #ddd; margin: 8px -16px 0; width: calc(100% + 32px); }
+.map-icon { background: none; border: none; }
+.map-icon svg { display: block; }
+.overlay {
+  position: fixed; inset: 0; z-index: 20; background: var(--bg); display: flex; flex-direction: column;
+  padding: 8px 16px 0; padding-top: calc(8px + env(safe-area-inset-top));
+}
+.overlay .map { margin-bottom: 0; }
+.overlay-bar { align-items: center; margin-bottom: 4px; }
+
 /* Menu */
 .menu { list-style: none; margin: 0; padding: 0; }
 .menu a {

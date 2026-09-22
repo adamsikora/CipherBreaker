@@ -2,7 +2,10 @@
 
 import { MODES } from '../logic/dictionary';
 import { formatLatLng, parseIntWithDefault } from '../logic/format';
-import { h } from '../shell/dom';
+import { pickFromMap } from '../components/map-picker';
+import { h, svg } from '../shell/dom';
+import { icons } from '../shell/icons';
+import { acquireLocation as locate, LatLon } from '../shell/location';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
@@ -37,7 +40,7 @@ export const dictionaryTool: Tool = {
     const state = loadState(STATE_KEY, DEFAULT_STATE);
     const worker = new Worker(new URL('../workers/search-worker.ts', import.meta.url), { type: 'module' });
     let searchId = 0;
-    let userLocation: { lat: number; lon: number } | null = null;
+    let userLocation: LatLon | null = null;
 
     const modeSelect = h('select', null, ...MODES.map(mode => h('option', null, mode)));
     const dictionarySelect = h('select', null, ...DICTIONARIES.map(([value, label]) => h('option', { value }, label)));
@@ -45,8 +48,9 @@ export const dictionaryTool: Tool = {
     const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0 });
     const diacriticsBox = h('input', { type: 'checkbox' });
     const positionText = h('span', { class: 'muted' }, 'Position: unknown');
-    const locateButton = h('button', { type: 'button', class: 'small' }, 'Current location');
-    const positionRow = h('div', { class: 'row hidden' }, positionText, locateButton);
+    const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
+    const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
+    const positionRow = h('div', { class: 'row compact hidden' }, positionText, h('span', { style: 'flex: 1' }), pickButton, locateButton);
     const queryBox = h('input', {
       type: 'text', placeholder: 'Query', autocomplete: 'off', autocapitalize: 'off', spellcheck: false, style: 'flex: 1; min-width: 200px',
     });
@@ -101,19 +105,14 @@ export const dictionaryTool: Tool = {
       } satisfies State);
     }
 
-    function acquireLocation() {
-      if (!navigator.geolocation) {
-        toast('Geolocation is not available');
-        return;
-      }
+    function setLocation(location: LatLon | null) {
+      if (location) userLocation = location;
+      positionText.textContent = userLocation ? `Position: ${formatLatLng(userLocation.lat, userLocation.lon)}` : 'Position: unknown';
+    }
+
+    async function acquireLocation() {
       positionText.textContent = 'Position: acquiring…';
-      navigator.geolocation.getCurrentPosition(pos => {
-        userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        positionText.textContent = `Position: ${formatLatLng(userLocation.lat, userLocation.lon)}`;
-      }, err => {
-        positionText.textContent = 'Position: unknown';
-        toast('Location not available: ' + err.message);
-      }, { enableHighAccuracy: true, timeout: 15000 });
+      setLocation(await locate());
     }
 
     function searchDictionary() {
@@ -164,6 +163,7 @@ export const dictionaryTool: Tool = {
       send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
     });
     locateButton.addEventListener('click', acquireLocation);
+    pickButton.addEventListener('click', async () => setLocation(await pickFromMap(userLocation)));
     form.addEventListener('submit', event => {
       event.preventDefault();
       searchDictionary();

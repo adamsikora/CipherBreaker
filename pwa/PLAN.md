@@ -134,3 +134,7 @@ one dependency that may need tuning.
 - 2026-09-22: Phase 4 done — `cell-grid` component (typing advances, Enter/Backspace navigate,
   long press or right click marks holes), Grille Helper and Playfair Helper ported with the app's
   default states and saved-state keys. Keyboard behaviour on phones is untested.
+- 2026-09-22: Phase 5 done — `map-view` (Leaflet + OpenStreetMap tiles, long press / right click,
+  the app's start marker, the arrow with its head kept over the destination), `map-picker`
+  overlay used by the Dictionary Searcher, Azimuth Finder with clipboard and mapy.cz link,
+  shared `shell/location`. Long press on touch screens and geolocation are untested here.
