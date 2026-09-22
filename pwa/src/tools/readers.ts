@@ -125,6 +125,7 @@ export const binaryReaderTool: Tool = {
   mount(container) {
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => rows.updateAll());
     const rows = readerRows(2, 5, 4, values => binaryLetters(values, start.value === '0' ? 1 : 0));
+    container.classList.add('reader', 'binary');
     const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'legend-bar' },
         h('div', { class: 'legend binary-legend' },
@@ -135,6 +136,7 @@ export const binaryReaderTool: Tool = {
     return () => {
       rows.list.dispose();
       unmountLayout();
+      container.classList.remove('reader', 'binary');
     };
   },
 };
@@ -161,6 +163,7 @@ export const ternaryReaderTool: Tool = {
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
       values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, alphabet.value === '27'));
     applyMode();
+    container.classList.add('reader', 'ternary');
 
     const settings = h('div', { class: 'settings hidden' },
       h('button', { type: 'button', class: 'icon close', 'aria-label': 'Close settings', onclick: () => settings.classList.add('hidden') }, svg(icons.close)),
@@ -177,6 +180,7 @@ export const ternaryReaderTool: Tool = {
     return () => {
       rows.list.dispose();
       unmountLayout();
+      container.classList.remove('reader', 'ternary');
     };
   },
 };
