@@ -26,7 +26,9 @@ function show(tool: Tool): void {
   main.replaceChildren();
   main.scrollTop = 0;
   document.getElementById('title')!.textContent = tool.title;
+  // The menu shows the app icon where the tools show the back arrow
   document.getElementById('back')!.hidden = tool === menu;
+  document.getElementById('logo')!.hidden = tool !== menu;
   document.title = tool === menu ? 'Cipher Breaker' : `${tool.title} – Cipher Breaker`;
   unmount = tool.mount?.(main);
 }

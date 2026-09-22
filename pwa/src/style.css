@@ -61,9 +61,11 @@ body {
   background: none; border: none; color: #fff; width: 48px; height: 48px; padding: 12px;
   border-radius: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex: none;
 }
-/* On the menu the arrow is hidden but keeps its place, so that the title stays where it is on
-   the other screens (display: flex above would override the hidden attribute otherwise) */
-#back[hidden] { visibility: hidden; }
+/* The menu shows the app icon in the slot of the back arrow, the same width, so that the title
+   stays where it is on the other screens (display: flex above would override the hidden attribute) */
+#back[hidden] { display: none; }
+#logo { width: 36px; height: 36px; margin: 6px; border-radius: 8px; flex: none; }
+#logo[hidden] { display: none; }
 #back svg { width: 24px; height: 24px; display: block; }
 #back:hover { background: rgba(255,255,255,.15); }
 #main { flex: 1; padding: 12px 16px; max-width: 720px; width: 100%; margin: 0 auto; }
