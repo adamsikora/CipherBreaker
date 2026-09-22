@@ -118,9 +118,13 @@ export const dictionaryTool: Tool = {
       positionText.textContent = userLocation ? `Position: ${formatLatLng(userLocation.lat, userLocation.lon)}` : 'Position: unknown';
     }
 
+    // The position arrives after the search that its request set off, so the results are
+    // recomputed once it is known
     async function acquireLocation() {
       positionText.textContent = 'Position: acquiring…';
-      setLocation(await locate());
+      const location = await locate();
+      setLocation(location);
+      if (location) scheduleSearch();
     }
 
     function showResult(count: number, time: number, result: string) {
@@ -191,15 +195,13 @@ export const dictionaryTool: Tool = {
     });
     for (const box of [queryBox, minLengthBox, maxLengthBox]) box.addEventListener('input', scheduleSearch);
     diacriticsBox.addEventListener('change', scheduleSearch);
-    locateButton.addEventListener('click', async () => {
-      await acquireLocation();
-      scheduleSearch();
-    });
+    locateButton.addEventListener('click', acquireLocation);
     pickButton.addEventListener('click', async () => {
       setLocation(await pickFromMap(userLocation));
       scheduleSearch();
     });
     refreshControls();
+    if (isMapChosen()) acquireLocation();
     send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
     queryBox.focus();
     // The saved query is searched right away, the loading is awaited by the worker
