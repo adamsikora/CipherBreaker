@@ -33,6 +33,10 @@ export default defineConfig({
         // The dictionaries are precached with the app, so that it works offline from the first load on
         globPatterns: ['**/*.{js,css,html,png,cbfcdict,cbfcmap}'],
         maximumFileSizeToCacheInBytes: 30 * 1024 * 1024,
+        // Only the files Vite names by their content hash are immutable; the plugin's default
+        // treats the whole assets/ folder that way, which would keep an updated dictionary
+        // (same name, other content) from ever being downloaded again by an existing install
+        dontCacheBustURLsMatching: /-[\w-]{8}\.(js|css)$/,
       },
     }),
   ],
