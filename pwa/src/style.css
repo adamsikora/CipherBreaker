@@ -78,9 +78,6 @@ body {
 .row > label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--muted); flex: 1; min-width: 120px; }
 .row > label.check { flex-direction: row; align-items: center; gap: 6px; padding-bottom: 7px; font-size: 15px; color: var(--fg); flex: 0 0 auto; min-width: 0; }
 .row > label.fixed { flex: 0 0 auto; }
-/* Label text on the same line as its control, for compact panels */
-.row > label.inline { flex-direction: row; align-items: center; gap: 6px; }
-.row > label.inline > select { flex: 1; width: auto; }
 /* Selects get an explicit width: Safari would otherwise size them by the selected option */
 .row > label > select { width: 100%; min-width: 0; }
 .row > label.fixed > select { width: 7em; }
@@ -90,11 +87,10 @@ body {
 .row.nowrap > label:not(.fixed) { flex: 1 1 0; }
 .row.nowrap > label:not(.fixed) > select { width: 100%; min-width: 0; font-size: 14px; }
 .row.nowrap > label.fixed > select { width: auto; }
-.row.nowrap > label.centered { align-items: center; }
 /* Accent marks standing for "diacritics", drawn large enough to be recognised */
 .accents { font-size: 20px; line-height: 16px; color: var(--fg); }
 .row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
-select, input[type=text], input[type=search], input[type=number], button, textarea {
+select, input[type=search], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
   border: 1px solid var(--border); border-radius: 4px; padding: 7px 9px;
 }
@@ -184,7 +180,7 @@ progress.visible { visibility: visible; }
   --cell: min(44px, calc((100vw - 54px) / 10));
   display: inline-grid; gap: 2px; padding: 2px; background: #808080; border-radius: 3px;
 }
-/* input.cell outweighs the generic input[type=text] rule, which would keep the font size */
+/* input.cell outweighs the generic input[type=search] rule, which would keep the font size */
 input.cell {
   width: var(--cell); height: var(--cell); padding: 0; border: none; border-radius: 0;
   background: var(--cell-free); color: var(--cell-fg); text-align: center; font-size: calc(var(--cell) / 1.7);
@@ -215,7 +211,6 @@ input.cell {
 /* Maps */
 .row.compact { margin-bottom: 4px; align-items: center; gap: 8px; }
 .row.compact > label.check { padding: 0; gap: 8px; }
-.row.compact > form, form.row.compact { margin-bottom: 4px; }
 .map { flex: 1; min-height: 300px; background: #ddd; margin: 0 -16px; width: calc(100% + 32px); }
 .map-icon { background: none; border: none; }
 .map-icon svg { display: block; }
@@ -224,7 +219,6 @@ input.cell {
   padding: 8px 16px 0; padding-top: calc(8px + env(safe-area-inset-top));
 }
 .overlay:focus { outline: none; }
-.overlay .map { margin-bottom: 0; }
 .overlay-bar { align-items: center; margin-bottom: 4px; }
 
 /* Menu */

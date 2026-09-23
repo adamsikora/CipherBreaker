@@ -50,10 +50,7 @@ export function startRouter(menuTool: Tool, toolList: Tool[]): void {
   route();
 }
 
+/** Opens a tool of the app; an external one is a plain link in the menu */
 export function navigate(tool: Tool): void {
-  if (tool.external) {
-    window.open(tool.external, '_blank', 'noopener');
-  } else {
-    location.hash = `#/${tool.path}`;
-  }
+  location.hash = `#/${tool.path}`;
 }
