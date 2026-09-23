@@ -128,7 +128,11 @@ export const numberAnalyzerTool: Tool = {
     applyState(state);
 
     const unmountLayout = fixedTopLayout(container, [
-      h('div', { class: 'row' }, h('label', null, 'input:', inputTypeSelect), h('label', null, 'output:', outputTypeSelect)),
+      // Split like the rows below, the input over the number and the output over its result: the
+      // number box keeps its 20px of padding and border before the 2:3 split, so does the label
+      h('div', { class: 'row' },
+        h('label', { style: 'flex: 2 1 20px' }, 'input:', inputTypeSelect),
+        h('label', { style: 'flex: 3 1 0' }, 'output:', outputTypeSelect)),
     ], [list.element]);
     list.rows[0].input.focus();
 
