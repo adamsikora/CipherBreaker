@@ -10,10 +10,10 @@ import { mapView } from './map-view';
 export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
   return new Promise(resolve => {
     let position = initial;
-    const positionText = h('span', null, position ? formatLatLng(position.lat, position.lon) : '');
+    const locationText = h('span', null, position ? formatLatLng(position.lat, position.lon) : '');
     const view = mapView(picked => {
       position = picked;
-      positionText.textContent = formatLatLng(picked.lat, picked.lon);
+      locationText.textContent = formatLatLng(picked.lat, picked.lon);
       view.setPosition(picked, 'pin');
       toast('Set new starting location');
     });
@@ -24,10 +24,10 @@ export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
     };
     const overlay = h('div', { class: 'overlay' },
       h('div', { class: 'row overlay-bar' },
-        h('span', null, 'Position: ', positionText),
+        h('span', null, 'Location: ', locationText),
         h('span', { style: 'flex: 1' }),
         h('button', { type: 'button', class: 'small', onclick: () => close(null) }, 'Cancel'),
-        h('button', { type: 'button', class: 'primary', onclick: () => position ? close(position) : toast('No position selected') }, 'Confirm')),
+        h('button', { type: 'button', class: 'primary', onclick: () => position ? close(position) : toast('No location selected') }, 'Confirm')),
       view.element);
     document.body.append(overlay);
     view.ready();

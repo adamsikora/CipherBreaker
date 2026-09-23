@@ -48,10 +48,10 @@ export const dictionaryTool: Tool = {
     const minLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Min', min: 0, style: 'width: 3em' });
     const maxLengthBox = h('input', { type: 'number', class: 'short', placeholder: 'Max', min: 0, style: 'width: 3em' });
     const diacriticsBox = h('input', { type: 'checkbox', style: 'width: 20px; height: 20px; margin: 0' });
-    const positionText = h('span', { class: 'muted' }, 'Position: unknown');
+    const locationText = h('span', { class: 'muted' }, 'Location: unknown');
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
     const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
-    const positionRow = h('div', { class: 'row compact hidden' }, positionText, h('span', { style: 'flex: 1' }), pickButton, locateButton);
+    const locationRow = h('div', { class: 'row compact hidden' }, locationText, h('span', { style: 'flex: 1' }), pickButton, locateButton);
     const queryBox = makeQueryBox('Query', 'flex: 1; min-width: 200px', () => searchDictionary());
     const countView = h('b', null, '0');
     const timeView = h('b', null, '0.000');
@@ -77,7 +77,7 @@ export const dictionaryTool: Tool = {
         h('label', { style: 'flex-grow: 5' }, 'Mode:', modeSelect),
         h('label', { style: 'flex-grow: 4' }, 'Dictionary:', dictionarySelect),
         h('label', { class: 'fixed' }, 'Length:', h('span', { style: 'display: flex; align-items: center; gap: 4px' }, minLengthBox, '-', maxLengthBox))),
-      positionRow,
+      locationRow,
       form,
       statsRow,
       progressBar,
@@ -99,7 +99,7 @@ export const dictionaryTool: Tool = {
       // Only Regex, Hamming and Levenshtein can be sensitive to diacritics
       diacriticsBox.disabled = !(mode === 0 || mode === 4 || mode === 5);
       queryBox.inputMode = mode >= 6 ? 'numeric' : 'text';
-      positionRow.classList.toggle('hidden', !isMapChosen());
+      locationRow.classList.toggle('hidden', !isMapChosen());
     }
 
     function save() {
@@ -115,13 +115,13 @@ export const dictionaryTool: Tool = {
 
     function setLocation(location: LatLon | null) {
       if (location) userLocation = location;
-      positionText.textContent = userLocation ? `Position: ${formatLatLng(userLocation.lat, userLocation.lon)}` : 'Position: unknown';
+      locationText.textContent = userLocation ? `Location: ${formatLatLng(userLocation.lat, userLocation.lon)}` : 'Location: unknown';
     }
 
     // The position arrives after the search that its request set off, so the results are
     // recomputed once it is known
     async function acquireLocation() {
-      positionText.textContent = 'Position: acquiring…';
+      locationText.textContent = 'Location: acquiring…';
       const location = await locate();
       setLocation(location);
       if (location) scheduleSearch();

@@ -21,7 +21,7 @@ export const azimuthTool: Tool = {
 
     const distanceBox = h('input', { type: 'number', class: 'short', placeholder: 'm', inputmode: 'decimal', step: 'any' });
     const angleBox = h('input', { type: 'number', class: 'short', placeholder: '°', inputmode: 'decimal', step: 'any' });
-    const positionText = h('span');
+    const locationText = h('span');
     const resultText = h('span');
 
     const view = mapView(picked => {
@@ -33,7 +33,7 @@ export const azimuthTool: Tool = {
 
     function setLocation(move: boolean) {
       if (!position) return;
-      positionText.textContent = formatLatLng(position.lat, position.lon);
+      locationText.textContent = formatLatLng(position.lat, position.lon);
       const dist = getNumber(distanceBox);
       const angle = getNumber(angleBox);
       view.setPosition(position);
@@ -90,7 +90,7 @@ export const azimuthTool: Tool = {
         h('label', { class: 'check' }, 'Distance:', distanceBox),
         h('label', { class: 'check' }, 'Angle:', angleBox)),
       h('div', { class: 'row compact' },
-        h('span', null, 'Position: ', positionText),
+        h('span', null, 'Location: ', locationText),
         h('span', { style: 'flex: 1' }),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location', onclick: async () => {
           const location = await acquireLocation();

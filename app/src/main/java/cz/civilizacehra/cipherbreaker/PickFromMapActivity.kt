@@ -50,7 +50,7 @@ class PickFromMapActivity : FragmentActivity(), OnMapReadyCallback {
                 setResult(RESULT_OK, intent)
                 finish()
             } else {
-                applicationContext.toastIt("No position selected")
+                applicationContext.toastIt("No location selected")
             }
         }
     }
