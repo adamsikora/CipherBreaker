@@ -180,7 +180,8 @@ progress.visible { visibility: visible; }
 /* The grid starts at the left like the settings above and the readouts below it */
 .grid-holder { display: flex; justify-content: flex-start; margin: 12px 0 8px; }
 .cell-grid {
-  --cell: min(44px, calc((100vw - 48px) / 10));
+  /* Ten cells with their 2px gaps and padding fit the 100vw - 32px of content on a phone */
+  --cell: min(44px, calc((100vw - 54px) / 10));
   display: inline-grid; gap: 2px; padding: 2px; background: #808080; border-radius: 3px;
 }
 /* input.cell outweighs the generic input[type=text] rule, which would keep the font size */

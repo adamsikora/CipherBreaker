@@ -65,8 +65,11 @@ export function loadDictionary(text: string, isMap: boolean): Dictionary {
   for (let i = 0; i < count; i++) {
     const parts = entries[i].split(';');
     names[i] = parts[0];
-    lat[i] = parseFloat(parts[parts.length - 2]);
-    lon[i] = parseFloat(parts[parts.length - 1]);
+    // A line without coordinates gets zeros like in the app, rather than NaN distances
+    if (parts.length >= 3) {
+      lat[i] = parseFloat(parts[parts.length - 2]);
+      lon[i] = parseFloat(parts[parts.length - 1]);
+    }
   }
   return { names, lat, lon };
 }
@@ -203,7 +206,8 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
   let pattern: RegExp | null = null;
   if (regex) {
     try {
-      pattern = new RegExp('^(?:' + input + ')$', 'u');
+      // Without the u flag, which would reject a lone ] or an escape like \- that the app accepts
+      pattern = new RegExp('^(?:' + input + ')$');
     } catch (e) {
       return fail('Invalid regex syntax');
     }

@@ -105,11 +105,14 @@ export const playfairTool: Tool = {
 
     widthSelect.addEventListener('change', () => { reloadGrid(); save(); });
     heightSelect.addEventListener('change', () => { reloadGrid(); save(); });
-    inputBox.addEventListener('input', () => {
-      // Upper case like the grid, so that the letters match; the caret is kept where it was
-      const caret = inputBox.selectionEnd;
-      inputBox.value = inputBox.value.toUpperCase();
-      inputBox.setSelectionRange(caret, caret);
+    inputBox.addEventListener('input', event => {
+      // Upper case like the grid, so that the letters match; the caret is kept where it was.
+      // Not while a phone keyboard composes a word, changing the value would break it off
+      if (!(event as InputEvent).isComposing) {
+        const caret = inputBox.selectionEnd;
+        inputBox.value = inputBox.value.toUpperCase();
+        inputBox.setSelectionRange(caret, caret);
+      }
       computeGrid();
       save();
     });

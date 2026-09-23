@@ -9,6 +9,11 @@ describe('Holiday', () => {
     expect(holiday.toString(false)).toBe('24. 12. (St)  Adam\n');
   });
 
+  it('takes a year below 100 as it is', () => {
+    // The year 27 has the weekdays of 2027, the calendar repeats every 400 years; 1927 differs
+    expect(new Holiday(27, 1, 1, 'Nový rok').toString(false)).toMatch(/\(Pa\)/);
+  });
+
   it('pads the date and orders by the flag', () => {
     const holiday = new Holiday(2025, 1, 2, 'Karina');
     expect(holiday.toString(false)).toBe(' 2.  1. (Ct)  Karina\n');

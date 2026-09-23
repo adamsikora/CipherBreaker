@@ -93,7 +93,7 @@ export const dictionaryTool: Tool = {
       progressBar,
     ], [resultView]);
 
-    modeSelect.selectedIndex = state.modeSpinner;
+    modeSelect.selectedIndex = Math.min(Math.max(state.modeSpinner, 0), MODES.length - 1);
     if (DICTIONARIES.some(([value]) => value === state.dictionarySpinner)) dictionarySelect.value = state.dictionarySpinner;
     minLengthBox.value = state.minLength;
     maxLengthBox.value = state.maxLength;

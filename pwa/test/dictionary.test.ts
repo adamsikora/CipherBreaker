@@ -188,6 +188,19 @@ describe('loadDictionary', () => {
     expect(Array.from(map.lat!)).toEqual([49.46814, 50.08335]);
     expect(Array.from(map.lon!)).toEqual([17.97076, 14.39509]);
   });
+
+  it('gives a place without coordinates zeros', () => {
+    const map = loadDictionary('1\nAPetřín', true);
+    expect(map.names).toEqual(['Petřín']);
+    expect(Array.from(map.lat!)).toEqual([0]);
+    expect(Array.from(map.lon!)).toEqual([0]);
+  });
+
+  it('takes a regex the app takes', async () => {
+    // Not valid with the u flag, valid for java.util.regex
+    expect((await find('kos]', regex)).toasts).toEqual([]);
+    expect((await find('[a-z\\-]+', regex)).matches).toContain('kos');
+  });
 });
 
 // Without a location all distances are zero and results are sorted by name

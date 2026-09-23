@@ -55,7 +55,8 @@ and was not verified.
   map); only `androidx.core` and `androidx.fragment`, no appcompat. Flat package, no subpackages.
   Named styles in `res/values/styles.xml`.
 - The version is in three places that must stay in sync: `about_version` in `strings.xml`,
-  `versionCode` and `versionName` in `app/build.gradle`. Version bumps get their own commit.
+  `versionCode` and `versionName` in `app/build.gradle`; the PWA has its own in `pwa/package.json`,
+  see above. Version bumps get their own commit.
 
 ## Assets
 

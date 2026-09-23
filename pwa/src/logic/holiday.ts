@@ -14,7 +14,10 @@ export class Holiday {
   }
 
   updateYear(year: number): void {
-    this.dayOfWeek = DAY_OF_WEEK_LIST[new Date(year, this.month - 1, this.day).getDay()];
+    // Set apart from the constructor, which would take a year below 100 for the 1900s
+    const date = new Date(0);
+    date.setFullYear(year, this.month - 1, this.day);
+    this.dayOfWeek = DAY_OF_WEEK_LIST[date.getDay()];
   }
 
   toString(nameFirst: boolean): string {
