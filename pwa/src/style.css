@@ -52,9 +52,11 @@ body {
 }
 /* The icon and the title of the header line up with the icons and the titles of the menu below:
    the menu rows start 24px in from the edge of the main column (16px of padding plus 8px of the
-   row), which is at most 720px wide and centred, and their icons are 44px with a 14px gap */
+   row), which is at most 720px wide and centred, and their icons are 44px with a 14px gap. The
+   buttons on the right sit closer to the edge, 8px in from the column */
 #header {
-  background: var(--primary); color: #fff; padding: 0 max(24px, calc(50% - 336px));
+  background: var(--primary); color: #fff;
+  padding: 0 max(8px, calc(50% - 352px)) 0 max(24px, calc(50% - 336px));
   padding-top: env(safe-area-inset-top);
   min-height: 52px; display: flex; align-items: center; gap: 14px;
   box-shadow: 0 2px 4px rgba(0,0,0,.3); flex: none;
