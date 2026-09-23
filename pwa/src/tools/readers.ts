@@ -34,10 +34,11 @@ function readerRows(base: number, digitCount: number, resultCount: number, compu
     };
     for (let k = 0; k < digitCount; k++) {
       const digit = h('button', {
-        type: 'button', class: digitClass(0, base), 'aria-label': `Digit ${k + 1}`,
+        type: 'button', class: digitClass(0, base), 'aria-label': `Digit ${k + 1}: 0`,
         onclick: () => {
           values[k] = (values[k] + 1) % base;
           digit.className = digitClass(values[k], base);
+          digit.setAttribute('aria-label', `Digit ${k + 1}: ${values[k]}`);
           update();
         },
       });
@@ -62,7 +63,7 @@ function radioGroup(name: string, label: string, options: [string, string][], ch
     const input = h('input', { type: 'radio', name, value, checked: value === checked, onchange });
     return h('label', { class: 'check' }, input, text);
   });
-  const group = h('div', { class: 'row radio-group' }, h('span', { class: 'muted' }, label), ...inputs);
+  const group = h('div', { class: 'row radio-group', role: 'radiogroup', 'aria-label': label }, h('span', { class: 'muted' }, label), ...inputs);
   return {
     element: group,
     get value() { return (group.querySelector(`input[name="${name}"]:checked`) as HTMLInputElement).value; },
@@ -167,16 +168,22 @@ export const ternaryReaderTool: Tool = {
     container.classList.add('reader', 'ternary');
 
     const settings = h('div', { class: 'settings hidden' },
-      h('button', { type: 'button', class: 'icon close', 'aria-label': 'Close settings', onclick: () => settings.classList.add('hidden') }, svg(icons.close)),
+      h('button', { type: 'button', class: 'icon close', 'aria-label': 'Close settings', onclick: () => showSettings(false) }, svg(icons.close)),
       start.element,
       alphabet.element,
       direction.element,
       mode.element);
+    const settingsButton = h('button', {
+      type: 'button', class: 'icon large', 'aria-label': 'Settings', 'aria-expanded': 'false',
+      onclick: () => showSettings(settings.classList.contains('hidden')),
+    }, svg(icons.settings));
+    function showSettings(shown: boolean) {
+      settings.classList.toggle('hidden', !shown);
+      settingsButton.setAttribute('aria-expanded', String(shown));
+    }
     const unmountLayout = fixedTopLayout(container, [
       settings,
-      h('div', { class: 'legend-bar' },
-        legend,
-        h('button', { type: 'button', class: 'icon large', 'aria-label': 'Settings', onclick: () => settings.classList.toggle('hidden') }, svg(icons.settings))),
+      h('div', { class: 'legend-bar' }, legend, settingsButton),
     ], [rows.list.element]);
     return () => {
       rows.list.dispose();

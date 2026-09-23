@@ -17,15 +17,21 @@ export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
       view.setPosition(picked, 'pin');
       toast('Set new starting location');
     });
-    // Leaving the tool underneath (browser back) cancels the picking, the overlay would stay otherwise
+    // Leaving the tool underneath (browser back) cancels the picking, the overlay would stay
+    // otherwise; so does Escape
     const onHashChange = () => close(null);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close(null);
+    };
     const close = (result: LatLon | null) => {
       window.removeEventListener('hashchange', onHashChange);
+      document.removeEventListener('keydown', onKeyDown);
       view.destroy();
       overlay.remove();
       resolve(result);
     };
     window.addEventListener('hashchange', onHashChange);
+    document.addEventListener('keydown', onKeyDown);
     const overlay = h('div', { class: 'overlay' },
       h('div', { class: 'row overlay-bar' },
         h('span', null, 'Location: ', locationText),
@@ -34,6 +40,9 @@ export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
         h('button', { type: 'button', class: 'primary', onclick: () => position ? close(position) : toast('No location selected') }, 'Confirm')),
       view.element);
     document.body.append(overlay);
+    // The keyboard focus moves into the overlay with it, like into a dialog
+    overlay.tabIndex = -1;
+    overlay.focus();
     view.ready();
     if (position) {
       view.setPosition(position, 'pin');

@@ -28,11 +28,13 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-/** An SVG icon as an element, from the icons module */
+/** An SVG icon as an element, from the icons module; decorative, the text or label next to it names it */
 export function svg(markup: string): SVGElement {
   const template = document.createElement('template');
   template.innerHTML = markup;
-  return template.content.firstElementChild as SVGElement;
+  const element = template.content.firstElementChild as SVGElement;
+  element.setAttribute('aria-hidden', 'true');
+  return element;
 }
 
 export function clear(element: HTMLElement): void {

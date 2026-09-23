@@ -223,6 +223,7 @@ input.cell {
   position: fixed; inset: 0; z-index: 20; background: var(--bg); display: flex; flex-direction: column;
   padding: 8px 16px 0; padding-top: calc(8px + env(safe-area-inset-top));
 }
+.overlay:focus { outline: none; }
 .overlay .map { margin-bottom: 0; }
 .overlay-bar { align-items: center; margin-bottom: 4px; }
 

@@ -69,8 +69,8 @@ export const numberAnalyzerTool: Tool = {
       row.result.replaceChildren(...(number === null ? ['Unable to parse the number'] : formatNumber(number)));
     }
 
-    const list = endlessRows<Row>(() => {
-      const input = h('input', { type: 'search', autocomplete: 'off', spellcheck: false });
+    const list = endlessRows<Row>(index => {
+      const input = h('input', { type: 'search', autocomplete: 'off', spellcheck: false, 'aria-label': `Number ${index + 1}` });
       setKeyboard(input);
       const result = h('span', { class: 'row-result' });
       const row: Row = { element: h('div', { class: 'number-row' }, input, result), input, result };
