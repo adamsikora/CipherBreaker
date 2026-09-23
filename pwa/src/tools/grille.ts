@@ -1,15 +1,13 @@
 // Turning Grille, port of GrillerActivity.kt: letters in a square grid, holes of the turning
 // grille marked by a long press, the text read through the holes in all four rotations
 
-import { cellGrid, CellGrid } from '../components/cell-grid';
+import { cellGrid, CellGrid, GRID_SIZES as SIZES } from '../components/cell-grid';
 import { Grille } from '../logic/grille';
 import { h } from '../shell/dom';
 import { settingsPanel } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
-
-const SIZES = [4, 5, 6, 7, 8, 9, 10];
 
 // Cell states: 0 is a hole, 1-3 the cells it turns onto, 4 a free cell, 5 the unusable center.
 // States 0-3 are coloured by the cell-grid `state` classes, the other two are the plain look

@@ -1,6 +1,7 @@
 // Azimuth Calculator, port of AzimutherActivity.kt: the point reached from a start position after
 // given distance under given azimuth, drawn on the map as an arrow
 
+import { locationRow } from '../components/location-row';
 import { mapView } from '../components/map-view';
 import { destination } from '../logic/azimuth';
 import { formatCoord, formatLatLng } from '../logic/format';
@@ -92,16 +93,14 @@ export const azimuthTool: Tool = {
       h('div', { class: 'row compact' },
         h('label', { class: 'check' }, 'Distance:', distanceBox),
         h('label', { class: 'check' }, 'Angle:', angleBox)),
-      h('div', { class: 'row compact' },
-        h('span', null, 'Location: ', locationText),
-        h('span', { style: 'flex: 1' }),
+      locationRow(h('span', null, 'Location: ', locationText),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location', onclick: async () => {
           const location = await acquireLocation();
           if (location && !disposed) setLatLon(location, true);
         } }, svg(icons['my-location']))),
       h('div', { class: 'row compact' },
         h('span', { onclick: copyDestination, style: 'cursor: pointer' }, 'Destination: ', resultText),
-        h('span', { style: 'flex: 1' }),
+        h('span', { class: 'spacer' }),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Copy to clipboard', onclick: copyDestination }, svg(icons.clipboard)),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Open in mapy.cz', onclick: openInMapy },
           h('img', { src: 'mapy_cz.png', alt: '' }))),

@@ -6,6 +6,9 @@ import { h } from '../shell/dom';
 
 export type CellIndex = [number, number];
 
+/** Side lengths a grid can have, offered by the Grille and Playfair pickers */
+export const GRID_SIZES = [4, 5, 6, 7, 8, 9, 10];
+
 export interface CellGridOptions {
   rows: number;
   cols: number;

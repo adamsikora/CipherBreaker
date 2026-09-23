@@ -15,6 +15,8 @@ interface Row {
   values: number[];
   digits: HTMLButtonElement[];
   results: HTMLElement[];
+  /** Shows the letters read from the current values */
+  update(): void;
 }
 
 function digitClass(value: number, base: number): string {
@@ -27,10 +29,12 @@ function readerRows(base: number, digitCount: number, resultCount: number, compu
     const values = new Array<number>(digitCount).fill(0);
     const results = Array.from({ length: resultCount }, () => h('span', { class: 'result' }));
     const digits: HTMLButtonElement[] = [];
-    const row: Row = { element: h('div'), values, digits, results };
-    const update = () => {
-      const letters = compute(values);
-      results.forEach((result, i) => { result.textContent = letters[i]; });
+    const row: Row = {
+      element: h('div'), values, digits, results,
+      update() {
+        const letters = compute(values);
+        results.forEach((result, i) => { result.textContent = letters[i]; });
+      },
     };
     for (let k = 0; k < digitCount; k++) {
       const digit = h('button', {
@@ -39,7 +43,7 @@ function readerRows(base: number, digitCount: number, resultCount: number, compu
           values[k] = (values[k] + 1) % base;
           digit.className = digitClass(values[k], base);
           digit.setAttribute('aria-label', `Digit ${k + 1}: ${values[k]}`);
-          update();
+          row.update();
         },
       });
       digits.push(digit);
@@ -48,13 +52,10 @@ function readerRows(base: number, digitCount: number, resultCount: number, compu
     row.element = h('div', { class: 'reader-row' },
       h('div', { class: 'results' }, ...results),
       h('div', { class: 'digits' }, ...[...digits].reverse()));
-    update();
+    row.update();
     return row;
   });
-  const updateAll = () => list.rows.forEach(row => {
-    const letters = compute(row.values);
-    row.results.forEach((result, i) => { result.textContent = letters[i]; });
-  });
+  const updateAll = () => list.rows.forEach(row => row.update());
   return { list, updateAll };
 }
 

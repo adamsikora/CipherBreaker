@@ -35,7 +35,7 @@ export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
     const overlay = h('div', { class: 'overlay' },
       h('div', { class: 'row overlay-bar' },
         h('span', null, 'Location: ', locationText),
-        h('span', { style: 'flex: 1' }),
+        h('span', { class: 'spacer' }),
         h('button', { type: 'button', class: 'small', onclick: () => close(null) }, 'Cancel'),
         h('button', { type: 'button', class: 'primary', onclick: () => position ? close(position) : toast('No location selected') }, 'Confirm')),
       view.element);

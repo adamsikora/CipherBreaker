@@ -210,6 +210,8 @@ input.cell {
 
 /* Maps */
 .row.compact { margin-bottom: 4px; align-items: center; gap: 8px; }
+/* Pushes what follows it in a row to the right */
+.spacer { flex: 1; }
 .row.compact > label.check { padding: 0; gap: 8px; }
 .map { flex: 1; min-height: 300px; background: #ddd; margin: 0 -16px; width: calc(100% + 32px); }
 .map-icon { background: none; border: none; }

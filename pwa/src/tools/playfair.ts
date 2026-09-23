@@ -1,15 +1,13 @@
 // Playfair Cipher, port of PlayfairActivity.kt: a key grid and a text, shown decrypted and
 // encrypted as they are typed
 
-import { cellGrid, CellGrid } from '../components/cell-grid';
+import { cellGrid, CellGrid, GRID_SIZES as SIZES } from '../components/cell-grid';
 import { crypt, findProblem } from '../logic/playfair';
 import { h } from '../shell/dom';
 import { settingsPanel } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
-
-const SIZES = [4, 5, 6, 7, 8, 9, 10];
 
 interface State {
   playfairWidthSpinner: number;

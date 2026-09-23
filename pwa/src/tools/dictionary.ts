@@ -2,6 +2,7 @@
 
 import { MODES } from '../logic/dictionary';
 import { formatLatLng, parseIntWithDefault } from '../logic/format';
+import { locationRow as makeLocationRow } from '../components/location-row';
 import { pickFromMap } from '../components/map-picker';
 import { queryBox as makeQueryBox } from '../components/query-box';
 import { h, svg } from '../shell/dom';
@@ -61,7 +62,7 @@ export const dictionaryTool: Tool = {
     const locationText = h('span', { class: 'muted' }, 'Location: unknown');
     const pickButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Pick from map' }, svg(icons.map));
     const locateButton = h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location' }, svg(icons['my-location']));
-    const locationRow = h('div', { class: 'row compact hidden' }, locationText, h('span', { style: 'flex: 1' }), pickButton, locateButton);
+    const locationRow = makeLocationRow(locationText, pickButton, locateButton);
     const queryBox = makeQueryBox('Query', 'flex: 1; min-width: 200px', () => searchDictionary());
     const countView = h('b', null, '0');
     const timeView = h('b', null, '0.000');
