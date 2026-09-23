@@ -40,8 +40,6 @@ export const azimuthTool: Tool = {
     const locationText = h('span');
     const resultText = h('span');
     const state = loadState(STATE_KEY, DEFAULT_STATE);
-    distanceBox.value = state.distance;
-    angleBox.value = state.angle;
     const save = () => saveState(STATE_KEY, {
       lat: position?.lat ?? null, lon: position?.lon ?? null, distance: distanceBox.value, angle: angleBox.value,
     } satisfies State);
@@ -76,6 +74,22 @@ export const azimuthTool: Tool = {
       position = latLon;
       setLocation(move);
       save();
+    }
+
+    /** Puts in a saved state, an example or the defaults */
+    function applyState(s: State) {
+      distanceBox.value = s.distance;
+      angleBox.value = s.angle;
+      if (s.lat !== null && s.lon !== null) {
+        setLatLon({ lat: s.lat, lon: s.lon }, true);
+      } else {
+        position = null;
+        target = null;
+        locationText.textContent = '';
+        resultText.textContent = '';
+        view.clear();
+        save();
+      }
     }
 
     const onEdit = () => {
@@ -126,13 +140,21 @@ export const azimuthTool: Tool = {
           h('img', { src: 'mapy_cz.png', alt: '' }))),
     ), view.element);
     view.ready();
-    if (state.lat !== null && state.lon !== null) setLatLon({ lat: state.lat, lon: state.lon }, true);
+    applyState(state);
 
-    return () => {
-      disposed = true;
-      save();
-      view.destroy();
-      container.classList.remove('fill');
+    return {
+      unmount() {
+        disposed = true;
+        save();
+        view.destroy();
+        container.classList.remove('fill');
+      },
+      reset: () => applyState(DEFAULT_STATE),
+      examples: [
+        { name: 'Prague, Old Town Square: 500 m to the north-east', apply: () => applyState({ lat: 50.08750, lon: 14.42120, distance: '500', angle: '45' }) },
+        { name: 'Brno, Špilberk: 1200 m to the west', apply: () => applyState({ lat: 49.19444, lon: 16.59917, distance: '1200', angle: '270' }) },
+        { name: 'Sněžka: 3 km due south', apply: () => applyState({ lat: 50.73611, lon: 15.73972, distance: '3000', angle: '180' }) },
+      ],
     };
   },
 };

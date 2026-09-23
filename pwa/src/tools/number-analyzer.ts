@@ -37,8 +37,6 @@ export const numberAnalyzerTool: Tool = {
     const outputTypeSelect = h('select', null, ...OUTPUT_TYPES.map(type => h('option', null, type)));
     // The saved types, or the common case rather than the first entry of each list
     const state = loadState(STATE_KEY, DEFAULT_STATE);
-    inputTypeSelect.value = INPUT_TYPES.includes(state.inputType) ? state.inputType : DEFAULT_STATE.inputType;
-    outputTypeSelect.value = OUTPUT_TYPES.includes(state.outputType) ? state.outputType : DEFAULT_STATE.outputType;
     const save = () => {
       const numbers = list.rows.map(row => row.input.value);
       let count = numbers.length;
@@ -114,21 +112,38 @@ export const numberAnalyzerTool: Tool = {
     });
     outputTypeSelect.addEventListener('change', () => { analyzeAllRows(); save(); });
 
-    if (Array.isArray(state.numbers)) {
-      list.ensure(state.numbers.length);
-      state.numbers.forEach((number, i) => { list.rows[i].input.value = String(number); });
+    /** Puts in a saved state, an example or the defaults */
+    function applyState(s: State) {
+      inputTypeSelect.value = INPUT_TYPES.includes(s.inputType) ? s.inputType : DEFAULT_STATE.inputType;
+      outputTypeSelect.value = OUTPUT_TYPES.includes(s.outputType) ? s.outputType : DEFAULT_STATE.outputType;
+      const numbers = Array.isArray(s.numbers) ? s.numbers : [];
+      list.ensure(numbers.length);
+      list.rows.forEach((row, i) => {
+        row.input.value = String(numbers[i] ?? '');
+        setKeyboard(row.input);
+      });
       analyzeAllRows();
+      save();
     }
+    applyState(state);
 
     const unmountLayout = fixedTopLayout(container, [
       h('div', { class: 'row' }, h('label', null, 'input:', inputTypeSelect), h('label', null, 'output:', outputTypeSelect)),
     ], [list.element]);
     list.rows[0].input.focus();
 
-    return () => {
-      save();
-      list.dispose();
-      unmountLayout();
+    return {
+      unmount() {
+        save();
+        list.dispose();
+        unmountLayout();
+      },
+      reset: () => applyState(DEFAULT_STATE),
+      examples: [
+        { name: 'Prime factors', apply: () => applyState({ inputType: 'base-10', outputType: PRIME_FACTORS, numbers: ['2026', '1234567', '65536', '600851475143'] }) },
+        { name: 'Hexadecimal to decimal', apply: () => applyState({ inputType: 'base-16', outputType: 'base-10', numbers: ['FF', 'CAFE', 'DEADBEEF'] }) },
+        { name: 'Roman numerals to decimal', apply: () => applyState({ inputType: ROMAN_NUMERALS, outputType: 'base-10', numbers: ['MMXXVI', 'MCMLXXXIV', 'XLII'] }) },
+      ],
     };
   },
 };

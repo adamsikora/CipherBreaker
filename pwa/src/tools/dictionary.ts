@@ -9,7 +9,7 @@ import { h, svg } from '../shell/dom';
 import { icons } from '../shell/icons';
 import { fixedTopLayout } from '../shell/layout';
 import { acquireLocation as locate, LatLon } from '../shell/location';
-import { Tool } from '../shell/router';
+import { Example, Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
 import type { WorkerRequest, WorkerResponse } from '../workers/search-worker';
 
@@ -94,12 +94,6 @@ export const dictionaryTool: Tool = {
       progressBar,
     ], [resultView]);
 
-    modeSelect.selectedIndex = Math.min(Math.max(state.modeSpinner, 0), MODES.length - 1);
-    if (DICTIONARIES.some(([value]) => value === state.dictionarySpinner)) dictionarySelect.value = state.dictionarySpinner;
-    minLengthBox.value = state.minLength;
-    maxLengthBox.value = state.maxLength;
-    diacriticsBox.checked = state.diacritics;
-    queryBox.value = state.query;
 
     const isMapChosen = () => dictionarySelect.value.endsWith('.cbfcmap');
     const assetUrl = (name: string) => new URL(`assets/${name}`, document.baseURI).href;
@@ -159,7 +153,29 @@ export const dictionaryTool: Tool = {
     function clearResults() {
       ++searchId;
       progressBar.classList.remove('visible');
+      messageView.textContent = '';
       showResult(0, 0, '');
+    }
+
+    /** Has the chosen dictionary loaded and searched, or the results of the previous one cleared */
+    function dictionaryChosen() {
+      if (isMapChosen() && userLocation === null) acquireLocation();
+      // Loading a dictionary takes a while, it starts as soon as it is chosen
+      send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
+      if (queryBox.value === '') clearResults();
+      else searchDictionary();
+    }
+
+    /** Puts in a saved state, an example or the defaults */
+    function applyState(s: State) {
+      modeSelect.selectedIndex = Math.min(Math.max(s.modeSpinner, 0), MODES.length - 1);
+      dictionarySelect.value = DICTIONARIES.some(([value]) => value === s.dictionarySpinner) ? s.dictionarySpinner : DEFAULT_STATE.dictionarySpinner;
+      minLengthBox.value = s.minLength;
+      maxLengthBox.value = s.maxLength;
+      diacriticsBox.checked = s.diacritics;
+      queryBox.value = s.query;
+      refreshControls();
+      dictionaryChosen();
     }
 
     function searchDictionary() {
@@ -217,12 +233,7 @@ export const dictionaryTool: Tool = {
     });
     dictionarySelect.addEventListener('change', () => {
       refreshControls();
-      if (isMapChosen() && userLocation === null) acquireLocation();
-      // Loading a dictionary takes a while, it starts as soon as it is chosen
-      send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
-      // The results of the other dictionary are replaced by the search, or cleared without one
-      if (queryBox.value === '') clearResults();
-      else scheduleSearch();
+      dictionaryChosen();
     });
     for (const box of [queryBox, minLengthBox, maxLengthBox]) box.addEventListener('input', scheduleSearch);
     diacriticsBox.addEventListener('change', scheduleSearch);
@@ -233,21 +244,30 @@ export const dictionaryTool: Tool = {
       setLocation(picked);
       scheduleSearch();
     });
-    refreshControls();
-    if (isMapChosen()) acquireLocation();
-    send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
-    queryBox.focus();
     // The saved query is searched right away, the loading is awaited by the worker
-    if (queryBox.value !== '') scheduleSearch();
+    applyState(state);
+    queryBox.focus();
 
-    return () => {
-      disposed = true;
-      clearTimeout(searchTimer);
-      save();
-      // The worker lives on with its dictionaries, only its messages are no longer wanted
-      ++searchId;
-      worker.onmessage = null;
-      unmountLayout();
+    const example = (name: string, s: Partial<State>): Example => ({ name, apply: () => applyState({ ...DEFAULT_STATE, ...s }) });
+    return {
+      unmount() {
+        disposed = true;
+        clearTimeout(searchTimer);
+        save();
+        // The worker lives on with its dictionaries, only its messages are no longer wanted
+        ++searchId;
+        worker.onmessage = null;
+        unmountLayout();
+      },
+      reset: () => applyState(DEFAULT_STATE),
+      examples: [
+        example('Regex: Czech words k?s?', { modeSpinner: 0, dictionarySpinner: 'cs.cbfcdict', query: 'k.s.' }),
+        example('Levenshtein: what is close to "cypher"', { modeSpinner: 2, dictionarySpinner: 'en.cbfcdict', query: 'cypher' }),
+        example('Hamming: Czech words one letter away from "lampa"', { modeSpinner: 1, dictionarySpinner: 'cs.cbfcdict', query: 'lampa' }),
+        example('Subanagram: words from the letters of "breaker"', { modeSpinner: 3, dictionarySpinner: 'en.cbfcdict', query: 'breaker', minLength: '4' }),
+        example('# Morse: Czech words whose letters have 1, 3, 2 and 4 signs', { modeSpinner: 6, dictionarySpinner: 'cs.cbfcdict', query: '1324' }),
+        example('Map: lookout towers, closest first', { modeSpinner: 0, dictionarySpinner: 'Czechia.cbfcmap', query: '.*rozhledna.*' }),
+      ],
     };
   },
 };

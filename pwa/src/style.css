@@ -59,18 +59,19 @@ body {
   min-height: 52px; display: flex; align-items: center; gap: 14px;
   box-shadow: 0 2px 4px rgba(0,0,0,.3); flex: none;
 }
-#header h1 { font-size: 19px; font-weight: 500; margin: 0; }
-#back {
+/* The title takes the room between the back arrow and the example and reset buttons */
+#header h1 { font-size: 19px; font-weight: 500; margin: 0; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-button {
   background: none; border: none; color: #fff; width: 44px; height: 44px; padding: 10px;
   border-radius: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex: none;
 }
 /* The menu shows the app icon in the slot of the back arrow, the same width, so that the title
    stays where it is on the other screens (display: flex above would override the hidden attribute) */
-#back[hidden] { display: none; }
+.header-button[hidden] { display: none; }
 #logo { width: 44px; height: 44px; border-radius: 10px; flex: none; }
 #logo[hidden] { display: none; }
-#back svg { width: 24px; height: 24px; display: block; }
-#back:hover { background: rgba(255,255,255,.15); }
+.header-button svg { width: 24px; height: 24px; display: block; }
+.header-button:hover { background: rgba(255,255,255,.15); }
 #main { flex: 1; padding: 10px 16px; max-width: 720px; width: 100%; margin: 0 auto; }
 
 /* Controls */

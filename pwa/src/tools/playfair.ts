@@ -17,9 +17,8 @@ interface State {
 }
 
 const STATE_KEY = 'playfair';
-const DEFAULT_STATE: State = {
-  playfairWidthSpinner: 1, playfairHeightSpinner: 1, playfairGrid: 'PLAYFIRBCDEGHJKMNOSTUVWXZ', playfairText: 'LYBLRTKUYODPBNWLSLMKZSDE',
-};
+// A 5×5 grid, empty
+const DEFAULT_STATE: State = { playfairWidthSpinner: 1, playfairHeightSpinner: 1, playfairGrid: '', playfairText: '' };
 
 export const playfairTool: Tool = {
   path: 'playfair',
@@ -84,22 +83,24 @@ export const playfairTool: Tool = {
       } satisfies State);
     }
 
-    function loadSavedState() {
-      widthSelect.selectedIndex = Math.min(Math.max(state.playfairWidthSpinner, 0), SIZES.length - 1);
-      heightSelect.selectedIndex = Math.min(Math.max(state.playfairHeightSpinner, 0), SIZES.length - 1);
+    /** Puts in a saved state, an example or the defaults; an empty grid is just left empty */
+    function applyState(s: State) {
+      widthSelect.selectedIndex = Math.min(Math.max(s.playfairWidthSpinner, 0), SIZES.length - 1);
+      heightSelect.selectedIndex = Math.min(Math.max(s.playfairHeightSpinner, 0), SIZES.length - 1);
       reloadGrid();
-      if (state.playfairGrid.length !== width * height) {
+      if (s.playfairGrid !== '' && s.playfairGrid.length !== width * height) {
         toast('Invalid saved state, not loading');
         return;
       }
-      for (let i = 0; i < height; i++) {
+      for (let i = 0; i < height && s.playfairGrid !== ''; i++) {
         for (let j = 0; j < width; j++) {
-          const letter = state.playfairGrid[i * width + j];
+          const letter = s.playfairGrid[i * width + j];
           if (letter !== '_') grid!.setLetter(i, j, letter);
         }
       }
-      inputBox.value = state.playfairText;
+      inputBox.value = s.playfairText;
       computeGrid();
+      save();
     }
 
     widthSelect.addEventListener('change', () => { reloadGrid(); save(); });
@@ -117,8 +118,16 @@ export const playfairTool: Tool = {
       h('div', { class: 'muted', style: 'margin-top: 8px' }, 'Encrypted text:'),
       encryptedView,
     );
-    loadSavedState();
+    applyState(state);
 
-    return () => save();
+    return {
+      unmount: save,
+      reset: () => applyState(DEFAULT_STATE),
+      examples: [
+        { name: 'Key PLAYFIR, a message to decipher', apply: () => applyState({ playfairWidthSpinner: 1, playfairHeightSpinner: 1, playfairGrid: 'PLAYFIRBCDEGHJKMNOSTUVWXZ', playfairText: 'LYBLRTKUYODPBNWLSLMKZSDE' }) },
+        { name: 'Key PLAYFAIR EXAMPLE, the gold in the tree stump', apply: () => applyState({ playfairWidthSpinner: 1, playfairHeightSpinner: 1, playfairGrid: 'PLAYFIREXMBCDGHKNOQSTUVWZ', playfairText: 'BMODZBXDNABEKUDMUIXMMOUVIF' }) },
+        { name: '6×6 grid with digits, a text to encipher', apply: () => applyState({ playfairWidthSpinner: 2, playfairHeightSpinner: 2, playfairGrid: 'CIPHERABDFGKLMNOQSTUVWXYZ0123456789J', playfairText: 'CODEHUNT2026OK' }) },
+      ],
+    };
   },
 };

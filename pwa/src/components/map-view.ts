@@ -44,6 +44,8 @@ export interface MapView {
   setArrow(from: LatLon, to: LatLon | null): void;
   moveTo(position: LatLon): void;
   fit(a: LatLon, b: LatLon): void;
+  /** Removes the marker and the arrow and shows the whole country again */
+  clear(): void;
   destroy(): void;
 }
 
@@ -88,6 +90,19 @@ export function mapView(onLongPress: (position: LatLon) => void): MapView {
   }
   map.on('move zoom moveend zoomend', updateArrow);
 
+  const setArrow = (from: LatLon, to: LatLon | null) => {
+    line?.remove();
+    head?.remove();
+    line = null;
+    head = null;
+    arrow = null;
+    if (!to) return;
+    arrow = { from, to };
+    line = L.polyline([toLatLng(from), toLatLng(to)], { color: '#f00', weight: 3, interactive: false }).addTo(map);
+    head = L.marker(toLatLng(to), { icon: START_ICON, interactive: false, zIndexOffset: 1000 }).addTo(map);
+    updateArrow();
+  };
+
   return {
     map,
     element,
@@ -96,20 +111,15 @@ export function mapView(onLongPress: (position: LatLon) => void): MapView {
       if (marker) marker.remove();
       marker = L.marker(toLatLng(position), { icon: icon === 'start' ? START_ICON : PIN_ICON, interactive: false }).addTo(map);
     },
-    setArrow(from, to) {
-      line?.remove();
-      head?.remove();
-      line = null;
-      head = null;
-      arrow = null;
-      if (!to) return;
-      arrow = { from, to };
-      line = L.polyline([toLatLng(from), toLatLng(to)], { color: '#f00', weight: 3, interactive: false }).addTo(map);
-      head = L.marker(toLatLng(to), { icon: START_ICON, interactive: false, zIndexOffset: 1000 }).addTo(map);
-      updateArrow();
-    },
+    setArrow,
     moveTo: position => map.setView(toLatLng(position), POSITION_ZOOM),
     fit: (a, b) => map.fitBounds(L.latLngBounds(toLatLng(a), toLatLng(b)), { padding: [60, 60] }),
+    clear() {
+      marker?.remove();
+      marker = null;
+      setArrow({ lat: 0, lon: 0 }, null);
+      map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+    },
     destroy: () => map.remove(),
   };
 }

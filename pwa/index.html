@@ -16,10 +16,17 @@
 <body>
   <header id="header">
     <img id="logo" src="icon-192.png" alt="">
-    <button id="back" type="button" aria-label="Back" hidden>
+    <button id="back" class="header-button" type="button" aria-label="Back" hidden>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </button>
     <h1 id="title">Cipher Breaker</h1>
+    <!-- Shown by the router for the tools that have examples and a reset -->
+    <button id="example" class="header-button" type="button" aria-label="Show an example" title="Example" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
+    </button>
+    <button id="reset" class="header-button" type="button" aria-label="Reset the tool" title="Reset" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10zm2-8h6v8H5v-8zm5-6H6L5 5H2v2h12V5h-3z"/></svg>
+    </button>
   </header>
   <main id="main"></main>
   <div id="toast" role="status"></div>

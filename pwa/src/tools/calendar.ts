@@ -55,11 +55,6 @@ export const calendarTool: Tool = {
     const resultView = h('div', { class: 'mono' });
 
     const state = loadState(STATE_KEY, DEFAULT_STATE);
-    selectValue(daySelect, state.day);
-    selectValue(monthSelect, state.month);
-    selectValue(dayOfWeekSelect, state.dayOfWeek);
-    queryBox.value = state.query;
-    sortByNameBox.checked = state.sortByName;
     const save = () => saveState(STATE_KEY, {
       day: daySelect.value, month: monthSelect.value, dayOfWeek: dayOfWeekSelect.value, query: queryBox.value,
       sortByName: sortByNameBox.checked,
@@ -85,6 +80,17 @@ export const calendarTool: Tool = {
       resultView.textContent = filtered.map(holiday => holiday.toString(sortByName)).join('');
     }
 
+    /** Puts in a saved state, an example or the defaults; the year is the current one either way */
+    function applyState(s: State) {
+      selectValue(daySelect, s.day);
+      selectValue(monthSelect, s.month);
+      selectValue(dayOfWeekSelect, s.dayOfWeek);
+      queryBox.value = s.query;
+      sortByNameBox.checked = s.sortByName;
+      yearBox.value = String(new Date().getFullYear());
+      updateHolidays();
+    }
+
     for (const control of [daySelect, monthSelect, dayOfWeekSelect, sortByNameBox]) {
       control.addEventListener('change', updateHolidays);
     }
@@ -102,11 +108,19 @@ export const calendarTool: Tool = {
         h('label', { class: 'fixed' }, 'Day of Week:', dayOfWeekSelect)),
       h('div', { class: 'row' }, queryBox, h('label', { class: 'check' }, sortByNameBox, 'Sort by name')),
     ], [resultView]);
-    updateHolidays();
+    applyState(state);
     queryBox.focus();
-    return () => {
-      save();
-      unmountLayout();
+    return {
+      unmount() {
+        save();
+        unmountLayout();
+      },
+      reset: () => applyState(DEFAULT_STATE),
+      examples: [
+        { name: 'Name days in December', apply: () => applyState({ ...DEFAULT_STATE, month: '12' }) },
+        { name: 'Every Petr and Pavel, by name', apply: () => applyState({ ...DEFAULT_STATE, query: 'petr|pavel', sortByName: true }) },
+        { name: 'Sundays in January', apply: () => applyState({ ...DEFAULT_STATE, month: '1', dayOfWeek: 'Ne' }) },
+      ],
     };
   },
 };

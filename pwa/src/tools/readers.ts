@@ -83,9 +83,21 @@ function rowValues(list: EndlessRows<Row>): number[][] {
   return values.slice(0, count);
 }
 
+/** Puts the saved values into the rows, the rows beyond them are cleared */
 function restoreRows(list: EndlessRows<Row>, saved: number[][]): void {
   list.ensure(saved.length);
-  saved.forEach((values, i) => { if (Array.isArray(values)) list.rows[i].setValues(values); });
+  list.rows.forEach((row, i) => row.setValues(Array.isArray(saved[i]) ? saved[i] : []));
+}
+
+/** Digits of a word, a row per letter: the digit k is the bit or trit k of the letter's value */
+function encode(word: string, base: number, digitCount: number, start: string, ch = false): number[][] {
+  const alphabet = ch ? ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'CH', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    : [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
+  const letters = ch ? word.match(/CH|[A-Z]/g) ?? [] : [...word];
+  return letters.map(letter => {
+    let value = alphabet.indexOf(letter) + 1 - (start === '0' ? 1 : 0);
+    return Array.from({ length: digitCount }, () => { const digit = value % base; value = Math.floor(value / base); return digit; });
+  });
 }
 
 function radioGroup(name: string, label: string, options: [string, string][], checked: string, onchange: () => void) {
@@ -179,9 +191,14 @@ export const binaryReaderTool: Tool = {
     const save = () => saveState(BINARY_STATE_KEY, { start: start.value, rows: rowValues(rows.list) } satisfies BinaryState);
     const start = radioGroup('binaryStart', 'Alphabet Start', [['1', '1'], ['0', '0']], '1', () => { rows.updateAll(); save(); });
     const rows = readerRows(2, 5, 4, values => binaryLetters(values, start.value === '0' ? 1 : 0), save);
-    start.setValue(state.start);
-    restoreRows(rows.list, state.rows);
-    rows.updateAll();
+    /** Puts in a saved state, an example or the defaults */
+    const applyState = (s: BinaryState) => {
+      start.setValue(s.start);
+      restoreRows(rows.list, s.rows);
+      rows.updateAll();
+      save();
+    };
+    applyState(state);
     container.classList.add('reader', 'binary');
     // The setting has its own line above the legend, next to it they would not fit on a phone
     const unmountLayout = fixedTopLayout(container, [
@@ -191,11 +208,19 @@ export const binaryReaderTool: Tool = {
           h('div', null, arrowTile(true), arrowTile(true), arrowTile(false), arrowTile(false)),
           h('div', null, binaryTile(true), binaryTile(false), binaryTile(true), binaryTile(false)))),
     ], [rows.list.element]);
-    return () => {
-      save();
-      rows.list.dispose();
-      unmountLayout();
-      container.classList.remove('reader', 'binary');
+    return {
+      unmount() {
+        save();
+        rows.list.dispose();
+        unmountLayout();
+        container.classList.remove('reader', 'binary');
+      },
+      reset: () => applyState(BINARY_DEFAULT_STATE),
+      examples: [
+        { name: 'AHOJ in five bits, A = 1', apply: () => applyState({ start: '1', rows: encode('AHOJ', 2, 5, '1') }) },
+        { name: 'PUZZLE in five bits, A = 1', apply: () => applyState({ start: '1', rows: encode('PUZZLE', 2, 5, '1') }) },
+        { name: 'CIPHER in five bits, A = 0', apply: () => applyState({ start: '0', rows: encode('CIPHER', 2, 5, '0') }) },
+      ],
     };
   },
 };
@@ -226,12 +251,17 @@ export const ternaryReaderTool: Tool = {
     const legend = h('div', { class: 'legend ternary-legend' });
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
       values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, alphabet.value === '27'), save);
-    start.setValue(state.start);
-    alphabet.setValue(state.alphabet);
-    direction.setValue(state.direction);
-    mode.setValue(state.mode);
-    restoreRows(rows.list, state.rows);
-    applyMode();
+    /** Puts in a saved state, an example or the defaults */
+    const applyState = (s: TernaryState) => {
+      start.setValue(s.start);
+      alphabet.setValue(s.alphabet);
+      direction.setValue(s.direction);
+      mode.setValue(s.mode);
+      restoreRows(rows.list, s.rows);
+      applyMode();
+      save();
+    };
+    applyState(state);
     container.classList.add('reader', 'ternary');
 
     const settings = h('div', { class: 'settings hidden' },
@@ -252,11 +282,19 @@ export const ternaryReaderTool: Tool = {
       settings,
       h('div', { class: 'legend-bar' }, legend, settingsButton),
     ], [rows.list.element]);
-    return () => {
-      save();
-      rows.list.dispose();
-      unmountLayout();
-      container.classList.remove('reader', 'ternary');
+    return {
+      unmount() {
+        save();
+        rows.list.dispose();
+        unmountLayout();
+        container.classList.remove('reader', 'ternary');
+      },
+      reset: () => applyState(TERNARY_DEFAULT_STATE),
+      examples: [
+        { name: 'AHOJ in trits, A = 1', apply: () => applyState({ ...TERNARY_DEFAULT_STATE, rows: encode('AHOJ', 3, 3, '1') }) },
+        { name: 'CHATA with CH in the alphabet, read in every order', apply: () => applyState({ ...TERNARY_DEFAULT_STATE, alphabet: '27', mode: 'order', rows: encode('CHATA', 3, 3, '1', true) }) },
+        { name: 'PUZZLE in trits, A = 0', apply: () => applyState({ ...TERNARY_DEFAULT_STATE, start: '0', rows: encode('PUZZLE', 3, 3, '0') }) },
+      ],
     };
   },
 };
