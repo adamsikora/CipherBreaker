@@ -19,8 +19,8 @@ export const azimuthTool: Tool = {
     let position: LatLon | null = null;
     let target: LatLon | null = null;
 
-    const distanceBox = h('input', { type: 'number', class: 'short', placeholder: 'm', inputmode: 'decimal', step: 'any' });
-    const angleBox = h('input', { type: 'number', class: 'short', placeholder: '°', inputmode: 'decimal', step: 'any' });
+    const distanceBox = h('input', { type: 'search', class: 'short', placeholder: 'm', inputmode: 'decimal' });
+    const angleBox = h('input', { type: 'search', class: 'short', placeholder: '°', inputmode: 'decimal' });
     const locationText = h('span');
     const resultText = h('span');
 

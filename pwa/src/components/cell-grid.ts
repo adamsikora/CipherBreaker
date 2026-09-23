@@ -56,7 +56,7 @@ export function cellGrid(options: CellGridOptions): CellGrid {
     for (let j = 0; j < cols; j++) {
       const disabled = options.isDisabled?.(i, j) ?? false;
       const cell = h('input', {
-        type: 'text', class: 'cell', maxlength: 1, autocomplete: 'off', spellcheck: false,
+        type: 'search', class: 'cell', maxlength: 1, autocomplete: 'off', spellcheck: false,
         autocapitalize: 'characters', inputmode: 'none', disabled,
       });
       if (!disabled) {

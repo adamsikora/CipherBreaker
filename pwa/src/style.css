@@ -94,7 +94,7 @@ body {
 /* Accent marks standing for "diacritics", drawn large enough to be recognised */
 .accents { font-size: 20px; line-height: 16px; color: var(--fg); }
 .row.nowrap > label.fixed > select, .row.nowrap > label.fixed > input { flex: none; }
-select, input[type=text], input[type=number], button, textarea {
+select, input[type=text], input[type=search], input[type=number], button, textarea {
   font: inherit; color: var(--fg); background: transparent;
   border: 1px solid var(--border); border-radius: 4px; padding: 7px 9px;
 }
@@ -102,8 +102,13 @@ select, input[type=text], input[type=number], button, textarea {
    it sits, the page or the settings panel */
 select, option { background: var(--bg); }
 .panel select, .panel option { background: var(--panel); }
-input[type=number].short { width: 66px; padding: 7px 4px; text-align: center; appearance: textfield; -moz-appearance: textfield; }
-input.short::-webkit-outer-spin-button, input.short::-webkit-inner-spin-button { appearance: none; margin: 0; }
+/* Every text box is a search input (Chrome on Android shows its autofill bar over the keyboard
+   for any other text input), styled as a plain text field */
+input[type=search] { appearance: none; -webkit-appearance: none; }
+input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration {
+  appearance: none; -webkit-appearance: none; display: none;
+}
+input.short { width: 66px; padding: 7px 4px; text-align: center; }
 button.primary {
   background: var(--primary); color: #fff; border: none; padding: 8px 18px; cursor: pointer;
   text-transform: uppercase; font-weight: 500; letter-spacing: .5px;

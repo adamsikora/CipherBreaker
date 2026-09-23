@@ -30,7 +30,7 @@ export const calendarTool: Tool = {
     // Fixed widths, so that the pickers stay put whatever is selected, in every browser
     const daySelect = h('select', { style: 'width: 5em' }, ...numberOptions(31));
     const monthSelect = h('select', { style: 'width: 5em' }, ...numberOptions(12));
-    const yearBox = h('input', { type: 'number', placeholder: 'Year', value: String(new Date().getFullYear()), style: 'width: 6em' });
+    const yearBox = h('input', { type: 'search', inputmode: 'numeric', placeholder: 'Year', value: String(new Date().getFullYear()), style: 'width: 6em' });
     const dayOfWeekSelect = h('select', { style: 'width: 5.5em' }, ...DAYS_OF_WEEK.map(day => h('option', null, day)));
     const queryBox = makeQueryBox('Regex', 'flex: 1; min-width: 160px', () => updateHolidays());
     const sortByNameBox = h('input', { type: 'checkbox' });

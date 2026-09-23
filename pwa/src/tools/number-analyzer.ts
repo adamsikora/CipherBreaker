@@ -70,7 +70,7 @@ export const numberAnalyzerTool: Tool = {
     }
 
     const list = endlessRows<Row>(() => {
-      const input = h('input', { type: 'text', autocomplete: 'off', spellcheck: false });
+      const input = h('input', { type: 'search', autocomplete: 'off', spellcheck: false });
       setKeyboard(input);
       const result = h('span', { class: 'row-result' });
       const row: Row = { element: h('div', { class: 'number-row' }, input, result), input, result };
