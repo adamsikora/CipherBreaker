@@ -157,13 +157,12 @@ export const dictionaryTool: Tool = {
       showResult(0, 0, '');
     }
 
-    /** Has the chosen dictionary loaded and searched, or the results of the previous one cleared */
+    /** Has the chosen dictionary loaded and searched, the results of the previous one go either way */
     function dictionaryChosen() {
       if (isMapChosen() && userLocation === null) acquireLocation();
       // Loading a dictionary takes a while, it starts as soon as it is chosen
       send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
-      if (queryBox.value === '') clearResults();
-      else searchDictionary();
+      searchDictionary();
     }
 
     /** Puts in a saved state, an example or the defaults */
@@ -184,8 +183,11 @@ export const dictionaryTool: Tool = {
       messageView.textContent = '';
       const minLength = parseIntWithDefault(minLengthBox.value, 0);
       const maxLength = parseIntWithDefault(maxLengthBox.value, Number.MAX_SAFE_INTEGER);
-      // Nothing to search for, the last results stay
-      if (queryBox.value === '') return;
+      // Nothing to search for, nothing to show
+      if (queryBox.value === '') {
+        clearResults();
+        return;
+      }
       if (minLength > maxLength) {
         clearResults();
         messageView.textContent = `Min length (${minLength}) is greater than max length (${maxLength})`;
