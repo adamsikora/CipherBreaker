@@ -15,39 +15,38 @@ export type WorkerResponse =
   | { type: 'toast'; id: number; text: string }
   | { type: 'progress'; id: number; progress: number; count: number; time: number; result: string; done: boolean };
 
+// Every dictionary loaded stays loaded, so that coming back to it costs nothing: all four take
+// about 270 MB with their keys, which the page is judged to afford
 const dictionaries = new Map<string, Dictionary>();
-let loading: { name: string; promise: Promise<Dictionary> } | null = null;
+const loads = new Map<string, Promise<Dictionary>>();
 let currentSearch = 0;
 
 function post(message: WorkerResponse): void {
   self.postMessage(message);
 }
 
-async function load(name: string, url: string): Promise<Dictionary> {
+function load(name: string, url: string): Promise<Dictionary> {
   const existing = dictionaries.get(name);
-  if (existing) return existing;
-  if (loading && loading.name === name) return loading.promise;
-  const promise = (async () => {
-    post({ type: 'loading', text: `Loading ${name}…` });
-    const started = performance.now();
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Cannot load ${name}`);
-    const dictionary = loadDictionary(await response.text(), name.endsWith('.cbfcmap'));
-    // Only the dictionary searched last is kept, the others would take too much memory
-    dictionaries.clear();
-    dictionaries.set(name, dictionary);
-    // The keys are made now rather than by the first search, which would be slow otherwise
-    await prepareKeys(dictionary, false, yieldToMessages);
-    const seconds = ((performance.now() - started) / 1000).toFixed(2);
-    post({ type: 'loading', text: `${dictionary.names.length} entries loaded in ${seconds} s` });
-    return dictionary;
-  })();
-  loading = { name, promise };
-  try {
-    return await promise;
-  } finally {
-    if (loading && loading.promise === promise) loading = null;
+  if (existing) return Promise.resolve(existing);
+  let promise = loads.get(name);
+  if (!promise) {
+    promise = (async () => {
+      post({ type: 'loading', text: `Loading ${name}…` });
+      const started = performance.now();
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Cannot load ${name}`);
+      const dictionary = loadDictionary(await response.text(), name.endsWith('.cbfcmap'));
+      dictionaries.set(name, dictionary);
+      // The keys are made now rather than by the first search, which would be slow otherwise
+      await prepareKeys(dictionary, false, yieldToMessages);
+      const seconds = ((performance.now() - started) / 1000).toFixed(2);
+      post({ type: 'loading', text: `${dictionary.names.length} entries loaded in ${seconds} s` });
+      return dictionary;
+    })();
+    loads.set(name, promise);
+    promise.finally(() => loads.delete(name)).catch(() => { /* reported by the callers */ });
   }
+  return promise;
 }
 
 // Lets the messages that arrived meanwhile, a newer search or a load, be handled between two

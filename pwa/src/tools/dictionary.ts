@@ -33,14 +33,24 @@ const DEFAULT_STATE: State = {
   modeSpinner: 0, dictionarySpinner: DICTIONARIES[0][0], minLength: '', maxLength: '', diacritics: false, query: '',
 };
 
+// One worker for the life of the page: it keeps the dictionaries it has loaded, so that coming
+// back to the tool, or to a dictionary, does not load them again. Searches are numbered across
+// the visits, so that a response to a search of a previous visit is never taken for a new one
+let worker: Worker | null = null;
+let searchId = 0;
+
+function searchWorker(): Worker {
+  worker ??= new Worker(new URL('../workers/search-worker.ts', import.meta.url), { type: 'module' });
+  return worker;
+}
+
 export const dictionaryTool: Tool = {
   path: 'dictionary',
   title: 'Dictionary Search',
   icon: 'dictionary',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);
-    const worker = new Worker(new URL('../workers/search-worker.ts', import.meta.url), { type: 'module' });
-    let searchId = 0;
+    const worker = searchWorker();
     let userLocation: LatLon | null = null;
 
     const modeSelect = h('select', null, ...MODES.map(mode => h('option', null, mode)));
@@ -223,7 +233,9 @@ export const dictionaryTool: Tool = {
       disposed = true;
       clearTimeout(searchTimer);
       save();
-      worker.terminate();
+      // The worker lives on with its dictionaries, only its messages are no longer wanted
+      ++searchId;
+      worker.onmessage = null;
       unmountLayout();
     };
   },
