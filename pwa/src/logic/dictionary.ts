@@ -115,6 +115,56 @@ interface Place {
   name: string;
 }
 
+const closerFirst = (a: Place, b: Place) => a.distance - b.distance || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+const farther = (a: Place, b: Place) => closerFirst(a, b) > 0;
+
+/**
+ * The closest places matched so far, at most MAX_RESULTS of them. A binary heap with the farthest
+ * place at the root, so that a closer match replaces it in logarithmic time: a query matching
+ * every place, the way to list what is around, would otherwise sort the matches over and over.
+ */
+class ClosestPlaces {
+  private readonly heap: Place[] = [];
+
+  get size(): number {
+    return this.heap.length;
+  }
+
+  add(place: Place): void {
+    const heap = this.heap;
+    if (heap.length < MAX_RESULTS) {
+      heap.push(place);
+      // Sift up
+      let i = heap.length - 1;
+      while (i > 0) {
+        const parent = (i - 1) >> 1;
+        if (!farther(heap[i], heap[parent])) break;
+        [heap[i], heap[parent]] = [heap[parent], heap[i]];
+        i = parent;
+      }
+    } else if (farther(heap[0], place)) {
+      heap[0] = place;
+      // Sift down
+      let i = 0;
+      for (;;) {
+        const left = 2 * i + 1;
+        const right = left + 1;
+        let largest = i;
+        if (left < heap.length && farther(heap[left], heap[largest])) largest = left;
+        if (right < heap.length && farther(heap[right], heap[largest])) largest = right;
+        if (largest === i) break;
+        [heap[i], heap[largest]] = [heap[largest], heap[i]];
+        i = largest;
+      }
+    }
+  }
+
+  /** The places from the closest, the heap itself is left as it is */
+  sorted(): Place[] {
+    return [...this.heap].sort(closerFirst);
+  }
+}
+
 /**
  * Searches the dictionary. Input is expected in lower case. The search yields between chunks of
  * entries through yieldNow, and stops without a final progress call when shouldStop says so.
@@ -184,34 +234,29 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
   // Letter counts of the entry in the anagram modes, one array reused for all the entries
   const chars = new Int32Array(26);
 
-  // Matches are strings for a word dictionary and places for a map
+  // Matches are strings for a word dictionary, trimmed to MAX_RESULTS whenever twice as many
+  // gather, and the closest places for a map
   let words: string[] = [];
-  let places: Place[] = [];
+  const places = new ClosestPlaces();
   const trim = () => {
-    if (map) {
-      places.sort((a, b) => a.distance - b.distance || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
-      places = places.slice(0, MAX_RESULTS);
-    } else {
-      if (shouldSort) words.sort();
-      words = words.slice(0, MAX_RESULTS);
-    }
+    if (shouldSort) words.sort();
+    words = words.slice(0, MAX_RESULTS);
   };
   const matched = (i: number, prefix: string) => {
     if (map) {
       const distance = location ? distanceMetres(location.lat, location.lon, dictionary.lat![i], dictionary.lon![i]) : 0;
-      places.push({ distance, name: prefix + names[i] });
-      if (places.length >= 2 * MAX_RESULTS) trim();
+      places.add({ distance, name: prefix + names[i] });
     } else {
       words.push(prefix + names[i]);
       if (words.length >= 2 * MAX_RESULTS) trim();
     }
   };
   const conclude = () => {
+    if (map) return places.sorted().map(p => `${p.name} (${Math.round(p.distance)}m)`).join('\n');
     trim();
-    if (map) return places.map(p => `${p.name} (${Math.round(p.distance)}m)`).join('\n');
     return words.join('\n');
   };
-  const resultsSize = () => Math.min(map ? places.length : words.length, MAX_RESULTS);
+  const resultsSize = () => map ? places.size : Math.min(words.length, MAX_RESULTS);
 
   let lastUpdate = performance.now();
   for (let i = 0; i < total; i++) {

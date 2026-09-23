@@ -238,4 +238,25 @@ describe('map', () => {
     expect(lines[2]).toMatch(/^Bus 741: Gmünd \(\d+m\)$/);
     expect(lines[3]).toMatch(/^Petřín \(2\d{5}m\)$/);
   });
+
+  it('keeps the closest thousand places of many', async () => {
+    // 2500 places eastwards of the location, one every 0.001 degree, listed in a scrambled order
+    const count = 2500;
+    const lines = Array.from({ length: count }, (_, i) => {
+      const k = (i * 7919) % count;
+      return `aP${k};50.00000;${(14 + k * 0.001).toFixed(5)}`;
+    });
+    const many = loadDictionary(`${count}\n${lines.join('\n')}`, true);
+    const { matches, count: reported } = await run(many, '.*', regex);
+    expect(reported).toBe(1000);
+    expect(matches).toHaveLength(1000);
+    // Without a location every distance is 0 and the names decide
+    expect(matches[0]).toBe('P0 (0m)');
+    let lastResult = '';
+    await search(many, '.*', { modeId: regex, minLength: 0, maxLength: 100, diacritics: false },
+      { lat: 50, lon: 14 }, { toast: () => {}, progress: (_p, _c, _t, result) => { lastResult = result; } });
+    const closest = lastResult.split('\n');
+    expect(closest).toHaveLength(1000);
+    closest.forEach((line, i) => expect(line.startsWith(`P${i} (`)).toBe(true));
+  });
 });
