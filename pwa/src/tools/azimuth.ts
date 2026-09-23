@@ -20,7 +20,8 @@ export const azimuthTool: Tool = {
     let target: LatLon | null = null;
 
     const distanceBox = h('input', { type: 'search', class: 'short', placeholder: 'm', inputmode: 'decimal' });
-    const angleBox = h('input', { type: 'search', class: 'short', placeholder: '°', inputmode: 'decimal' });
+    // The dial pad has the minus sign that the decimal keyboard lacks, for angles like -90
+    const angleBox = h('input', { type: 'search', class: 'short', placeholder: '°', inputmode: 'tel' });
     const locationText = h('span');
     const resultText = h('span');
 
