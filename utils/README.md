@@ -1,3 +1,8 @@
+Offline tooling that makes the dictionary and map assets of the apps, a uv project (Python 3.14).
+Run everything from this directory. The web app reads the front coded `.cbfcdict` and `.cbfcmap`
+files from `pwa/public/assets/`, the Android app the plain `.cbdict` and `.cbmap` files from
+`app/src/main/assets/`.
+
 ## Map
 
 1. Download map in .osm.pbf format from: http://download.geofabrik.de/europe/czech-republic.html
@@ -9,7 +14,8 @@
      semicolons, coordinates have 5 decimal places
    - czech-republic-latest.cbfcmap - the same lines front coded, the same way as .cbfcdict below
 
-4. Copy czech-republic-latest.cbmap to app assets as Czechia.cbmap
+4. Copy czech-republic-latest.cbfcmap to pwa/public/assets/ as Czechia.cbfcmap, and
+   czech-republic-latest.cbmap to app/src/main/assets/ as Czechia.cbmap for the Android app
 
 ## Czech dictionary
 
@@ -26,10 +32,14 @@
      when the first letter of the word is. Words with other upper case letters start with = and are
      in their original case, see src/common/front_coding.py for details
 
+4. Copy the `_all` and `_nouns` lists to the assets: `.cbfcdict` to pwa/public/assets/ as
+   cs.cbfcdict and cs_nouns.cbfcdict, `.cbdict` to app/src/main/assets/ as cs_morfflex_all.cbdict
+   and cs_morfflex_nouns.cbdict
+
 ### Dictionaries of the app
 
-.cbdict dictionaries in app assets were made from .canon files of `cleanedkey:word` lines, which the
-app used to read:
+The English dictionary and the `_old` Czech ones of the Android app were made from .canon files of
+`cleanedkey:word` lines, which the app used to read:
 
 1. Put .canon files to data/cz_dict/input/
 2. Run `uv run parse-canon data/cz_dict/input/cs.canon data/cz_dict/input/en.canon ...`, for every
