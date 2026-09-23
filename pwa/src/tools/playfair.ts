@@ -31,7 +31,7 @@ export const playfairTool: Tool = {
     const widthSelect = h('select', null, ...sizeOptions());
     const heightSelect = h('select', null, ...sizeOptions());
     const gridHolder = h('div', { class: 'grid-holder' });
-    const inputBox = h('textarea', { placeholder: 'Text to decipher', rows: 2, autocomplete: 'off', spellcheck: false, autocapitalize: 'characters', style: 'width: 100%' });
+    const inputBox = h('textarea', { placeholder: 'Text to decipher', rows: 2, autocomplete: 'off', spellcheck: false, style: 'width: 100%' });
     const decryptedView = h('div', { class: 'playfair-result' });
     const encryptedView = h('div', { class: 'playfair-result' });
 
@@ -41,7 +41,8 @@ export const playfairTool: Tool = {
 
     function computeGrid() {
       const cells = grid!.letters();
-      const text = inputBox.value;
+      // The grid is in upper case, the text is taken as typed and matched regardless of case
+      const text = inputBox.value.toUpperCase();
       const problem = findProblem(cells, text);
       if (problem !== null) {
         decryptedView.textContent = problem;
@@ -103,14 +104,7 @@ export const playfairTool: Tool = {
 
     widthSelect.addEventListener('change', () => { reloadGrid(); save(); });
     heightSelect.addEventListener('change', () => { reloadGrid(); save(); });
-    inputBox.addEventListener('input', event => {
-      // Upper case like the grid, so that the letters match; the caret is kept where it was.
-      // Not while a phone keyboard composes a word, changing the value would break it off
-      if (!(event as InputEvent).isComposing) {
-        const caret = inputBox.selectionEnd;
-        inputBox.value = inputBox.value.toUpperCase();
-        inputBox.setSelectionRange(caret, caret);
-      }
+    inputBox.addEventListener('input', () => {
       computeGrid();
       save();
     });
