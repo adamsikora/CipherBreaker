@@ -155,6 +155,13 @@ export const dictionaryTool: Tool = {
       statsRow.replaceChildren(countsView);
     }
 
+    /** Empties the results and the stats, and drops a search that may be running */
+    function clearResults() {
+      ++searchId;
+      progressBar.classList.remove('visible');
+      showResult(0, 0, '');
+    }
+
     function searchDictionary() {
       clearTimeout(searchTimer);
       save();
@@ -164,9 +171,7 @@ export const dictionaryTool: Tool = {
       // Nothing to search for, the last results stay
       if (queryBox.value === '') return;
       if (minLength > maxLength) {
-        ++searchId;
-        progressBar.classList.remove('visible');
-        showResult(0, 0, '');
+        clearResults();
         messageView.textContent = `Min length (${minLength}) is greater than max length (${maxLength})`;
         return;
       }
@@ -215,7 +220,9 @@ export const dictionaryTool: Tool = {
       if (isMapChosen() && userLocation === null) acquireLocation();
       // Loading a dictionary takes a while, it starts as soon as it is chosen
       send({ type: 'load', name: dictionarySelect.value, url: assetUrl(dictionarySelect.value) });
-      scheduleSearch();
+      // The results of the other dictionary are replaced by the search, or cleared without one
+      if (queryBox.value === '') clearResults();
+      else scheduleSearch();
     });
     for (const box of [queryBox, minLengthBox, maxLengthBox]) box.addEventListener('input', scheduleSearch);
     diacriticsBox.addEventListener('change', scheduleSearch);
