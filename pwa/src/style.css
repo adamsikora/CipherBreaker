@@ -50,13 +50,16 @@ body {
   font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   display: flex; flex-direction: column;
 }
+/* The icon and the title of the header line up with the icons and the titles of the menu below:
+   the menu rows start 24px in from the edge of the main column (16px of padding plus 8px of the
+   row), which is at most 720px wide and centred, and their icons are 44px with a 14px gap */
 #header {
-  background: var(--primary); color: #fff; padding: 0 8px;
+  background: var(--primary); color: #fff; padding: 0 max(24px, calc(50% - 336px));
   padding-top: env(safe-area-inset-top);
-  min-height: 52px; display: flex; align-items: center; gap: 4px;
+  min-height: 52px; display: flex; align-items: center; gap: 14px;
   box-shadow: 0 2px 4px rgba(0,0,0,.3); flex: none;
 }
-#header h1 { font-size: 19px; font-weight: 500; margin: 0 8px; }
+#header h1 { font-size: 19px; font-weight: 500; margin: 0; }
 #back {
   background: none; border: none; color: #fff; width: 44px; height: 44px; padding: 10px;
   border-radius: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex: none;
@@ -64,7 +67,7 @@ body {
 /* The menu shows the app icon in the slot of the back arrow, the same width, so that the title
    stays where it is on the other screens (display: flex above would override the hidden attribute) */
 #back[hidden] { display: none; }
-#logo { width: 34px; height: 34px; margin: 5px; border-radius: 8px; flex: none; }
+#logo { width: 44px; height: 44px; border-radius: 10px; flex: none; }
 #logo[hidden] { display: none; }
 #back svg { width: 24px; height: 24px; display: block; }
 #back:hover { background: rgba(255,255,255,.15); }
