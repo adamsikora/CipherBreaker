@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Dictionary, loadDictionary, search } from '../src/logic/dictionary';
+import { hammingDistance, levenshteinDistance } from '../src/logic/string-utils';
 
 const words = ['en', 'kos', 'osa', 'pes', 'šep', 'ta', 'at', 'kosa', 'sako', 'pešek', 'kost', 'kosti'];
 
@@ -200,6 +201,54 @@ describe('loadDictionary', () => {
     // Not valid with the u flag, valid for java.util.regex
     expect((await find('kos]', regex)).toasts).toEqual([]);
     expect((await find('[a-z\\-]+', regex)).matches).toContain('kos');
+  });
+});
+
+describe('many matches', () => {
+  // Words at Hamming distance 1, 2 and 3 from the input, listed from the farthest, so that the
+  // trims of the gathered matches happen before the best ones come
+  const input = 'aaaaaaaa';
+  const letters = 'bcdefghijklmnopqrstuvwxyz';
+  const vary = (positions: number[]) => {
+    const words: string[] = [];
+    const go = (word: string, i: number) => {
+      if (i === positions.length) { words.push(word); return; }
+      for (const c of letters) go(word.slice(0, positions[i]) + c + word.slice(positions[i] + 1), i + 1);
+    };
+    go(input, 0);
+    return words;
+  };
+  const near: string[] = [];
+  for (let p = 0; p < 8; p++) near.push(...vary([p]));
+  const farther = vary([0, 1]).concat(vary([2, 3]), vary([4, 5])).slice(0, 1800);
+  const farthest = vary([0, 1, 2]).slice(0, 500);
+  const many = { names: [...farthest, ...farther, ...near] };
+  const best = (distance: (word: string) => number) =>
+    many.names.map(word => `(${distance(word)}) ${word}`).sort().slice(0, 1000);
+
+  it('keeps the best thousand with hamming', async () => {
+    const result = await run(many, input, hamming);
+    expect(result.count).toBe(1000);
+    expect(result.matches).toEqual(best(word => hammingDistance(word, input)));
+  });
+
+  it('keeps the best thousand with levenshtein', async () => {
+    const result = await run(many, input, levenshtein);
+    expect(result.count).toBe(1000);
+    expect(result.matches).toEqual(best(word => levenshteinDistance(word, input, 6)));
+  });
+
+  it('stops without a final progress when asked to', async () => {
+    const names = Array.from({ length: 50000 }, (_, i) => `w${i}`);
+    let stopped = false;
+    let done = false;
+    let calls = 0;
+    await search({ names }, '.*', { modeId: regex, minLength: 0, maxLength: 100, diacritics: false }, null, {
+      toast: () => {},
+      progress: (_p, _c, _t, _r, isDone) => { calls++; if (isDone) done = true; },
+    }, async () => { stopped = true; }, () => stopped);
+    expect(done).toBe(false);
+    expect(calls).toBe(0);
   });
 });
 
