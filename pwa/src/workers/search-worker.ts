@@ -76,6 +76,10 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
     load(msg.name, msg.url).catch(e => post({ type: 'loading', text: (e as Error).message }));
   } else if (msg.type === 'search') {
     currentSearch = msg.id;
-    runSearch(msg).catch(e => post({ type: 'toast', id: msg.id, text: 'Unknown error ' + (e as Error).message }));
+    runSearch(msg).catch(e => {
+      post({ type: 'toast', id: msg.id, text: 'Unknown error ' + (e as Error).message });
+      // The page hides the progress bar on the final progress only
+      post({ type: 'progress', id: msg.id, progress: 100, count: 0, time: 0, result: '', done: true });
+    });
   }
 };

@@ -7,7 +7,9 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   const element = document.createElement(tag);
   if (attrs) {
     for (const [name, value] of Object.entries(attrs)) {
-      if (value === null || value === undefined || value === false) continue;
+      if (value === null || value === undefined) continue;
+      // false leaves an attribute out, but is assigned to a property (spellcheck: false)
+      if (value === false && !(name in element)) continue;
       if (name === 'class') element.className = String(value);
       else if (name === 'html') element.innerHTML = String(value);
       else if (name.startsWith('on') && typeof value === 'function') {

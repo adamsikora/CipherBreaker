@@ -118,13 +118,23 @@ export const dictionaryTool: Tool = {
       locationText.textContent = userLocation ? `Location: ${formatLatLng(userLocation.lat, userLocation.lon)}` : 'Location: unknown';
     }
 
-    // The position arrives after the search that its request set off, so the results are
-    // recomputed once it is known
-    async function acquireLocation() {
-      locationText.textContent = 'Location: acquiring…';
-      const location = await locate();
-      setLocation(location);
-      if (location) scheduleSearch();
+    // Set when the tool is left, so that the outcome of a pending request is dropped
+    let disposed = false;
+    // One request at a time: every search while the location is unknown asks for it, and the
+    // searches come with the keystrokes. The location arrives after the search that its request
+    // set off, so the results are recomputed once it is known
+    let locating: Promise<void> | null = null;
+    function acquireLocation(): Promise<void> {
+      if (!locating) {
+        locationText.textContent = 'Location: acquiring…';
+        locating = locate().then(location => {
+          locating = null;
+          if (disposed) return;
+          setLocation(location);
+          if (location) scheduleSearch();
+        });
+      }
+      return locating;
     }
 
     function showResult(count: number, time: number, result: string) {
@@ -197,7 +207,9 @@ export const dictionaryTool: Tool = {
     diacriticsBox.addEventListener('change', scheduleSearch);
     locateButton.addEventListener('click', acquireLocation);
     pickButton.addEventListener('click', async () => {
-      setLocation(await pickFromMap(userLocation));
+      const picked = await pickFromMap(userLocation);
+      if (disposed) return;
+      setLocation(picked);
       scheduleSearch();
     });
     refreshControls();
@@ -208,6 +220,7 @@ export const dictionaryTool: Tool = {
     if (queryBox.value !== '') scheduleSearch();
 
     return () => {
+      disposed = true;
       clearTimeout(searchTimer);
       save();
       worker.terminate();

@@ -255,6 +255,7 @@ input.cell {
 #toast {
   position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
   background: #323232; color: #fff; padding: 10px 18px; border-radius: 4px;
-  opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; z-index: 10;
+  /* Above the panes and controls of a Leaflet map (up to 1000) and the map picker overlay */
+  opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; z-index: 2000;
 }
 #toast.visible { opacity: 1; }

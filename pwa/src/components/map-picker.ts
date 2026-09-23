@@ -17,11 +17,15 @@ export function pickFromMap(initial: LatLon | null): Promise<LatLon | null> {
       view.setPosition(picked, 'pin');
       toast('Set new starting location');
     });
+    // Leaving the tool underneath (browser back) cancels the picking, the overlay would stay otherwise
+    const onHashChange = () => close(null);
     const close = (result: LatLon | null) => {
+      window.removeEventListener('hashchange', onHashChange);
       view.destroy();
       overlay.remove();
       resolve(result);
     };
+    window.addEventListener('hashchange', onHashChange);
     const overlay = h('div', { class: 'overlay' },
       h('div', { class: 'row overlay-bar' },
         h('span', null, 'Location: ', locationText),

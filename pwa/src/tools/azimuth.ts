@@ -18,6 +18,8 @@ export const azimuthTool: Tool = {
   mount(container) {
     let position: LatLon | null = null;
     let target: LatLon | null = null;
+    // Set when the tool is left: a location that arrives afterwards must not touch the removed map
+    let disposed = false;
 
     const distanceBox = h('input', { type: 'search', class: 'short', placeholder: 'm', inputmode: 'decimal' });
     // The dial pad has the minus sign that the decimal keyboard lacks, for angles like -90
@@ -95,7 +97,7 @@ export const azimuthTool: Tool = {
         h('span', { style: 'flex: 1' }),
         h('button', { type: 'button', class: 'icon', 'aria-label': 'Current location', onclick: async () => {
           const location = await acquireLocation();
-          if (location) setLatLon(location, true);
+          if (location && !disposed) setLatLon(location, true);
         } }, svg(icons['my-location']))),
       h('div', { class: 'row compact' },
         h('span', { onclick: copyDestination, style: 'cursor: pointer' }, 'Destination: ', resultText),
@@ -107,6 +109,7 @@ export const azimuthTool: Tool = {
     view.ready();
 
     return () => {
+      disposed = true;
       view.destroy();
       container.classList.remove('fill');
     };
