@@ -8,6 +8,8 @@ const BATCH = 30;
 export interface EndlessRows<R> {
   element: HTMLElement;
   rows: R[];
+  /** Adds batches until there are at least this many rows, for restoring saved ones */
+  ensure(count: number): void;
   /** Stops watching the scrolling, to be called when the tool is left */
   dispose(): void;
 }
@@ -38,5 +40,10 @@ export function endlessRows<R extends { element: HTMLElement }>(makeRow: (index:
   // The element is attached to the page only after this returns, the observer copes with that
   observer.observe(sentinel);
 
-  return { element, rows, dispose: () => observer.disconnect() };
+  return {
+    element,
+    rows,
+    ensure: count => { while (rows.length < count) addBatch(); },
+    dispose: () => observer.disconnect(),
+  };
 }

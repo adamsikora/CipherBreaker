@@ -10,7 +10,19 @@ import { icons } from '../shell/icons';
 import { settingsPanel } from '../shell/layout';
 import { acquireLocation, LatLon } from '../shell/location';
 import { Tool } from '../shell/router';
+import { loadState, saveState } from '../shell/storage';
 import { copyToClipboard, toast } from '../shell/toast';
+
+// Saved start location and inputs; the location is null until one is set
+interface State {
+  lat: number | null;
+  lon: number | null;
+  distance: string;
+  angle: string;
+}
+
+const STATE_KEY = 'azimuth';
+const DEFAULT_STATE: State = { lat: null, lon: null, distance: '', angle: '' };
 
 export const azimuthTool: Tool = {
   path: 'azimuth',
@@ -27,6 +39,12 @@ export const azimuthTool: Tool = {
     const angleBox = h('input', { type: 'search', class: 'short', placeholder: '°', inputmode: 'tel' });
     const locationText = h('span');
     const resultText = h('span');
+    const state = loadState(STATE_KEY, DEFAULT_STATE);
+    distanceBox.value = state.distance;
+    angleBox.value = state.angle;
+    const save = () => saveState(STATE_KEY, {
+      lat: position?.lat ?? null, lon: position?.lon ?? null, distance: distanceBox.value, angle: angleBox.value,
+    } satisfies State);
 
     const view = mapView(picked => {
       setLatLon(picked, false);
@@ -57,6 +75,7 @@ export const azimuthTool: Tool = {
     function setLatLon(latLon: LatLon, move: boolean) {
       position = latLon;
       setLocation(move);
+      save();
     }
 
     const onEdit = () => {
@@ -64,6 +83,7 @@ export const azimuthTool: Tool = {
       else toast('Set starting location either by clicking in map or by getting your current location');
     };
     for (const box of [distanceBox, angleBox]) {
+      box.addEventListener('input', save);
       box.addEventListener('change', onEdit);
       box.addEventListener('keydown', event => {
         if (event.key === 'Enter') {
@@ -106,9 +126,11 @@ export const azimuthTool: Tool = {
           h('img', { src: 'mapy_cz.png', alt: '' }))),
     ), view.element);
     view.ready();
+    if (state.lat !== null && state.lon !== null) setLatLon({ lat: state.lat, lon: state.lon }, true);
 
     return () => {
       disposed = true;
+      save();
       view.destroy();
       container.classList.remove('fill');
     };

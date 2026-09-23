@@ -7,7 +7,25 @@ import { queryBox as makeQueryBox } from '../components/query-box';
 import { h } from '../shell/dom';
 import { fixedTopLayout } from '../shell/layout';
 import { Tool } from '../shell/router';
+import { loadState, saveState } from '../shell/storage';
 import { toast } from '../shell/toast';
+
+// Saved filters; the year is not among them, it starts as the current one every time
+interface State {
+  day: string;
+  month: string;
+  dayOfWeek: string;
+  query: string;
+  sortByName: boolean;
+}
+
+const STATE_KEY = 'calendar';
+const DEFAULT_STATE: State = { day: '-', month: '-', dayOfWeek: '-', query: '', sortByName: false };
+
+/** Selects the option with the value when there is one, an unknown value is left alone */
+function selectValue(select: HTMLSelectElement, value: string): void {
+  if ([...select.options].some(option => option.value === value)) select.value = value;
+}
 
 function numberOptions(count: number): HTMLOptionElement[] {
   return ['-', ...Array.from({ length: count }, (_, i) => String(i + 1))].map(value => h('option', null, value));
@@ -36,9 +54,21 @@ export const calendarTool: Tool = {
     const sortByNameBox = h('input', { type: 'checkbox' });
     const resultView = h('div', { class: 'mono' });
 
+    const state = loadState(STATE_KEY, DEFAULT_STATE);
+    selectValue(daySelect, state.day);
+    selectValue(monthSelect, state.month);
+    selectValue(dayOfWeekSelect, state.dayOfWeek);
+    queryBox.value = state.query;
+    sortByNameBox.checked = state.sortByName;
+    const save = () => saveState(STATE_KEY, {
+      day: daySelect.value, month: monthSelect.value, dayOfWeek: dayOfWeekSelect.value, query: queryBox.value,
+      sortByName: sortByNameBox.checked,
+    } satisfies State);
+
     const holidays = parseHolidays(holidaysText, parseIntWithDefault(yearBox.value));
 
     function updateHolidays() {
+      save();
       const query = queryBox.value;
       if (!isValidRegex(query)) {
         toast('Invalid regex syntax');
@@ -74,6 +104,9 @@ export const calendarTool: Tool = {
     ], [resultView]);
     updateHolidays();
     queryBox.focus();
-    return unmountLayout;
+    return () => {
+      save();
+      unmountLayout();
+    };
   },
 };
