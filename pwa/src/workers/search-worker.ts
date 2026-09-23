@@ -50,7 +50,16 @@ async function load(name: string, url: string): Promise<Dictionary> {
   }
 }
 
-const yieldToMessages = () => new Promise<void>(resolve => setTimeout(resolve, 0));
+// Lets the messages that arrived meanwhile, a newer search or a load, be handled between two
+// chunks of work. Through a message port rather than setTimeout(0): browsers clamp nested
+// timers to 4 ms, which would cost a long search more than the chunks themselves take
+const yieldChannel = new MessageChannel();
+const yieldWaiters: (() => void)[] = [];
+yieldChannel.port1.onmessage = () => yieldWaiters.shift()?.();
+const yieldToMessages = () => new Promise<void>(resolve => {
+  yieldWaiters.push(resolve);
+  yieldChannel.port2.postMessage(null);
+});
 
 async function runSearch(msg: SearchMessage): Promise<void> {
   const { id } = msg;

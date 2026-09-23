@@ -181,6 +181,8 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
   const names = dictionary.names;
   const total = names.length;
   const costs = new Int32Array(input.length + 1);
+  // Letter counts of the entry in the anagram modes, one array reused for all the entries
+  const chars = new Int32Array(26);
 
   // Matches are strings for a word dictionary and places for a map
   let words: string[] = [];
@@ -247,7 +249,7 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
       }
       if (allSatisfy) matched(i, '');
     } else {
-      const chars = new Int32Array(26);
+      chars.fill(0);
       for (let j = 0; j < len; j++) {
         // Digits of a key are not counted
         const position = first.charCodeAt(j) - 97;
