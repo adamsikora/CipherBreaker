@@ -73,7 +73,6 @@ export const dictionaryTool: Tool = {
     const messageView = h('span', { class: 'message' });
     const countsView = h('span', { style: 'display: contents' }, h('span', null, 'Count: ', countView), h('span', null, 'Time: ', timeView, ' s'), messageView);
     const statsRow = h('div', { class: 'stats' }, countsView);
-    const progressBar = h('progress', { max: 100, value: 0 });
     const resultView = h('div', { class: 'mono' });
 
     // The search runs as the query is typed, after a short pause; Enter runs it at once
@@ -91,7 +90,6 @@ export const dictionaryTool: Tool = {
       locationRow,
       form,
       statsRow,
-      progressBar,
     ], [resultView]);
 
 
@@ -152,7 +150,6 @@ export const dictionaryTool: Tool = {
     /** Empties the results and the stats, and drops a search that may be running */
     function clearResults() {
       ++searchId;
-      progressBar.classList.remove('visible');
       messageView.textContent = '';
       showResult(0, 0, '');
     }
@@ -194,8 +191,6 @@ export const dictionaryTool: Tool = {
         return;
       }
       if (isMapChosen() && userLocation === null) acquireLocation();
-      progressBar.value = 0;
-      progressBar.classList.add('visible');
       send({
         type: 'search',
         id: ++searchId,
@@ -223,9 +218,8 @@ export const dictionaryTool: Tool = {
       } else if (msg.type === 'toast') {
         if (msg.id === searchId) messageView.textContent = msg.text;
       } else if (msg.type === 'progress' && msg.id === searchId) {
-        progressBar.value = msg.progress;
+        // The searches are quick, the results coming in are all the progress shown
         showResult(msg.count, msg.time, msg.result);
-        if (msg.done) progressBar.classList.remove('visible');
       }
     };
 
