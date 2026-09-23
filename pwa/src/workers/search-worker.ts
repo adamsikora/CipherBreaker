@@ -1,7 +1,7 @@
 // Loads dictionaries and runs searches off the main thread. Messages in:
 // { type: 'load', name, url } and { type: 'search', id, name, url, input, params, location };
-// messages out: { type: 'loading', text }, { type: 'toast', id, text } and
-// { type: 'progress', id, progress, count, time, result, done }
+// messages out: { type: 'loading', name, state, entries?, seconds? } as a load starts, ends or
+// fails, { type: 'toast', id, text } and { type: 'progress', id, progress, count, time, result, done }
 
 import { Dictionary, Location, loadDictionary, prepareKeys, QueryParams, search } from '../logic/dictionary';
 
@@ -11,7 +11,8 @@ export interface SearchMessage {
 }
 export type WorkerRequest = LoadMessage | SearchMessage;
 export type WorkerResponse =
-  | { type: 'loading'; text: string }
+  | { type: 'loading'; name: string; state: 'started' | 'failed' }
+  | { type: 'loading'; name: string; state: 'done'; entries: number; seconds: number }
   | { type: 'toast'; id: number; text: string }
   | { type: 'progress'; id: number; progress: number; count: number; time: number; result: string; done: boolean };
 
@@ -31,20 +32,20 @@ function load(name: string, url: string): Promise<Dictionary> {
   let promise = loads.get(name);
   if (!promise) {
     promise = (async () => {
-      post({ type: 'loading', text: `Loading ${name}…` });
+      post({ type: 'loading', name, state: 'started' });
       const started = performance.now();
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Cannot load ${name}`);
+      if (!response.ok) throw new Error('Cannot load the dictionary');
       const dictionary = loadDictionary(await response.text(), name.endsWith('.cbfcmap'));
       dictionaries.set(name, dictionary);
       // The keys are made now rather than by the first search, which would be slow otherwise
       await prepareKeys(dictionary, false, yieldToMessages);
-      const seconds = ((performance.now() - started) / 1000).toFixed(2);
-      post({ type: 'loading', text: `${dictionary.names.length} entries loaded in ${seconds} s` });
+      const seconds = (performance.now() - started) / 1000;
+      post({ type: 'loading', name, state: 'done', entries: dictionary.names.length, seconds });
       return dictionary;
     })();
     loads.set(name, promise);
-    promise.finally(() => loads.delete(name)).catch(() => { /* reported by the callers */ });
+    promise.catch(() => post({ type: 'loading', name, state: 'failed' })).finally(() => loads.delete(name));
   }
   return promise;
 }
@@ -81,7 +82,8 @@ async function runSearch(msg: SearchMessage): Promise<void> {
 self.onmessage = (event: MessageEvent<WorkerRequest>) => {
   const msg = event.data;
   if (msg.type === 'load') {
-    load(msg.name, msg.url).catch(e => post({ type: 'loading', text: (e as Error).message }));
+    // A failure is reported by the load itself
+    load(msg.name, msg.url).catch(() => {});
   } else if (msg.type === 'search') {
     currentSearch = msg.id;
     runSearch(msg).catch(e => {

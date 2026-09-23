@@ -191,7 +191,10 @@ export const dictionaryTool: Tool = {
     worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
       const msg = event.data;
       if (msg.type === 'loading') {
-        loadingView.textContent = msg.text;
+        // The dictionary is named as in the list, not by its file
+        const label = DICTIONARIES.find(([file]) => file === msg.name)?.[1] ?? msg.name;
+        loadingView.textContent = msg.state === 'done' ? `${msg.entries} entries loaded in ${msg.seconds.toFixed(2)} s`
+          : msg.state === 'started' ? `Loading ${label}…` : `Cannot load ${label}`;
         statsRow.replaceChildren(loadingView);
       } else if (msg.type === 'toast') {
         if (msg.id === searchId) messageView.textContent = msg.text;
