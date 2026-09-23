@@ -13,7 +13,8 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon-192.png', 'icon-512.png', 'icon-512-maskable.png'],
+      // The icons are precached by the glob below already
+      includeManifestIcons: false,
       manifest: {
         name: 'Cipher Breaker',
         short_name: 'Cipher Breaker',
