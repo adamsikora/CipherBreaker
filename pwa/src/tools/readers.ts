@@ -159,7 +159,7 @@ export const ternaryReaderTool: Tool = {
       legend.replaceChildren(...TERNARY_MAPPING.map((mapping, i) => readOrder ? orderTile(TERNARY_MAPPING[5 - i]) : valuesTile(mapping)));
       rows.updateAll();
     };
-    const mode = radioGroup('ternaryMode', 'Permutate', [['order', 'Order'], ['values', 'Values']], 'order', applyMode);
+    const mode = radioGroup('ternaryMode', 'Permutate', [['values', 'Values'], ['order', 'Order']], 'values', applyMode);
     const legend = h('div', { class: 'legend ternary-legend' });
     const rows = readerRows(3, 3, 6, values => ternaryLetters(
       values, mode.value === 'order', direction.value === 'right', start.value === '0' ? 1 : 0, alphabet.value === '27'));
