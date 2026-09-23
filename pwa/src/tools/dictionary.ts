@@ -97,7 +97,7 @@ export const dictionaryTool: Tool = {
     function refreshControls() {
       const mode = modeSelect.selectedIndex;
       // Only Regex, Hamming and Levenshtein can be sensitive to diacritics
-      diacriticsBox.disabled = !(mode === 0 || mode === 4 || mode === 5);
+      diacriticsBox.disabled = !(mode <= 2);
       queryBox.inputMode = mode >= 6 ? 'numeric' : 'text';
       locationRow.classList.toggle('hidden', !isMapChosen());
     }

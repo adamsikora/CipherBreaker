@@ -10,7 +10,7 @@ export const MAX_RESULTS = 1000;
 const DISTANCE_LIMIT = 6;
 const CHUNK = 20000;
 
-export const MODES = ['Regex', 'Subanagram', 'Anagram', 'Superanagram', 'Hamming', 'Levenshtein',
+export const MODES = ['Regex', 'Hamming', 'Levenshtein', 'Subanagram', 'Anagram', 'Superanagram',
   '# Morse', '# Braille', '# Segments', '# Moves', '# Holes', '# Ends'];
 
 const COUNTS_LISTS = [
@@ -128,11 +128,11 @@ export async function search(dictionary: Dictionary, input: string, params: Quer
   const time = () => (performance.now() - started) / 1000;
 
   const regex = modeId === 0;
-  const subset = modeId === 1;
-  const exact = modeId === 2;
-  const superset = modeId === 3;
-  const hamming = modeId === 4;
-  const levenshtein = modeId === 5;
+  const hamming = modeId === 1;
+  const levenshtein = modeId === 2;
+  const subset = modeId === 3;
+  const exact = modeId === 4;
+  const superset = modeId === 5;
   const countMode = modeId >= 6;
   const counts = countMode ? COUNTS_LISTS[modeId - 6] : null;
   const countValues: number[] = [];

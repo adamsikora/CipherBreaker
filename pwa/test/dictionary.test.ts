@@ -4,11 +4,11 @@ import { Dictionary, loadDictionary, search } from '../src/logic/dictionary';
 const words = ['en', 'kos', 'osa', 'pes', 'šep', 'ta', 'at', 'kosa', 'sako', 'pešek', 'kost', 'kosti'];
 
 const regex = 0;
-const subset = 1;
-const exact = 2;
-const superset = 3;
-const hamming = 4;
-const levenshtein = 5;
+const hamming = 1;
+const levenshtein = 2;
+const subset = 3;
+const exact = 4;
+const superset = 5;
 const morse = 6;
 const holes = 10;
 
