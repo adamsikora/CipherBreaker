@@ -73,6 +73,8 @@ body {
 #logo { width: 44px; height: 44px; border-radius: 10px; flex: none; }
 #logo[hidden] { display: none; }
 .header-button svg { width: 24px; height: 24px; display: block; }
+/* The bulb sits close to the bin, not a full gap away */
+#example { margin-right: -10px; }
 .header-button:hover { background: rgba(255,255,255,.15); }
 #main { flex: 1; padding: 10px 16px; max-width: 720px; width: 100%; margin: 0 auto; }
 
