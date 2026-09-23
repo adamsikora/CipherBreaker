@@ -6,15 +6,15 @@ The app uses no sensors and locks no orientation, so nothing platform-specific i
 
 ## 1. Decisions
 
-| Decision | Choice | Why |
-|---|---|---|
-| Stack | TypeScript, no UI framework, built with Vite | Matches the app's plain-views style; TS types replace Kotlin's; Vite gives bundling, hashing and the service worker precache list (`vite-plugin-pwa`). Needs Node 18+. |
-| Structure | One single-page app, `#/tool` routes, one module per tool | Shared shell, toast and header; each tool module exposes `mount(container)` / `unmount()`, like an Activity. |
-| Maps | Leaflet with OpenStreetMap tiles | Free, no API key; markers, polylines, fitBounds, long press and pixel↔latlng projection. Tiles need network, as Google Maps does now. |
-| Dictionaries | Only the four front-coded files, 25 MB (9 MB gzipped), precached on first load | Done in the prototype. The three `_old` lists (60 MB) are dropped. |
-| Tests | Vitest, porting the 11 JUnit files one-to-one | The logic classes are pure; the tests are the spec of the port. |
-| Hosting | GitHub Pages, deployed by a GitHub Action | Static files only. Pages does not serve Git LFS content, so the Action checks out with `lfs: true` and copies the assets into the build. |
-| Android | Keep the native app; wrap the PWA as a Trusted Web Activity later if the port replaces it | No decision needed until the port is complete. |
+| Decision     | Choice                                                                                    | Why                                                                                                                                                                    |
+| ------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack        | TypeScript, no UI framework, built with Vite                                              | Matches the app's plain-views style; TS types replace Kotlin's; Vite gives bundling, hashing and the service worker precache list (`vite-plugin-pwa`). Needs Node 18+. |
+| Structure    | One single-page app, `#/tool` routes, one module per tool                                 | Shared shell, toast and header; each tool module exposes `mount(container)` / `unmount()`, like an Activity.                                                           |
+| Maps         | Leaflet with OpenStreetMap tiles                                                          | Free, no API key; markers, polylines, fitBounds, long press and pixel↔latlng projection. Tiles need network, as Google Maps does now.                                  |
+| Dictionaries | Only the four front-coded files, 25 MB (9 MB gzipped), precached on first load            | Done in the prototype. The three `_old` lists (60 MB) are dropped.                                                                                                     |
+| Tests        | Vitest, porting the 11 JUnit files one-to-one                                             | The logic classes are pure; the tests are the spec of the port.                                                                                                        |
+| Hosting      | GitHub Pages, deployed by a GitHub Action                                                 | Static files only. Pages does not serve Git LFS content, so the Action checks out with `lfs: true` and copies the assets into the build.                               |
+| Android      | Keep the native app; wrap the PWA as a Trusted Web Activity later if the port replaces it | No decision needed until the port is complete.                                                                                                                         |
 
 ## 2. Layout of the result
 
@@ -39,9 +39,10 @@ pwa/
 ### Phase 0 — Foundation and logic (largest step, no visible screen yet)
 
 - Vite + TypeScript + Vitest in `pwa/`, the prototype keeps working meanwhile.
-- Port the logic modules (~1,000 lines): `DictionaryKey`, `StringUtils`, `Dictionary`/`MapDictionary`
-  (from the prototype worker), `BaseReader`, `Grille`, `Playfair`, `NumberAnalysis`, `Azimuth`,
-  `Holiday`, `Utils` formatting. Port each JUnit file before its module and make it pass.
+- Port the logic modules (~1,000 lines): `DictionaryKey`, `StringUtils`,
+  `Dictionary`/`MapDictionary` (from the prototype worker), `BaseReader`, `Grille`, `Playfair`,
+  `NumberAnalysis`, `Azimuth`, `Holiday`, `Utils` formatting. Port each JUnit file before its module
+  and make it pass.
 - Watch for: `NumberAnalysis` uses `ULong` up to 2^64 → `BigInt`; Java vs JS regex differ only in
   exotic syntax; `Collator("cs")` → `Intl.Collator("cs")`; weekday maths → `Date`.
 - App shell: menu with the 10 entries in the app's order (Princip Trainer stays an external link),
@@ -58,13 +59,15 @@ pwa/
 ### Phase 2 — Simple tools
 
 - About: static page, version from `package.json`.
-- Number Analyzer: two selects, endless list of input rows, `<sup>` exponents, `inputmode` switching.
+- Number Analyzer: two selects, endless list of input rows, `<sup>` exponents, `inputmode`
+  switching.
 - Name Day Searcher: `holidays.txt` (7 KB) inlined as JSON; four pickers, live regex validation,
   sort switch.
 
 ### Phase 3 — Binary and Ternary readers
 
-- One `endless-rows` component (30 rows added when scrolled to the bottom), shared with Number Analyzer.
+- One `endless-rows` component (30 rows added when scrolled to the bottom), shared with Number
+  Analyzer.
 - Clickable digit cells cycling through values; the platform drawables become small images or CSS
   shapes; copy the `ternary*.png` and `black/white_horizontal.png` legends.
 - Ternary: collapsible settings panel with three radio groups and the CH switch.
@@ -74,8 +77,8 @@ pwa/
 - One `cell-grid` component replacing ~560 lines of duplicated Kotlin: N×M single-letter inputs,
   auto-advance, Enter/Backspace navigation, long press to mark holes (Grille only), colour states,
   cell size from viewport width.
-- Grille: size select 4–10, warning line, four rotation readouts. Playfair: width and height selects,
-  ciphertext input, live encrypt/decrypt.
+- Grille: size select 4–10, warning line, four rotation readouts. Playfair: width and height
+  selects, ciphertext input, live encrypt/decrypt.
 - Watch for: virtual keyboards on iOS and Android differ in auto-advance and long press; test early.
 
 ### Phase 5 — Azimuth Finder and map picker
@@ -96,15 +99,15 @@ pwa/
 
 ## 4. Order and size
 
-| Phase | Kotlin it replaces | Effort |
-|---|---|---|
-| 0 Foundation + logic + tests | ~1,000 lines logic, 948 tests | large |
-| 1 Dictionary Searcher | 255 + prototype | medium |
-| 2 About, Number Analyzer, Name Days | 340 | small |
-| 3 Readers | 236 + base | medium |
-| 4 Grid editors | 566 | medium–large |
-| 5 Maps | 300 | medium |
-| 6 Polish, hosting | — | medium |
+| Phase                               | Kotlin it replaces            | Effort       |
+| ----------------------------------- | ----------------------------- | ------------ |
+| 0 Foundation + logic + tests        | ~1,000 lines logic, 948 tests | large        |
+| 1 Dictionary Searcher               | 255 + prototype               | medium       |
+| 2 About, Number Analyzer, Name Days | 340                           | small        |
+| 3 Readers                           | 236 + base                    | medium       |
+| 4 Grid editors                      | 566                           | medium–large |
+| 5 Maps                              | 300                           | medium       |
+| 6 Polish, hosting                   | —                             | medium       |
 
 Phases 2–5 are independent once phase 0 is done: cheapest first, maps last because Leaflet is the
 one dependency that may need tuning.
@@ -124,22 +127,22 @@ one dependency that may need tuning.
 - 2026-09-22: plan written. Prototype of the Dictionary Searcher (plain JS, no build) committed.
 - 2026-09-22: Phase 0 done — Vite + TypeScript + Vitest set up (Node 24), all logic modules ported
   with 110 tests, app shell (menu with the app's icons, router, toast, storage, service worker
-  precaching the dictionaries). Phase 1 mostly done: the Dictionary Searcher tool is ported;
-  picking the position from a map is still missing (needs the Leaflet map of phase 5).
-- 2026-09-22: Phase 2 done — About, Number Analyzer (with the `endless-rows` component) and
-  Name Day Searcher ported and checked in Chrome.
-- 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`). The legends
-  are drawn as SVG from the digit assignments, in the colours of the digit cells, instead of the
-  app's PNGs (which the app's mode listener shows in the wrong order after toggling Values).
-- 2026-09-22: Phase 4 done — `cell-grid` component (typing advances, Enter/Backspace navigate,
-  long press or right click marks holes), Grille Helper and Playfair Helper ported with the app's
-  default states and saved-state keys. Keyboard behaviour on phones is untested.
+  precaching the dictionaries). Phase 1 mostly done: the Dictionary Searcher tool is ported; picking
+  the position from a map is still missing (needs the Leaflet map of phase 5).
+- 2026-09-22: Phase 2 done — About, Number Analyzer (with the `endless-rows` component) and Name Day
+  Searcher ported and checked in Chrome.
+- 2026-09-22: Phase 3 done — Binary and Ternary readers ported (`tools/readers.ts`). The legends are
+  drawn as SVG from the digit assignments, in the colours of the digit cells, instead of the app's
+  PNGs (which the app's mode listener shows in the wrong order after toggling Values).
+- 2026-09-22: Phase 4 done — `cell-grid` component (typing advances, Enter/Backspace navigate, long
+  press or right click marks holes), Grille Helper and Playfair Helper ported with the app's default
+  states and saved-state keys. Keyboard behaviour on phones is untested.
 - 2026-09-22: Phase 5 done — `map-view` (Leaflet + OpenStreetMap tiles, long press / right click,
-  the app's start marker, the arrow with its head kept over the destination), `map-picker`
-  overlay used by the Dictionary Searcher, Azimuth Finder with clipboard and mapy.cz link,
-  shared `shell/location`. Long press on touch screens and geolocation are untested here.
+  the app's start marker, the arrow with its head kept over the destination), `map-picker` overlay
+  used by the Dictionary Searcher, Azimuth Finder with clipboard and mapy.cz link, shared
+  `shell/location`. Long press on touch screens and geolocation are untested here.
 - 2026-09-22: Phase 6 — icons made from the app's `icon.png` (plus a maskable one), persistent
-  storage requested, GitHub Pages workflow added (`.github/workflows/pages.yml`, Pages source has
-  to be set to GitHub Actions once), README and CLAUDE.md updated. Still open: testing on
-  phones (offline, installed to the home screen, keyboards in the grids, long press on maps),
-  a Lighthouse audit, and the optional TWA wrapper for Play.
+  storage requested, GitHub Pages workflow added (`.github/workflows/pages.yml`, Pages source has to
+  be set to GitHub Actions once), README and CLAUDE.md updated. Still open: testing on phones
+  (offline, installed to the home screen, keyboards in the grids, long press on maps), a Lighthouse
+  audit, and the optional TWA wrapper for Play.
