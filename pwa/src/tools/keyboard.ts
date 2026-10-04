@@ -44,7 +44,11 @@ export const keyboardTool: Tool = {
   mount(container) {
     const layoutSelect = h('select', null, ...KEYBOARD_LAYOUTS.map(layout => h('option', { value: layout.id }, layout.name)));
     const colorButtons = COLORS.map(color => h('button', { class: 'swatch', style: `background: ${color}`, title: color, 'aria-label': `Colour ${color}` }));
-    const customInput = h('input', { type: 'color', class: 'swatch', title: 'Any colour', 'aria-label': 'Any colour' });
+    // The colour input of the browser would look like one more swatch, so it lies unseen over a
+    // rainbow one, with the colour picked in it shown in the middle
+    const customInput = h('input', { type: 'color', 'aria-label': 'Any colour' });
+    const customDot = h('span');
+    const customButton = h('label', { class: 'swatch custom', title: 'Any colour' }, customInput, customDot);
     const eraseButton = h('button', { class: 'swatch erase', title: 'Eraser', 'aria-label': 'Eraser' }, svg(icons.close));
     const canvas = h('canvas', { class: 'keyboard', role: 'img', 'aria-label': 'Keyboard' });
 
@@ -109,7 +113,8 @@ export const keyboardTool: Tool = {
     function showColor() {
       colorButtons.forEach((button, i) => button.classList.toggle('selected', COLORS[i] === color));
       eraseButton.classList.toggle('selected', color === '');
-      customInput.classList.toggle('selected', color !== '' && !COLORS.includes(color));
+      customButton.classList.toggle('selected', color !== '' && !COLORS.includes(color));
+      customDot.style.background = customInput.value;
     }
 
     function save() {
@@ -163,7 +168,7 @@ export const keyboardTool: Tool = {
     container.append(
       ...settingsPanel(h('div', { class: 'keyboard-settings' },
         h('div', { class: 'row' }, h('label', null, 'Layout:', layoutSelect)),
-        h('div', { class: 'swatches' }, ...colorButtons, customInput, eraseButton),
+        h('div', { class: 'swatches' }, ...colorButtons, customButton, eraseButton),
       )),
       h('div', { class: 'keyboard-holder' }, canvas),
     );
