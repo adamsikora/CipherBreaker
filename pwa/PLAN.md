@@ -58,7 +58,7 @@ pwa/
 
 ### Phase 2 — Simple tools
 
-- About: static page, version from `package.json`.
+- About: static page, version is the time of the build.
 - Number Analyzer: two selects, endless list of input rows, `<sup>` exponents, `inputmode`
   switching.
 - Name Day Searcher: `holidays.txt` (7 KB) inlined as JSON; four pickers, live regex validation,

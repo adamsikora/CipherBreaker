@@ -1,8 +1,9 @@
-import { readFileSync } from 'node:fs';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 
-const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8'));
+// The version is the time of the build as "2026-10-04 14:32"; the Swedish locale formats dates the
+// ISO way. In Czech time, as the deployment builds in UTC
+const version = new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Prague', dateStyle: 'short', timeStyle: 'short' });
 
 export default defineConfig({
   // Served from a subdirectory on GitHub Pages, so links are relative

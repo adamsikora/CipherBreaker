@@ -35,9 +35,9 @@ say what was and was not verified.
 - Saved state uses the keys of the Android app's SharedPreferences, in `localStorage` per tool.
 - Icons and legends are inline SVG generated from the app's vector drawables; no raster images apart
   from the app icons.
-- Installed apps update through the service worker after every deployment, a version bump is not
-  needed for that. The About version comes from `package.json`; bump it with the lock file in a
-  commit of its own.
+- Installed apps update through the service worker after every deployment. The About version is the
+  time of the build (`vite.config.ts`), there is nothing to bump; the version in `package.json` is
+  not shown anywhere.
 
 ## Android app (`app/`)
 
@@ -55,8 +55,8 @@ and was not verified.
   map); only `androidx.core` and `androidx.fragment`, no appcompat. Flat package, no subpackages.
   Named styles in `res/values/styles.xml`.
 - The version is in three places that must stay in sync: `about_version` in `strings.xml`,
-  `versionCode` and `versionName` in `app/build.gradle`; the PWA has its own in `pwa/package.json`,
-  see above. Version bumps get their own commit.
+  `versionCode` and `versionName` in `app/build.gradle`; the PWA is versioned by its build time, see
+  above. Version bumps get their own commit.
 
 ## Assets
 

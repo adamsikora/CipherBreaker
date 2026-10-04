@@ -24,7 +24,7 @@ Development needs Node 18+:
     npm run preview     # serves the build
     npm run dev         # dev server without the service worker
 
-The version on the About screen is the one in `pwa/package.json`.
+The version on the About screen is the time of the build, in Czech time.
 
 ## Android app
 
