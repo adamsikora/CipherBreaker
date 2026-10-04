@@ -88,7 +88,9 @@ export function mapView(onLongPress: (position: LatLon) => void): MapView {
       iconAnchor: [ARROW_SIZE / 2, ARROW_SIZE / 2],
     }));
   }
-  map.on('move zoom moveend zoomend', updateArrow);
+  // Only once the zoom has ended: during a pinch Leaflet just scales the drawn line with the map,
+  // and a line set to the zoom of the moment would get scaled on top of that
+  map.on('zoomend', updateArrow);
 
   const setArrow = (from: LatLon, to: LatLon | null) => {
     line?.remove();
