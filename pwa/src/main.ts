@@ -10,6 +10,7 @@ import { grilleTool } from './tools/grille';
 import { keyboardTool } from './tools/keyboard';
 import { linksTool } from './tools/links';
 import { menuTool } from './tools/menu';
+import { morseTool } from './tools/morse';
 import { numberAnalyzerTool } from './tools/number-analyzer';
 import { playfairTool } from './tools/playfair';
 import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
@@ -17,6 +18,7 @@ import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
 // Tools in the order of the app's menu; the ones not ported yet are listed without mount
 const tools: Tool[] = [
   dictionaryTool,
+  morseTool,
   binaryReaderTool,
   ternaryReaderTool,
   grilleTool,

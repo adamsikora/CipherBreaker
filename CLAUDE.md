@@ -27,11 +27,11 @@ the previous build first, or the page keeps coming from its cache. Phones are te
 say what was and was not verified.
 
 - `src/logic/` is the logic ported from the Android app, one module per Kotlin file, tested in
-  `test/` by ports of the JUnit tests; the Keyboard Helper exists in the PWA only. Keep logic out of
-  `src/tools/` (one module per screen), it is what gets tested. `src/shell/` is the app shell: hash
-  router with the `Tool` interface, the `h()` element builder, toast, `storage` over localStorage,
-  `layout` with fixed settings above scrolling results, geolocation, icons. `src/components/` are
-  reusable pieces, `src/workers/` the search off the main thread.
+  `test/` by ports of the JUnit tests; the Keyboard Helper and the Morse Reader exist in the PWA
+  only. Keep logic out of `src/tools/` (one module per screen), it is what gets tested. `src/shell/`
+  is the app shell: hash router with the `Tool` interface, the `h()` element builder, toast,
+  `storage` over localStorage, `layout` with fixed settings above scrolling results, geolocation,
+  icons. `src/components/` are reusable pieces, `src/workers/` the search off the main thread.
 - Saved state uses the keys of the Android app's SharedPreferences, in `localStorage` per tool.
 - Icons and legends are inline SVG generated from the app's vector drawables; no raster images apart
   from the app icons.

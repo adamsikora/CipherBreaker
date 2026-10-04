@@ -227,6 +227,29 @@ input.cell {
   .keyboard { max-width: max(360px, calc((100dvh - 110px - env(safe-area-inset-top)) * 3)); }
 }
 
+/* Morse Reader */
+/* The box grows with its message, up to a third of the screen, and scrolls from there on */
+.morse-divider { margin: 10px -16px 0; flex: none; }
+.morse-input { width: 100%; display: block; flex: none; max-height: 33dvh; resize: none; font-family: ui-monospace, Consolas, monospace; font-size: 20px; letter-spacing: 2px; word-break: break-all; }
+.morse-result { font-size: 26px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
+/* The three symbols with what they are read as, an arrow each */
+.morse-label { display: flex; gap: 20px; white-space: pre; font-family: ui-monospace, Consolas, monospace; font-size: 15px; }
+/* The arrow is dimmer than the symbols around it, and a hair off them: a dash fills its whole cell */
+.morse-arrow { opacity: .6; margin: 0 4px; }
+.scroll > hr { margin: 6px 0; }
+.morse-other { font-size: 18px; min-height: 1.4em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
+/* The four buttons the message is typed with, across the bottom of the screen */
+.morse-keys {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: none; margin: 0 -16px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--panel);
+}
+.morse-key {
+  height: 60px; padding: 0; cursor: pointer; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+}
+.morse-key:active { background: var(--row-hover); }
+.morse-key svg { width: 30px; height: 30px; display: block; }
+
 /* Settings of the tools sit on a tinted panel running edge to edge under the header, the results
    on the plain page below the divider */
 .panel { background: var(--panel); margin: -10px -16px 0; padding: 10px 16px 2px; flex: none; }
