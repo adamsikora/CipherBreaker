@@ -202,6 +202,14 @@ input.cell {
 .grille-result { font-size: 32px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
 .playfair-result { font-size: 20px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; min-height: 1.4em; }
 
+/* Keyboard Helper */
+.swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.swatch { width: 30px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: none; }
+.swatch.erase { padding: 3px; color: var(--fg); }
+.swatch.erase svg { width: 100%; height: 100%; display: block; }
+.swatch.selected { outline: 2px solid var(--fg); outline-offset: 1px; }
+.keyboard { display: block; width: 100%; margin: 12px 0 8px; cursor: pointer; touch-action: manipulation; }
+
 /* Settings of the tools sit on a tinted panel running edge to edge under the header, the results
    on the plain page below the divider */
 .panel { background: var(--panel); margin: -10px -16px 0; padding: 10px 16px 2px; flex: none; }
