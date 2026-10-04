@@ -57,11 +57,22 @@ export const keyboardTool: Tool = {
       if (width === 0) return;
       const unit = width / KEYBOARD_WIDTH;
       const ratio = window.devicePixelRatio || 1;
-      canvas.style.height = `${unit * KEYBOARD_HEIGHT}px`;
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(unit * KEYBOARD_HEIGHT * ratio);
+      // Sized only when the size changes: setting the size of a canvas empties it and lays the
+      // page out again, which shows as a blink when just a key is painted
+      const pixelWidth = Math.round(width * ratio);
+      const pixelHeight = Math.round(unit * KEYBOARD_HEIGHT * ratio);
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.style.height = `${unit * KEYBOARD_HEIGHT}px`;
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+      }
       const context = canvas.getContext('2d')!;
-      context.scale(ratio * unit, ratio * unit);
+      context.clearRect(0, 0, pixelWidth, pixelHeight);
+      // Drawn in the pixels of the canvas, a key being `scale` of them: with the context scaled to
+      // a key instead the fonts would be under a pixel in size, and phones leave letters out then
+      const scale = canvas.width / KEYBOARD_WIDTH;
+      const font = (size: number) => `${size * scale}px system-ui, sans-serif`;
+      const text = (legend: string, x: number, y: number) => context.fillText(legend, x * scale, y * scale);
       const style = getComputedStyle(canvas);
       const keyColor = style.getPropertyValue('--cell-free');
       const textColor = style.getPropertyValue('--cell-fg');
@@ -72,22 +83,25 @@ export const keyboardTool: Tool = {
         const painted = colors[key.id];
         context.fillStyle = painted ?? keyColor;
         // The lower part of a tall Enter reaches up to the upper one, over the gap between the rows
-        key.rects.forEach((r, i) => context.fillRect(r.x + GAP, i === 0 ? r.y + GAP : r.y - GAP, r.w - 2 * GAP, i === 0 ? r.h - 2 * GAP : r.h));
+        key.rects.forEach((r, i) => {
+          const top = i === 0 ? r.y + GAP : r.y - GAP;
+          context.fillRect((r.x + GAP) * scale, top * scale, (r.w - 2 * GAP) * scale, (r.y + r.h - GAP - top) * scale);
+        });
         const { x, y, w } = key.rects[0];
         if (key.control) {
           context.fillStyle = painted ? textColorOn(painted) : mutedColor;
-          context.font = '0.3px system-ui, sans-serif';
-          context.fillText(key.legends[0], x + w / 2, y + 0.5);
+          context.font = font(0.3);
+          text(key.legends[0], x + w / 2, y + 0.5);
           continue;
         }
         context.fillStyle = painted ? textColorOn(painted) : textColor;
         if (key.legends.length === 1) {
-          context.font = '0.5px system-ui, sans-serif';
-          context.fillText(key.legends[0], x + w / 2, y + 0.52);
+          context.font = font(0.5);
+          text(key.legends[0], x + w / 2, y + 0.52);
         } else {
-          context.font = '0.4px system-ui, sans-serif';
-          context.fillText(key.legends[0], x + w / 2, y + 0.29);
-          context.fillText(key.legends[1], x + w / 2, y + 0.73);
+          context.font = font(0.4);
+          text(key.legends[0], x + w / 2, y + 0.29);
+          text(key.legends[1], x + w / 2, y + 0.73);
         }
       }
     }
@@ -147,12 +161,11 @@ export const keyboardTool: Tool = {
     });
 
     container.append(
-      ...settingsPanel(
+      ...settingsPanel(h('div', { class: 'keyboard-settings' },
         h('div', { class: 'row' }, h('label', null, 'Layout:', layoutSelect)),
         h('div', { class: 'swatches' }, ...colorButtons, customInput, eraseButton),
-      ),
-      canvas,
-      h('div', { class: 'muted' }, 'Pick a colour and tap the keys to paint them. Tapping a key of that colour again clears it.'),
+      )),
+      h('div', { class: 'keyboard-holder' }, canvas),
     );
     applyState(loadState(STATE_KEY, DEFAULT_STATE));
 

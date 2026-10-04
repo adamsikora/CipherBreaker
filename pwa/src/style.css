@@ -208,7 +208,20 @@ input.cell {
 .swatch.erase { padding: 3px; color: var(--fg); }
 .swatch.erase svg { width: 100%; height: 100%; display: block; }
 .swatch.selected { outline: 2px solid var(--fg); outline-offset: 1px; }
-.keyboard { display: block; width: 100%; margin: 12px 0 8px; cursor: pointer; touch-action: manipulation; }
+/* The keyboard reaches into the padding of the page, 4px from the edges of the screen, to have its
+   keys as large as they can be */
+.keyboard-holder { display: flex; justify-content: center; margin: 12px -12px 8px; }
+/* Without the highlight that phones flash over a tapped element, here the whole keyboard */
+.keyboard { display: block; width: 100%; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+/* A phone held in landscape: the layout and the colours share a row, and the keyboard, three times
+   as wide as high, is as wide as lets it fit under them (160px are the header, the settings and the
+   margins) without scrolling */
+@media (orientation: landscape) and (max-height: 500px) {
+  .keyboard-settings { display: flex; align-items: end; gap: 12px; }
+  .keyboard-settings .row { flex: 1; min-width: 0; }
+  .keyboard-settings .swatches { flex: none; margin-bottom: 11px; }
+  .keyboard { max-width: max(360px, calc((100dvh - 160px - env(safe-area-inset-top)) * 3)); }
+}
 
 /* Settings of the tools sit on a tinted panel running edge to edge under the header, the results
    on the plain page below the divider */
