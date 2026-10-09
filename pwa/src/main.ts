@@ -14,8 +14,9 @@ import { morseTool } from './tools/morse';
 import { numberAnalyzerTool } from './tools/number-analyzer';
 import { playfairTool } from './tools/playfair';
 import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
+import { trainerTool } from './tools/trainer';
 
-// Tools in the order of the app's menu; the ones not ported yet are listed without mount
+// Tools in the order of the menu
 const tools: Tool[] = [
   dictionaryTool,
   morseTool,
@@ -28,7 +29,7 @@ const tools: Tool[] = [
   playfairTool,
   keyboardTool,
   linksTool,
-  { path: 'princip', title: 'Princip Trainer', icon: 'school', external: 'https://app.civilizacehra.cz' },
+  trainerTool,
   aboutTool,
 ];
 

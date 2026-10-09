@@ -250,6 +250,28 @@ input.cell {
 .morse-key:active { background: var(--row-hover); }
 .morse-key svg { width: 30px; height: 30px; display: block; }
 
+/* Trainer */
+/* The codes to pick from, each shown by a letter in it; the picked one has the border in colour */
+.trainer-codes { display: flex; gap: 6px; margin-bottom: 8px; }
+.trainer-code { flex: 1 1 0; max-width: 56px; aspect-ratio: 1; padding: 2px; border-width: 2px; cursor: pointer; background: var(--bg); }
+.trainer-code[aria-pressed=true] { border-color: var(--read-0); }
+.trainer svg, .trainer-code svg { display: block; width: 100%; height: 100%; }
+.trainer { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 14px; }
+.trainer-prompt { width: min(180px, 50vw); aspect-ratio: 1; border: 2px solid var(--border); border-radius: 4px; }
+.trainer-options { display: flex; gap: 8px; justify-content: center; width: 100%; }
+.trainer-option { flex: 1 1 0; max-width: 68px; aspect-ratio: 1; padding: 2px; border-width: 3px; cursor: pointer; touch-action: manipulation; }
+.trainer-option.right { border-color: var(--read-1); }
+.trainer-option.wrong { border-color: var(--read-3); }
+/* Five letters of a word in a row on a phone, the longer words go on in the next one */
+.trainer-word { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.trainer-tile { width: min(64px, calc((100vw - 56px) / 5)); aspect-ratio: 1; border: 1px solid var(--border); border-radius: 4px; }
+/* The letter of a tile is under it and has its room there from the start, so that nothing moves
+   when the solution is shown */
+.trainer-solution { font-size: 26px; line-height: 1.3; text-align: center; visibility: hidden; font-family: ui-monospace, Consolas, monospace; }
+.trainer-word.solved .trainer-solution { visibility: visible; }
+.trainer-message:empty { display: none; }
+.trainer-buttons { display: flex; gap: 10px; }
+
 /* Settings of the tools sit on a tinted panel running edge to edge under the header, the results
    on the plain page below the divider */
 .panel { background: var(--panel); margin: -10px -16px 0; padding: 10px 16px 2px; flex: none; }
