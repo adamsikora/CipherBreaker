@@ -251,13 +251,25 @@ input.cell {
 .morse-key svg { width: 30px; height: 30px; display: block; }
 
 /* Search */
-.search-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-.search-bar button { flex: none; min-width: 34px; }
-.search-position { flex: none; min-width: 4.5em; text-align: center; white-space: nowrap; }
-/* The terms of the query in their colours with the number of their matches; many of them scroll */
-.search-terms { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; max-height: 64px; overflow-y: auto; }
+/* The query takes the row; the number of the matches and the arrows that step through them follow */
+.search-bar { display: flex; align-items: center; gap: 2px; margin-bottom: 8px; }
+.search-bar button { flex: none; }
+.search-bar button:disabled { opacity: .35; cursor: default; }
+.search-bar button:disabled:hover { background: none; }
+.search-position { flex: none; padding: 0 6px 0 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.search-position:empty { display: none; }
+/* The terms of the query in their colours with the number of their matches, in one row that runs
+   to the edges of the screen and scrolls sideways when the terms do not fit */
+.search-terms {
+  display: flex; gap: 6px; margin: 0 -16px 8px; padding: 0 16px; overflow-x: auto; scrollbar-width: none;
+}
+.search-terms::-webkit-scrollbar { display: none; }
 .search-terms:empty { display: none; }
-.search-term { display: flex; gap: 6px; padding: 2px 10px; border-radius: 12px; font-size: 13px; cursor: pointer; }
+.search-term {
+  display: flex; flex: none; gap: 6px; padding: 3px 12px; border: none; border-radius: 14px; font-size: 13px;
+  white-space: nowrap; cursor: pointer; touch-action: manipulation;
+}
+.search-term:disabled { opacity: .5; cursor: default; }
 /* Highlights are half transparent, so that the text shows on them in both themes */
 .hl-0 { background: rgb(255 214 0 / .5); }
 .hl-1 { background: rgb(0 200 83 / .45); }

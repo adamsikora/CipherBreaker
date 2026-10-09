@@ -4,7 +4,8 @@
 
 import { queryBox as makeQueryBox } from '../components/query-box';
 import { countMatches, findMatches, highlightRuns, parseTerms, searchText, TextMatch } from '../logic/text-search';
-import { h } from '../shell/dom';
+import { h, svg } from '../shell/dom';
+import { icons } from '../shell/icons';
 import { settingsPanel } from '../shell/layout';
 import { Tool } from '../shell/router';
 import { loadState, saveState } from '../shell/storage';
@@ -45,7 +46,9 @@ export const searchTool: Tool = {
     const field = h('div', { class: 'search-field' }, backdrop, textBox);
     const positionView = h('span', { class: 'muted search-position' });
     const termsView = h('div', { class: 'search-terms' });
-    const button = (text: string, label: string, onclick: () => void) => h('button', { type: 'button', class: 'small', 'aria-label': label, title: label, onclick }, text);
+    const button = (icon: string, label: string, onclick: () => void) => h('button', { type: 'button', class: 'icon', 'aria-label': label, title: label, onclick }, svg(icons[icon]));
+    const previousButton = button('up', 'Previous match', () => step(-1));
+    const nextButton = button('down', 'Next match', () => step(1));
 
     let zoom = DEFAULT_STATE.searchZoom;
     let matches: TextMatch[] = [];
@@ -67,9 +70,11 @@ export const searchTool: Tool = {
       saveTimer = window.setTimeout(save, SAVE_DELAY_MS);
     }
 
+    /** How many matches there are, with the place of the one the navigation is at once it is at one */
     function showPosition() {
       const total = matches.length >= MAX_MATCHES ? `${MAX_MATCHES}+` : String(matches.length);
-      positionView.textContent = `${current + 1} / ${total}`;
+      positionView.textContent = termsView.childElementCount === 0 ? '' : current === -1 ? total : `${current + 1} / ${total}`;
+      previousButton.disabled = nextButton.disabled = matches.length === 0;
     }
 
     function syncScroll() {
@@ -100,7 +105,7 @@ export const searchTool: Tool = {
 
       const counts = countMatches(matches, terms.length);
       termsView.replaceChildren(...terms.map((term, i) => h('button', {
-        type: 'button', class: `search-term hl-${i % COLOR_COUNT}`, title: `Next ${term}`, onclick: () => stepTerm(i),
+        type: 'button', class: `search-term hl-${i % COLOR_COUNT}`, title: `Next ${term}`, disabled: counts[i] === 0, onclick: () => stepTerm(i),
       }, term, h('b', null, String(counts[i])))));
       showPosition();
     }
@@ -145,8 +150,8 @@ export const searchTool: Tool = {
       scheduleSave();
     }
 
-    // The text is zoomed by the buttons, by two fingers on it and by the wheel with Ctrl, which is
-    // also what a pinch on a touchpad comes as
+    // The text is zoomed by two fingers on it and by the wheel with Ctrl, which is also what a
+    // pinch on a touchpad comes as
     let pinch: { distance: number; zoom: number } | null = null;
     const touchDistance = (event: TouchEvent) => Math.hypot(
       event.touches[0].clientX - event.touches[1].clientX, event.touches[0].clientY - event.touches[1].clientY);
@@ -184,11 +189,9 @@ export const searchTool: Tool = {
       ...settingsPanel(
         h('div', { class: 'search-bar' },
           queryBox,
-          button('↑', 'Previous match', () => step(-1)),
           positionView,
-          button('↓', 'Next match', () => step(1)),
-          button('A−', 'Smaller text', () => setZoom(zoom / ZOOM_STEP)),
-          button('A+', 'Larger text', () => setZoom(zoom * ZOOM_STEP))),
+          previousButton,
+          nextButton),
         termsView,
       ),
       field,
