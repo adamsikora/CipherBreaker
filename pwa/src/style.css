@@ -133,7 +133,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
 .muted { color: var(--muted); font-size: 13px; }
 .hidden { display: none !important; }
 
-/* Rows of the Number Analyzer and the readers */
+/* Rows of Numbers and the readers */
 /* The result takes more of the row than the input: a number is short, its factorization is not */
 .number-row { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
 .number-row input { flex: 2 1 0; min-width: 0; }
@@ -202,7 +202,7 @@ input.cell {
 .grille-result { font-size: 32px; line-height: 1.2; min-height: 1.2em; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
 .playfair-result { font-size: 20px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; min-height: 1.4em; }
 
-/* Keyboard Helper */
+/* Keyboard */
 .swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .swatch { width: 30px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: none; }
 .swatch.erase { padding: 3px; color: var(--fg); }
@@ -227,7 +227,7 @@ input.cell {
   .keyboard { max-width: max(360px, calc((100dvh - 110px - env(safe-area-inset-top)) * 3)); }
 }
 
-/* Morse Reader */
+/* Morse */
 /* The box grows with its message, up to a third of the screen, and scrolls from there on */
 .morse-divider { margin: 10px -16px 0; flex: none; }
 .morse-input { width: 100%; display: block; flex: none; max-height: 33dvh; resize: none; font-family: ui-monospace, Consolas, monospace; font-size: 20px; letter-spacing: 2px; word-break: break-all; }
@@ -284,7 +284,7 @@ input.cell {
 .menu svg { width: 44px; height: 44px; flex: none; color: var(--primary); }
 @media (prefers-color-scheme: dark) { .menu svg { color: #9fa8da; } }
 
-/* Useful Links */
+/* Links */
 .links { list-style: none; margin: 0; padding: 0; }
 .links a {
   display: flex; flex-direction: column; gap: 2px; padding: 10px 8px; color: inherit; text-decoration: none;

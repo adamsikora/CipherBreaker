@@ -1,4 +1,4 @@
-// Number Analyzer, port of NumberAnalyzerActivity.kt
+// Numbers, port of NumberAnalyzerActivity.kt
 
 import {
   factorNumber, formatInBase, formatRomanNumeral, parseNumber, PRIME_FACTORS, ROMAN_NUMERALS,
@@ -30,7 +30,7 @@ interface Row {
 
 export const numberAnalyzerTool: Tool = {
   path: 'numbers',
-  title: 'Number Analyzer',
+  title: 'Numbers',
   icon: 'number-analyzer',
   mount(container) {
     const inputTypeSelect = h('select', null, ...INPUT_TYPES.map(type => h('option', null, type)));

@@ -1,4 +1,4 @@
-// Turning Grille, port of GrillerActivity.kt: letters in a square grid, holes of the turning
+// Grille, port of GrillerActivity.kt: letters in a square grid, holes of the turning
 // grille marked by a long press, the text read through the holes in all four rotations
 
 import { cellGrid, CellGrid, GRID_SIZES as SIZES } from '../components/cell-grid';
@@ -46,7 +46,7 @@ function grilleExample(size: number, holes: [number, number][], message: string)
 
 export const grilleTool: Tool = {
   path: 'grille',
-  title: 'Turning Grille',
+  title: 'Grille',
   icon: 'grille',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);

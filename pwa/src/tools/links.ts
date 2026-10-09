@@ -1,4 +1,4 @@
-// Useful Links: outside tools that come in handy at a puzzle hunt, opened in the browser
+// Links: outside tools that come in handy at a puzzle hunt, opened in the browser
 
 import { h } from '../shell/dom';
 import { Tool } from '../shell/router';
@@ -10,7 +10,7 @@ const LINKS: [string, string, string][] = [
 
 export const linksTool: Tool = {
   path: 'links',
-  title: 'Useful Links',
+  title: 'Links',
   icon: 'link',
   mount(container) {
     container.append(h('ul', { class: 'links' }, ...LINKS.map(([name, description, url]) =>

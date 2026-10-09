@@ -1,4 +1,4 @@
-// Azimuth Calculator, port of AzimutherActivity.kt: the point reached from a start position after
+// Azimuth, port of AzimutherActivity.kt: the point reached from a start position after
 // given distance under given azimuth, drawn on the map as an arrow
 
 import { locationRow } from '../components/location-row';
@@ -26,7 +26,7 @@ const DEFAULT_STATE: State = { lat: null, lon: null, distance: '', angle: '' };
 
 export const azimuthTool: Tool = {
   path: 'azimuth',
-  title: 'Azimuth Calculator',
+  title: 'Azimuth',
   icon: 'explore',
   mount(container) {
     let position: LatLon | null = null;

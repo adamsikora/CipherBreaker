@@ -1,4 +1,4 @@
-// Dictionary Search, port of PresmyslovnikActivity.kt. The search runs in search-worker.ts
+// Dictionary, port of PresmyslovnikActivity.kt. The search runs in search-worker.ts
 
 import { MODES } from '../logic/dictionary';
 import { formatLatLng, parseIntWithDefault } from '../logic/format';
@@ -47,7 +47,7 @@ function searchWorker(): Worker {
 
 export const dictionaryTool: Tool = {
   path: 'dictionary',
-  title: 'Dictionary Search',
+  title: 'Dictionary',
   icon: 'dictionary',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);

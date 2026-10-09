@@ -1,4 +1,4 @@
-// Morse Reader, made for the PWA: a message typed with a button for the dot, the dash and the
+// Morse, made for the PWA: a message typed with a button for the dot, the dash and the
 // slash each, shown decoded as it is and in the five other ways of taking the three symbols for
 // one another, as a message may have them swapped
 
@@ -29,7 +29,7 @@ function interpretationLabel(interpretation: string): HTMLElement {
 
 export const morseTool: Tool = {
   path: 'morse',
-  title: 'Morse Reader',
+  title: 'Morse',
   icon: 'morse',
   mount(container) {
     // Typed with the buttons below, so the keyboard of a phone stays hidden; a text can still be

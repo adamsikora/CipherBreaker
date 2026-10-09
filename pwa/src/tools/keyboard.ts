@@ -1,4 +1,4 @@
-// Keyboard Helper, made for the PWA: a keyboard drawn in the picked layout, whose keys are painted
+// Keyboard, made for the PWA: a keyboard drawn in the picked layout, whose keys are painted
 // with the picked colour by tapping them. The colours belong to the physical keys, so they stay
 // where they are when the layout changes
 
@@ -39,7 +39,7 @@ const GAP = 0.04;
 
 export const keyboardTool: Tool = {
   path: 'keyboard',
-  title: 'Keyboard Helper',
+  title: 'Keyboard',
   icon: 'keyboard',
   mount(container) {
     const layoutSelect = h('select', null, ...KEYBOARD_LAYOUTS.map(layout => h('option', { value: layout.id }, layout.name)));

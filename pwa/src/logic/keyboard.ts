@@ -1,4 +1,4 @@
-// Keyboard layouts of the Keyboard Helper: what the keys type alone and with Shift, where they are
+// Keyboard layouts of the Keyboard tool: what the keys type alone and with Shift, where they are
 // on the keyboard and which one is at a point. Made for the PWA, the Android app has no such tool
 
 export interface KeyboardLayout {

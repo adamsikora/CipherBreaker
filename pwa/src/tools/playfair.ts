@@ -1,4 +1,4 @@
-// Playfair Cipher, port of PlayfairActivity.kt: a key grid and a text, shown decrypted and
+// Playfair, port of PlayfairActivity.kt: a key grid and a text, shown decrypted and
 // encrypted as they are typed
 
 import { cellGrid, CellGrid, GRID_SIZES as SIZES } from '../components/cell-grid';
@@ -22,7 +22,7 @@ const DEFAULT_STATE: State = { playfairWidthSpinner: 1, playfairHeightSpinner: 1
 
 export const playfairTool: Tool = {
   path: 'playfair',
-  title: 'Playfair Cipher',
+  title: 'Playfair',
   icon: 'playfair',
   mount(container) {
     const state = loadState(STATE_KEY, DEFAULT_STATE);

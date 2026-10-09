@@ -1,4 +1,4 @@
-// Morse code of the Morse Reader: a message of dots, dashes and separators, read as it is and
+// Morse code of the Morse tool: a message of dots, dashes and separators, read as it is and
 // with the three symbols taken for one another. Made for the PWA, the Android app has no such tool
 
 /** The symbols a message is written in: a slash ends a letter, two of them a word */

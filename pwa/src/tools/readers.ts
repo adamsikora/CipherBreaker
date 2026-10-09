@@ -1,4 +1,4 @@
-// Binary Decoder and Ternary Decoder, ports of DebaseatorActivity.kt with DebinarizatorActivity.kt
+// Binary and Ternary, ports of DebaseatorActivity.kt with DebinarizatorActivity.kt
 // and DeternarizatorActivity.kt: endless rows of digit cells that cycle through their values on
 // tap, each row read as letters in all the ways the digits can be taken
 
@@ -184,7 +184,7 @@ const TERNARY_DEFAULT_STATE: TernaryState = { start: '1', alphabet: '26', direct
 
 export const binaryReaderTool: Tool = {
   path: 'binary',
-  title: 'Binary Decoder',
+  title: 'Binary',
   icon: 'binary',
   mount(container) {
     const state = loadState(BINARY_STATE_KEY, BINARY_DEFAULT_STATE);
@@ -227,7 +227,7 @@ export const binaryReaderTool: Tool = {
 
 export const ternaryReaderTool: Tool = {
   path: 'ternary',
-  title: 'Ternary Decoder',
+  title: 'Ternary',
   icon: 'ternary',
   mount(container) {
     const state = loadState(TERNARY_STATE_KEY, TERNARY_DEFAULT_STATE);
