@@ -14,11 +14,13 @@ import { morseTool } from './tools/morse';
 import { numberAnalyzerTool } from './tools/number-analyzer';
 import { playfairTool } from './tools/playfair';
 import { binaryReaderTool, ternaryReaderTool } from './tools/readers';
+import { searchTool } from './tools/search';
 import { trainerTool } from './tools/trainer';
 
 // Tools in the order of the menu
 const tools: Tool[] = [
   dictionaryTool,
+  searchTool,
   morseTool,
   binaryReaderTool,
   ternaryReaderTool,

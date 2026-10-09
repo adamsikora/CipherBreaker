@@ -250,6 +250,44 @@ input.cell {
 .morse-key:active { background: var(--row-hover); }
 .morse-key svg { width: 30px; height: 30px; display: block; }
 
+/* Search */
+.search-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.search-bar button { flex: none; min-width: 34px; }
+.search-position { flex: none; min-width: 4.5em; text-align: center; white-space: nowrap; }
+/* The terms of the query in their colours with the number of their matches; many of them scroll */
+.search-terms { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; max-height: 64px; overflow-y: auto; }
+.search-terms:empty { display: none; }
+.search-term { display: flex; gap: 6px; padding: 2px 10px; border-radius: 12px; font-size: 13px; cursor: pointer; }
+/* Highlights are half transparent, so that the text shows on them in both themes */
+.hl-0 { background: rgb(255 214 0 / .5); }
+.hl-1 { background: rgb(0 200 83 / .45); }
+.hl-2 { background: rgb(41 182 246 / .5); }
+.hl-3 { background: rgb(255 64 129 / .45); }
+.hl-4 { background: rgb(255 109 0 / .5); }
+.hl-5 { background: rgb(149 117 205 / .55); }
+.hl-6 { background: rgb(0 191 165 / .5); }
+.hl-7 { background: rgb(244 67 54 / .5); }
+/* The field takes the rest of the screen, from edge to edge. The text box and the copy of the text
+   under it have to break their lines at the same places, so everything that sets the lines is the
+   same for both, and both have a scrollbar, the one of the copy unseen under the other */
+.search-field { position: relative; flex: 1; min-height: 120px; margin: 0 -16px; --search-size: 16px; }
+.search-backdrop, .search-text {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 10px 16px; border: none; border-radius: 0;
+  font: var(--search-size)/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: 0;
+  font-kerning: none; font-variant-ligatures: none; tab-size: 4; text-align: left;
+  white-space: pre-wrap; overflow-wrap: break-word; word-break: normal; overflow-x: hidden; overflow-y: scroll;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+}
+.search-backdrop { color: transparent; pointer-events: none; scrollbar-color: transparent transparent; }
+/* Two fingers on the text zoom it and not the page */
+.search-text { display: block; background: transparent; resize: none; outline: none; touch-action: pan-y; }
+.search-mark { border-radius: 2px; }
+.search-mark.current { outline: 2px solid var(--fg); }
+/* Safari on iOS has 3px on the sides of the text in a text box that no padding accounts for */
+@supports (-webkit-touch-callout: none) {
+  .search-backdrop { padding-left: 19px; padding-right: 19px; }
+}
+
 /* Trainer */
 /* The codes to pick from, each shown by a letter in it; the picked one has the border in colour */
 .trainer-codes { display: flex; gap: 6px; margin-bottom: 8px; }

@@ -3,8 +3,9 @@
 Helper tools for Puzzle Hunts: dictionary search over Czech and English word lists and a map of
 Czechia, binary and ternary decoders, a turning grille, an azimuth calculator, name days, number
 analysis and prime factorization, a Playfair cipher helper, and keyboard layouts with keys to mark,
-a Morse code reader and a trainer of Morse, Braille, semaphore and number codes (all three web app
-only). Suggestions and contributions are welcome.
+a Morse code reader, a search of a pasted text for words hidden across its words and a trainer of
+Morse, Braille, semaphore and number codes (all four web app only). Suggestions and contributions
+are welcome.
 
 ## Web app
 
