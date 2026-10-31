@@ -16,7 +16,7 @@ through `.github/workflows/pages.yml`; Pages has to be set to "GitHub Actions" a
 repository settings. Installed apps update on their own after a deployment, through the service
 worker.
 
-Development needs Node 18+:
+Development needs Node 20.19+:
 
     cd pwa
     npm install
