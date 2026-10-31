@@ -1,5 +1,6 @@
 // Parsing, formatting and factoring of unsigned 64-bit numbers, which are bigint here as they do
-// not fit into a JS number. Port of NumberAnalysis.kt
+// not fit into a JS number. Port of NumberAnalysis.kt, except for the factoring: dividing up to the
+// square root, as the app does, would block the page for half a minute on the largest primes
 
 export const ROMAN_NUMERALS = 'roman numerals';
 export const PRIME_FACTORS = 'prime factors';
@@ -23,6 +24,11 @@ const ROMAN_VALUES: Record<string, bigint> = {
 };
 
 const DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+const TRIAL_DIVISION_LIMIT = 1000n;
+// With these the Miller-Rabin test is certain for every 64-bit number, not just probable
+const PRIMALITY_WITNESSES = [2n, 3n, 5n, 7n, 11n, 13n, 17n, 19n, 23n, 29n, 31n, 37n];
+const RHO_BATCH = 128;
 
 /** Parses digits of given radix as an unsigned 64-bit number, null when they are not one. */
 export function parseULong(input: string, radix: number): bigint | null {
@@ -85,6 +91,92 @@ export function parseRomanNumeral(input: string): bigint | null {
   return total;
 }
 
+function powMod(base: bigint, exponent: bigint, modulus: bigint): bigint {
+  let result = 1n;
+  let power = base % modulus;
+  for (let e = exponent; e > 0n; e >>= 1n) {
+    if (e & 1n) result = result * power % modulus;
+    power = power * power % modulus;
+  }
+  return result;
+}
+
+function gcd(a: bigint, b: bigint): bigint {
+  let x = a < 0n ? -a : a;
+  let y = b < 0n ? -b : b;
+  while (y > 0n) {
+    const rest = x % y;
+    x = y;
+    y = rest;
+  }
+  return x;
+}
+
+/** Miller-Rabin test of an odd number without factors below TRIAL_DIVISION_LIMIT */
+function isPrime(n: bigint): boolean {
+  if (n < TRIAL_DIVISION_LIMIT * TRIAL_DIVISION_LIMIT) return true;
+  let odd = n - 1n;
+  let twos = 0;
+  while (!(odd & 1n)) {
+    odd >>= 1n;
+    twos++;
+  }
+  witnesses: for (const witness of PRIMALITY_WITNESSES) {
+    let x = powMod(witness, odd, n);
+    if (x === 1n || x === n - 1n) continue;
+    for (let i = 1; i < twos; i++) {
+      x = x * x % n;
+      if (x === n - 1n) continue witnesses;
+    }
+    return false;
+  }
+  return true;
+}
+
+/** A factor of a composite odd number other than 1 and the number itself, by Pollard's rho */
+function findFactor(n: bigint): bigint {
+  for (let c = 1n; ; c++) {
+    const next = (x: bigint) => (x * x + c) % n;
+    let slow = 2n;
+    let fast = 2n;
+    let factor = 1n;
+    while (factor === 1n) {
+      // A gcd costs more than the steps do, so it is made of the product of a batch of them
+      const slowStart = slow;
+      const fastStart = fast;
+      let product = 1n;
+      for (let i = 0; i < RHO_BATCH; i++) {
+        slow = next(slow);
+        fast = next(next(fast));
+        product = product * (slow - fast) % n;
+      }
+      factor = gcd(n, product);
+      if (factor === n) {
+        // More than one factor came in the batch, or the walk closed: it is gone through by steps
+        slow = slowStart;
+        fast = fastStart;
+        do {
+          slow = next(slow);
+          fast = next(next(fast));
+          factor = gcd(n, slow - fast);
+        } while (factor === 1n);
+      }
+    }
+    // When the walk closed without a factor, another one is tried
+    if (factor !== n) return factor;
+  }
+}
+
+function addPrimeFactors(n: bigint, factors: bigint[]): void {
+  if (isPrime(n)) {
+    factors.push(n);
+  } else {
+    const factor = findFactor(n);
+    addPrimeFactors(factor, factors);
+    addPrimeFactors(n / factor, factors);
+  }
+}
+
 /** Prime factors in ascending order, with repetitions. Numbers below 2 have none. */
 export function factorNumber(number: bigint): bigint[] {
   const factors: bigint[] = [];
@@ -94,14 +186,13 @@ export function factorNumber(number: bigint): bigint[] {
     factors.push(2n);
     n /= 2n;
   }
-  // Odd divisors up to the square root of what is left
-  for (let i = 3n; i * i <= n; i += 2n) {
+  // The small odd divisors, dividing by them is the fastest way to get rid of them
+  for (let i = 3n; i < TRIAL_DIVISION_LIMIT && i * i <= n; i += 2n) {
     while (n % i === 0n) {
       factors.push(i);
       n /= i;
     }
   }
-  // What is left is a prime greater than 2
-  if (n > 2n) factors.push(n);
-  return factors;
+  if (n > 1n) addPrimeFactors(n, factors);
+  return factors.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }

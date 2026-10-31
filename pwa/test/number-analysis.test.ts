@@ -29,6 +29,29 @@ describe('factorNumber', () => {
     expect(factorNumber(999966000289n)).toEqual([999983n, 999983n]);
     expect(factorNumber(ULONG_MAX)).toEqual([3n, 5n, 17n, 257n, 641n, 65537n, 6700417n]);
   });
+
+  it('factors the hardest 64-bit numbers at once', () => {
+    // The largest 64-bit prime
+    expect(factorNumber(18446744073709551557n)).toEqual([18446744073709551557n]);
+    // The two largest 32-bit primes, and the largest one squared
+    expect(factorNumber(4294967279n * 4294967291n)).toEqual([4294967279n, 4294967291n]);
+    expect(factorNumber(4294967291n * 4294967291n)).toEqual([4294967291n, 4294967291n]);
+  }, 1000);
+
+  it('is not fooled by numbers that pass as primes for the small witnesses', () => {
+    expect(factorNumber(3825123056546413051n)).toEqual([149491n, 747451n, 34233211n]);
+    // A Carmichael number with factors above the trial division
+    expect(factorNumber(9624742921n)).toEqual([1171n, 2341n, 3511n]);
+  });
+
+  it('keeps factors around the limit of the trial division', () => {
+    expect(factorNumber(997n)).toEqual([997n]);
+    expect(factorNumber(997n * 997n)).toEqual([997n, 997n]);
+    expect(factorNumber(1009n)).toEqual([1009n]);
+    expect(factorNumber(1009n * 1009n)).toEqual([1009n, 1009n]);
+    expect(factorNumber(997n * 1009n * 1013n)).toEqual([997n, 1009n, 1013n]);
+    expect(factorNumber(1009n * 1009n * 1009n)).toEqual([1009n, 1009n, 1009n]);
+  });
 });
 
 describe('roman numerals', () => {

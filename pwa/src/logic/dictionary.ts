@@ -63,12 +63,15 @@ export function loadDictionary(text: string, isMap: boolean): Dictionary {
   const lat = new Float64Array(count);
   const lon = new Float64Array(count);
   for (let i = 0; i < count; i++) {
-    const parts = entries[i].split(';');
-    names[i] = parts[0];
+    const entry = entries[i];
+    const nameEnd = entry.indexOf(';');
+    names[i] = nameEnd < 0 ? entry : entry.slice(0, nameEnd);
+    const lonStart = entry.lastIndexOf(';') + 1;
+    const latStart = lonStart > 0 ? entry.lastIndexOf(';', lonStart - 2) + 1 : 0;
     // A line without coordinates gets zeros like in the app, rather than NaN distances
-    if (parts.length >= 3) {
-      lat[i] = parseFloat(parts[parts.length - 2]);
-      lon[i] = parseFloat(parts[parts.length - 1]);
+    if (latStart > 0) {
+      lat[i] = parseFloat(entry.slice(latStart, lonStart - 1));
+      lon[i] = parseFloat(entry.slice(lonStart));
     }
   }
   return { names, lat, lon };

@@ -11,17 +11,18 @@ export function frontDecode(coded: string[]): string[] {
   for (let i = 0; i < coded.length; i++) {
     const codedLine = coded[i];
     const first = codedLine.charCodeAt(0);
-    let line: string;
+    // Only a line in its original case needs making lower case, the others are coded in it
     if (codedLine[0] === ORIGINAL_CASE) {
-      line = previous.slice(0, codedLine.charCodeAt(1) - 97) + codedLine.slice(2);
+      const line = previous.slice(0, codedLine.charCodeAt(1) - 97) + codedLine.slice(2);
+      lines[i] = line;
+      previous = line.toLowerCase();
     } else if (first >= 65 && first <= 90) {
-      line = previous.slice(0, first - 65) + codedLine.slice(1);
-      line = line[0].toUpperCase() + line.slice(1);
+      previous = previous.slice(0, first - 65) + codedLine.slice(1);
+      lines[i] = previous[0].toUpperCase() + previous.slice(1);
     } else {
-      line = previous.slice(0, first - 97) + codedLine.slice(1);
+      previous = previous.slice(0, first - 97) + codedLine.slice(1);
+      lines[i] = previous;
     }
-    lines[i] = line;
-    previous = line.toLowerCase();
   }
   return lines;
 }

@@ -44,4 +44,15 @@ describe('keyWithDiacritics', () => {
     expect(keyWithDiacritics('Łódź')).toBe('łódź');
     expect(keyWithDiacritics('?! - _')).toBe('');
   });
+
+  it('handles characters out of the table of the common ones', () => {
+    // Other scripts, with the part in the table before and after them
+    expect(keyWithDiacritics('Žít Москва ž')).toBe('žítмоскваž');
+    expect(keyWithDiacritics('Ελλάδα, 東京')).toBe('ελλάδα東京');
+    // A letter out of the basic plane, and symbols that are not letters
+    expect(keyWithDiacritics('a𝒜b')).toBe('a𝒜b');
+    expect(keyWithDiacritics('č→€😀ď')).toBe('čď');
+    // In the table, but not letters
+    expect(keyWithDiacritics('š©×÷ř')).toBe('šř');
+  });
 });

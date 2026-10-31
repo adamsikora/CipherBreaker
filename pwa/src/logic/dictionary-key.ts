@@ -48,14 +48,35 @@ export function keyFromName(name: string): string {
   return key;
 }
 
-export function keyWithDiacritics(name: string): string {
+function letterKey(c: string): string {
+  return LETTER.test(c) ? c.toLowerCase() : '';
+}
+
+const TABLE_WITH_DIACRITICS: string[] = [];
+for (let code = TABLE_START; code < TABLE_END; code++) {
+  TABLE_WITH_DIACRITICS.push(letterKey(String.fromCharCode(code)));
+}
+
+function unicodeKeyWithDiacritics(name: string): string {
   let key = '';
   for (const c of name) {
     const code = c.codePointAt(0)!;
     if (isKeyChar(code)) key += c;
     else if (code >= 65 && code <= 90) key += String.fromCharCode(code + 32);
+    else if (code >= TABLE_START) key += letterKey(c);
+  }
+  return key;
+}
+
+export function keyWithDiacritics(name: string): string {
+  let key = '';
+  for (let i = 0; i < name.length; i++) {
+    const code = name.charCodeAt(i);
+    if (isKeyChar(code)) key += name[i];
+    else if (code >= 65 && code <= 90) key += String.fromCharCode(code + 32);
     else if (code < TABLE_START) continue;
-    else if (LETTER.test(c)) key += c.toLowerCase();
+    else if (code < TABLE_END) key += TABLE_WITH_DIACRITICS[code - TABLE_START];
+    else return unicodeKeyWithDiacritics(name);
   }
   return key;
 }
